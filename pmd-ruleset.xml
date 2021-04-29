@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ruleset
+  xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  name="OSF Ruleset"
+  xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd"
+>
+
+    <description>Default Ruleset by OSF Digital</description>
+    <rule ref="category/apex/design.xml" />
+    <rule ref="category/apex/performance.xml" />
+    <rule ref="category/apex/codestyle.xml" />
+    <rule ref="category/apex/bestpractices.xml" />
+    <rule ref="category/apex/errorprone.xml" />
+    <rule ref="category/apex/security.xml" />
+    <rule ref="category/apex/documentation.xml" />
+
+    <rule
+    name="ClassNamingConventionBatch"
+    language="apex"
+    message="Batch class name should end with '_Batch' suffix"
+    class="net.sourceforge.pmd.lang.rule.XPathRule"
+  >
+        <description />
+        <priority>1</priority>
+        <properties>
+            <property name="version" value="2.0" />
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//UserClass[@InterfaceNames="Database.Batchable" and not(ends-with(@Image, "_Batch"))]
+]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule
+    name="ClassNamingConventionQueueable"
+    language="apex"
+    message="Queueable class name should end with '_Queueable' suffix"
+    class="net.sourceforge.pmd.lang.rule.XPathRule"
+  >
+        <description />
+        <priority>1</priority>
+        <properties>
+            <property name="version" value="2.0" />
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//UserClass[@InterfaceNames="Queueable" and not(ends-with(@Image, "_Queueable"))]
+]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule
+    name="ClassNamingConventionSchedulable"
+    language="apex"
+    message="Schedulable class name should end with '_Schedule' suffix"
+    class="net.sourceforge.pmd.lang.rule.XPathRule"
+  >
+        <description />
+        <priority>1</priority>
+        <properties>
+            <property name="version" value="2.0" />
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//UserClass[@InterfaceNames="Schedulable" and not(ends-with(@Image, "_Schedule"))]
+]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule
+    name="ClassNamingConventionTest"
+    language="apex"
+    message="Test class name should end with 'Test' suffix"
+    class="net.sourceforge.pmd.lang.rule.XPathRule"
+  >
+        <description />
+        <priority>1</priority>
+        <properties>
+            <property name="version" value="2.0" />
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//UserClass[ends-with(@Image, "Test") and (not(ends-with(@Image,"Test")) or ends-with(@Image, "_Test")) and //Annotation[@Image="IsTest"]]
+]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+    <rule
+    name="ClassNamingConventionUnderscore"
+    language="apex"
+    message="Class name should not contain underscore unless Batch, Queueable or Schedulable"
+    class="net.sourceforge.pmd.lang.rule.XPathRule"
+  >
+        <description />
+        <priority>1</priority>
+        <properties>
+            <property name="version" value="2.0" />
+            <property name="xpath">
+                <value>
+                    <![CDATA[
+//UserClass[not(@InterfaceNames="Queueable") and not(@InterfaceNames="Database.Batchable") and not(@InterfaceNames="Schedulable") and contains(@Image, "_")]
+]]>
+                </value>
+            </property>
+        </properties>
+    </rule>
+
+</ruleset>

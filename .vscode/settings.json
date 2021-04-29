@@ -1,0 +1,5 @@
+{
+    "apexPMD.rulesets": [
+        "pmd-ruleset.xml"
+    ]
+}

@@ -1,0 +1,73 @@
+name: Scan Pull Request
+on:
+    pull_request:
+        branches:
+            - develop
+jobs:
+  run-static-code-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2.3.4
+      - name: Get PR Files
+        id: pr-files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+            pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+            prFiles=$(
+            curl \
+            -X GET \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/pulls/$pull_number/files" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token $GITHUB_TOKEN")
+            outputList=$(
+            echo $prFiles | jq '.[].raw_url')
+            echo $outputList
+            outputListJoined="${outputList//$'\n'/', '}"
+            outputListJoined=\""${outputListJoined//$'"'/''}"\"
+            baseUrlPattern="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/raw/[0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z][0-9a-z]/"
+            outputListJoined="${outputListJoined//$baseUrlPattern/$GITHUB_WORKSPACE/}"
+            echo "::set-output name=pr-files::$outputListJoined"
+      - name: Install Salesforce CLI
+        run: |
+            wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+            mkdir sfdx-cli
+            tar xJf sfdx-linux-amd64.tar.xz -C sfdx-cli --strip-components 1
+            ./sfdx-cli/install
+      - name: Install Salesforce Scanner CLI Plugin
+        run: sfdx plugins:install @salesforce/sfdx-scanner
+      - name: Run Salesforce Scanner
+        id: sfdx-scanner
+        run: |
+            echo ${{ steps.pr-files.outputs.pr-files }}
+            pmd_file_path="$GITHUB_WORKSPACE/pmd-settings.xml"
+            scanResult="$(sfdx scanner:run --target ${{ steps.pr-files.outputs.pr-files }} -f csv)"
+            scanResult="${scanResult//'%'/'%25'}"
+            scanResult="${scanResult//$'\n'/'%0A'}"
+            scanResult="${scanResult//$'\r'/'%0D'}"
+            scanResult="${scanResult//$'\''/''}"
+            echo "::set-output name=scan-result::$scanResult"
+      - name: Convert Salesforce Scanner Results
+        shell: pwsh
+        id: pwsh-script
+        run: |
+            $descriptions=""
+            $csvData=ConvertFrom-CSV -delim ',' -Input @"
+                ${{ steps.sfdx-scanner.outputs.scan-result }}
+            "@
+            $csvData | ForEach-Object { $descriptions+="``$(Split-Path $_.file -leaf):$($_.line),$($_.column)``\n> $($_.description)\n\n" }
+            echo "::set-output name=pwsh-result::$descriptions"
+            echo $descriptions
+      - name: Comment to Pull Request
+        if: contains(steps.pwsh-script.outputs.pwsh-result, '.cls')
+        env:
+          URL: ${{ github.event.pull_request.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl \
+            -X POST \
+            $URL \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            --data '{ "body": "${{ steps.pwsh-script.outputs.pwsh-result }}" }'

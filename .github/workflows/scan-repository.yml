@@ -1,0 +1,23 @@
+name: Scan Repository
+on:
+    workflow_dispatch:
+jobs:
+  SFDX-Scanner:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2.3.4
+      - name: Install Salesforce CLI
+        run: |
+            wget https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+            mkdir sfdx-cli
+            tar xJf sfdx-linux-amd64.tar.xz -C sfdx-cli --strip-components 1
+            ./sfdx-cli/install
+      - name: Install Salesforce Scanner CLI Plugin
+        run: sfdx plugins:install @salesforce/sfdx-scanner
+      - name: Run Salesforce Scanner
+        id: sfdx-scanner
+        run: |
+            pmd_file_path="$GITHUB_WORKSPACE/pmd-settings.xml"
+            scanResult="$(sfdx scanner:run --target $GITHUB_WORKSPACE --pmdconfig $pmd_file_path -f table)"
+            echo "::set-output name=scan-result::$scanResult"
