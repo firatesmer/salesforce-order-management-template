@@ -4,8 +4,10 @@
 * @description Constant values class
 */
 public class Constants {
+    public static final String ACTIVE = 'Active';
     public static final String ACTIVATED = 'Activated';
     public static final String ALLOCATED = 'Allocated';
+    public static final String AMERICAN_EXPRESS = 'American Express';
     public static final String APPROVED = 'Approved';
     public static final String ASSIGNED = 'Assigned';
     public static final String CANCELED = 'Canceled';
@@ -14,6 +16,7 @@ public class Constants {
     public static final String CREATED = 'Created';
     public static final String DELIVERED = 'Delivered';
     public static final String DELIVERY_CHARGE = 'Delivery Charge';
+    public static final String DINERS_CLUB = 'Diners Club';
     public static final String DRAFT = 'Draft';
     public static final String ERROR_POSTING = 'Error Posting';
     public static final String ESTIMATED = 'Estimated';
@@ -24,8 +27,12 @@ public class Constants {
     public static final String HTTP_REQUEST = 'HTTP request';
     public static final String HTTP_RESPONSE = 'HTTP response';
     public static final String IGNORED = 'Ignored';
+    public static final String INACTIVE = 'Inactive';
     public static final String IN_STORE_PICKUP = 'In Store Pickup';
     public static final String INVOICING = 'Invoicing';
+    public static final String JCB = 'JCB';
+    public static final String MAESTRO = 'Maestro';
+    public static final String MASTER_CARD = 'Master Card';
     public static final String NEW_C = 'New';
     public static final String ORDER_ACTIVATION = 'Order Activation';
     public static final String ORDER_APPROVAL = 'Order Approval';
@@ -49,6 +56,7 @@ public class Constants {
     public static final String SUBMITTED = 'Submitted';
     public static final String TEST = 'Test';
     public static final String VIRTUAL_C = 'Virtual';
+    public static final String VISA = 'Visa';
     public static final String WAITING_TO_FULFILL = 'Waiting to Fulfill';
     public static final String WAREHOUSE = 'Warehouse';
 

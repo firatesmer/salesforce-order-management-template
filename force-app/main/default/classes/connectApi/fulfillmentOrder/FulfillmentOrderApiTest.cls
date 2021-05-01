@@ -148,6 +148,8 @@ private class FulfillmentOrderApiTest {
     @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateMultipleFulfillmentOrders() {
+        Test.startTest();
+
         String order1Id = createOrder();
         String order2Id = createOrder();
         List<String> orderIds = new List<String>{ order1Id, order2Id };
@@ -178,7 +180,6 @@ private class FulfillmentOrderApiTest {
             createFulfillmentOrderList.add(createFulfillmentOrder);
         }
 
-        Test.startTest();
         ConnectApi.MultipleFulfillmentOrderOutputRepresentation output = api.createMultipleFulfillmentOrder(createFulfillmentOrderList);
         Test.stopTest();
 

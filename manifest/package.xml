@@ -6,6 +6,7 @@
 		<members>BaseEnumTest</members>
 		<members>CalloutUtils</members>
 		<members>CalloutUtilsTest</members>
+		<members>CardPaymentMethodType</members>
 		<members>Constants</members>
 		<members>CsvParser</members>
 		<members>CsvParserTest</members>
@@ -45,7 +46,7 @@
 		<name>ApexClass</name>
 	</types>
 	<types>
-		<members>OMS</members>
+		<members>OrderManagement</members>
 		<name>ApexTestSuite</name>
 	</types>
 	<types>

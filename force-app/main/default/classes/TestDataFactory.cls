@@ -224,14 +224,16 @@ public class TestDataFactory {
     /**
     * @description Creates payment authorization
     * @param amount Payment amount
-    * @param paymentGroupId Payment group Id (createPaymentGroup)
+    * @param paymentGroupId Id of the PaymentGroup (createPaymentGroup)
+    * @param paymentMethodId Id of the PaymentMethod (createPaymentMethod)
     * @return PaymentAuthorization
     */
-    public static PaymentAuthorization createPaymentAuthorization(Double amount, String paymentGroupId) {
+    public static PaymentAuthorization createPaymentAuthorization(Double amount, String paymentGroupId, String paymentMethodId) {
         PaymentAuthorization paymentAuthorization = new PaymentAuthorization();
         paymentAuthorization.Amount = amount;
         paymentAuthorization.Status = Constants.PROCESSED;
         paymentAuthorization.ProcessingMode = Constants.EXTERNAL;
+        paymentAuthorization.PaymentMethodId = paymentMethodId;
         paymentAuthorization.PaymentGroupId = paymentGroupId;
         return paymentAuthorization;
     }
@@ -243,6 +245,8 @@ public class TestDataFactory {
     * @return Order
     */
     public static Order createOrderAndRelatedObjects(List<CreateOrderItem> orderItemList, String locationId) {
+        Double subTotal = 0; 
+
         // Product2
         Map<String, Product2> codeToProduct = new Map<String, Product2>();
         for (CreateOrderItem orderItem : orderItemList) {
@@ -255,6 +259,7 @@ public class TestDataFactory {
         for (CreateOrderItem orderItem : orderItemList) {
             Product2 product = codeToProduct.get(orderItem.productCode);
             codeToPricebookEntry.put(orderItem.productCode, createPricebookEntry(orderItem.unitPrice, product.Id));
+            subTotal += (Double)(orderItem.unitPrice * orderItem.quantity);
         }
         insert codeToPricebookEntry.values();
 
@@ -311,11 +316,43 @@ public class TestDataFactory {
             insert orderItemTaxLineItems;
         }
 
+        // CardPaymentMethod
+        CardPaymentMethod paymentMethod = createCardPaymentMethod(account);
+        insert paymentMethod;
+
+        // PaymentGroup
+        PaymentGroup paymentGroup = TestDataFactory.createPaymentGroup(order.Id);
+        insert paymentGroup;
+
+        // PaymentAuthorization 
+        PaymentAuthorization paymentAuthorization = TestDataFactory.createPaymentAuthorization(subTotal, paymentGroup.Id, paymentMethod.Id);
+        insert paymentAuthorization;
+
         order.Status = Constants.ACTIVATED;
         update order;
 
         return order;
     }
+
+    /**
+     * @description Creates CardPaymentMethod
+     * @param account Account
+     * @return CardPaymentMethod
+     */
+    public static CardPaymentMethod createCardPaymentMethod(Account account) {
+        CardPaymentMethod paymentMethod = new CardPaymentMethod();
+        paymentMethod.CardType = CardPaymentMethodType.VISA.toString();
+        paymentMethod.CardHolderName = String.format('{0} {1}', new List<String>{ account.FirstName, account.LastName });
+        paymentMethod.ExpiryYear = System.today().year() + 1;
+        paymentMethod.ExpiryMonth = 1;
+        paymentMethod.CardCategory = 'CreditCard';
+        paymentMethod.Status = CardPaymentMethodStatus.ACTIVE.toString();
+        paymentMethod.AccountId = account.Id;
+        paymentMethod.ProcessingMode = Constants.EXTERNAL;
+        paymentMethod.PaymentGatewayId = [SELECT Id FROM PaymentGateway LIMIT 1].Id;
+        return paymentMethod;
+    }
+
 
     /**
     * @description Model to use to create 

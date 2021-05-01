@@ -1,7 +1,7 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
-* @description Process exception type class
+* @description ProcessExceptionType class
 */
 public class ProcessExceptionType extends BaseEnum {
     private static final Map<String, ProcessExceptionType> TYPES = new Map<String, ProcessExceptionType>();
@@ -21,7 +21,7 @@ public class ProcessExceptionType extends BaseEnum {
 
     /**
     * @description Returns all types
-    * @return Process exception type list
+    * @return ProcessExceptionType list
     */
     public static ProcessExceptionType[] values() {
         return TYPES.values();

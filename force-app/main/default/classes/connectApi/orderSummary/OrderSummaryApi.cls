@@ -78,7 +78,7 @@ public with sharing class OrderSummaryApi extends BaseApi {
     /**
     * @description Adjust the price of one or more OrderItemSummaries from an 
     *   OrderSummary, and create one or two corresponding change orders.
-    * @param orderSummaryId Id of OrderSummary - required
+    * @param orderSummaryId Id of the OrderSummary - required
     * @param adjustItemInputList List of AdjustItemInputRepresentation object - required
     *   adjustmentType AmountWithTax|AmountWithoutTax|Percentage - required
     *   amount amount of adjustment, must be negative - required
@@ -92,6 +92,26 @@ public with sharing class OrderSummaryApi extends BaseApi {
         adjustInput.adjustItems = adjustItemInputList;
 
         ConnectApi.AdjustOrderSummaryOutputRepresentation output = ConnectApi.OrderSummary.adjustSubmit(orderSummaryId, adjustInput);
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    /**
+     *@description Ensure refunds for a credit memo or excess funds by
+     *  sending a request to a payment provider. This method inserts a 
+     *  background operation into an asynchronous job queue and returns
+     *  the ID of that operation so you can track its status. Payment gateway
+     *  responses appear in the payment gateway log and do not affect the
+     *  background operation status
+     * @param orderSummaryId Id of the OrderSummary - required
+     * @param invoiceId - Id of the Invoice - required
+     * @return Ensure funds async output
+     */
+    public ConnectApi.EnsureFundsAsyncOutputRepresentation ensureFundsAsync(String orderSummaryId, String invoiceId) {
+        ConnectApi.EnsureFundsAsyncInputRepresentation ensureFundsAsyncInput = new ConnectApi.EnsureFundsAsyncInputRepresentation();
+        ensureFundsAsyncInput.invoiceId = invoiceId;
+
+        ConnectApi.EnsureFundsAsyncOutputRepresentation output = ConnectApi.OrderSummary.ensureFundsAsync(orderSummaryId, ensureFundsAsyncInput);
         super.insertFailedResults(output);
         return output;
     }

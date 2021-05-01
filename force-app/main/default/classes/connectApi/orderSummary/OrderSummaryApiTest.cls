@@ -187,6 +187,60 @@ private class OrderSummaryApiTest {
     }
 
     /**
+    * @description Test method of OrderSummaryApi.ensureFundsAsync
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
+    */
+    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @IsTest(SeeAllData=true)
+    static void shouldEnsureFunds() {
+        String orderId = createOrder();
+
+        /**
+        * In most cases we have a flow creates order summary
+        * automatically once the order is activated so we will
+        * check if the order summary is already created or not
+        * to prevent test fail but in that case code will not
+        * be covered
+        */
+        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+
+        ConnectApi.OrderSummaryOutputRepresentation output;
+
+        if(orderSummary == null) {
+            output = createOrderSummary(orderId);
+            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        }
+
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE];
+
+        OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
+
+        // create FulfillmentOrder
+        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
+        createFulfillmentOrder.locationId = location.Id;
+        createFulfillmentOrder.orderSummaryId = orderSummary.Id;
+        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.toString();
+
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder);
+
+        String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
+
+        ConnectApi.FulfillmentOrderInvoiceOutputRepresentation invoiceOutput = fulfillmentOrderApi.createInvoice(fulfillmentOrderId);
+
+        List<Invoice> invoices = [SELECT Id FROM Invoice WHERE Id =: invoiceOutput.invoiceId];
+
+        Test.startTest();
+        ConnectApi.EnsureFundsAsyncOutputRepresentation ensureFundsOutput = orderSummaryApi.ensureFundsAsync(orderSummary.Id, invoices[0].Id);
+        Test.stopTest();
+
+        OrderPaymentSummary orderPaymentSummary = [SELECT AuthorizationAmount, AvailableToCaptureAmount, BalanceAmount, CapturedAmount, PendingCaptureAmount FROM OrderPaymentSummary WHERE OrderSummaryId =: orderSummary.Id];
+
+        System.assert(ensureFundsOutput.success, 'Ensure funds action failed');
+        System.assert(orderPaymentSummary.CapturedAmount > 0 || orderPaymentSummary.PendingCaptureAmount > 0 , 'CapturedAmount and PendingCaptureAmount is zero');
+    }
+
+    /**
     * @description Creates Order for test methods
     *   Test class containing a test setup method cannot 
     *   have any methods annotated with "SeeAllData=true"

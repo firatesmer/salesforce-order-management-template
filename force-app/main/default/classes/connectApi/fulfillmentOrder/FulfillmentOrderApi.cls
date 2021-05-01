@@ -127,7 +127,7 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
                 ConnectApi.FulfillmentGroupInputRepresentation fulfillmentGroup = new ConnectApi.FulfillmentGroupInputRepresentation();
                 fulfillmentGroup.fulfilledFromLocationId = locationId;
                 fulfillmentGroup.fulfillmentType = fulfillmentType;
-                fulfillmentGroup.referenceId = orderDeliveryGroupSummary.Id;
+                fulfillmentGroup.referenceId = createFulfillmentOrder.orderSummaryId;
     
                 List<ConnectApi.OrderItemSummaryInputRepresentation> orderItemSummaryInputList = new List<ConnectApi.OrderItemSummaryInputRepresentation>();
                 List<OrderItemSummary> orderItemSummaryList = [SELECT Quantity FROM OrderItemSummary 
@@ -147,6 +147,8 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
 
             multipleFulfillmentOrderInput.fulfillmentOrders.add(fulfillmentOrderInput);
         }
+
+        System.debug('multipleFulfillmentOrderInput: ' + multipleFulfillmentOrderInput);
 
         ConnectApi.MultipleFulfillmentOrderOutputRepresentation output = ConnectApi.FulfillmentOrder.createMultipleFulfillmentOrder(multipleFulfillmentOrderInput);
         super.insertFailedResults(output);

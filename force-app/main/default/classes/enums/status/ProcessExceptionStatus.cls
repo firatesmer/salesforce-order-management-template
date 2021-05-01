@@ -1,7 +1,7 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
-* @description Process exception status class
+* @description ProcessExceptionStatus class
 */
 public class ProcessExceptionStatus extends BaseEnum {
     private static final Map<String, ProcessExceptionStatus> STATUSES = new Map<String, ProcessExceptionStatus>();
@@ -19,7 +19,7 @@ public class ProcessExceptionStatus extends BaseEnum {
 
     /**
     * @description Returns all statuses
-    * @return Process exception status list
+    * @return ProcessExceptionStatus list
     */
     public static ProcessExceptionStatus[] values() {
         return STATUSES.values();

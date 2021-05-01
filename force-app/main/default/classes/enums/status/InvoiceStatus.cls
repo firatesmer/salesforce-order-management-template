@@ -1,7 +1,7 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
-* @description Invoice status class
+* @description InvoiceStatus class
 */
 public class InvoiceStatus extends BaseEnum {
     private static final Map<String, InvoiceStatus> STATUSES = new Map<String, InvoiceStatus>();
@@ -21,7 +21,7 @@ public class InvoiceStatus extends BaseEnum {
 
     /**
     * @description Returns all statuses
-    * @return Invoice status list
+    * @return InvoiceStatus list
     */
     public static InvoiceStatus[] values() {
         return STATUSES.values();

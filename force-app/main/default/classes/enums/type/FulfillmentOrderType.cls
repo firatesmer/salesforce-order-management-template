@@ -1,7 +1,7 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
-* @description Fulfillment order type class
+* @description FulfillmentOrderType class
 */
 public class FulfillmentOrderType extends BaseEnum {
     private static final Map<String, FulfillmentOrderType> TYPES = new Map<String, FulfillmentOrderType>();
@@ -19,7 +19,7 @@ public class FulfillmentOrderType extends BaseEnum {
 
     /**
     * @description Returns all types
-    * @return Fulfillment order type list
+    * @return FulfillmentOrderType list
     */
     public static FulfillmentOrderType[] values() {
         return TYPES.values();

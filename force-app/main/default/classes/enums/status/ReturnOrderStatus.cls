@@ -1,7 +1,7 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
-* @description Return order status class
+* @description ReturnOrderStatus class
 */
 public class ReturnOrderStatus extends BaseEnum {
     private static final Map<String, ReturnOrderStatus> STATUSES = new Map<String, ReturnOrderStatus>();
@@ -21,7 +21,7 @@ public class ReturnOrderStatus extends BaseEnum {
 
     /**
     * @description Returns all statuses
-    * @return Return order status list
+    * @return ReturnOrderStatus list
     */
     public static ReturnOrderStatus[] values() {
         return STATUSES.values();

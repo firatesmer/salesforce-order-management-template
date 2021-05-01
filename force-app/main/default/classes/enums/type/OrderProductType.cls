@@ -1,7 +1,7 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
-* @description Order product type class
+* @description OrderProductType class
 */
 public class OrderProductType extends BaseEnum {
     private static final Map<String, OrderProductType> TYPES = new Map<String, OrderProductType>();
@@ -18,7 +18,7 @@ public class OrderProductType extends BaseEnum {
 
     /**
     * @description Returns all types
-    * @return Order product type list
+    * @return OrderProductType list
     */
     public static OrderProductType[] values() {
         return TYPES.values();

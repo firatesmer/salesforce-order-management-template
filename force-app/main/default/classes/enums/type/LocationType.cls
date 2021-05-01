@@ -1,7 +1,7 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
-* @description Location type class
+* @description LocationType class
 */
 public class LocationType extends BaseEnum {
     private static final Map<String, LocationType> TYPES = new Map<String, LocationType>();
@@ -19,7 +19,7 @@ public class LocationType extends BaseEnum {
 
     /**
     * @description Returns all types
-    * @return Location type list
+    * @return LocationType list
     */
     public static LocationType[] values() {
         return TYPES.values();
