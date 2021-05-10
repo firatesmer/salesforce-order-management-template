@@ -97,16 +97,16 @@ public with sharing class OrderSummaryApi extends BaseApi {
     }
 
     /**
-     *@description Ensure refunds for a credit memo or excess funds by
-     *  sending a request to a payment provider. This method inserts a 
-     *  background operation into an asynchronous job queue and returns
-     *  the ID of that operation so you can track its status. Payment gateway
-     *  responses appear in the payment gateway log and do not affect the
-     *  background operation status
-     * @param orderSummaryId Id of the OrderSummary - required
-     * @param invoiceId - Id of the Invoice - required
-     * @return Ensure funds async output
-     */
+    * @description Ensure refunds for a credit memo or excess funds by
+    *  sending a request to a payment provider. This method inserts a 
+    *  background operation into an asynchronous job queue and returns
+    *  the ID of that operation so you can track its status. Payment gateway
+    *  responses appear in the payment gateway log and do not affect the
+    *  background operation status
+    * @param orderSummaryId Id of the OrderSummary - required
+    * @param invoiceId - Id of the Invoice - required
+    * @return Ensure funds async output
+    */
     public ConnectApi.EnsureFundsAsyncOutputRepresentation ensureFundsAsync(String orderSummaryId, String invoiceId) {
         ConnectApi.EnsureFundsAsyncInputRepresentation ensureFundsAsyncInput = new ConnectApi.EnsureFundsAsyncInputRepresentation();
         ensureFundsAsyncInput.invoiceId = invoiceId;
@@ -115,7 +115,7 @@ public with sharing class OrderSummaryApi extends BaseApi {
         super.insertFailedResults(output);
         return output;
     }
-    
+   
 
     // public ConnectApi.SubmitCancelOutputRepresentation submitCancel(String orderSummaryId, List<OrderItemSummary> orderItemSummaries) {
     //     ConnectApi.ChangeInputRepresentation changeInput = new ConnectApi.ChangeInputRepresentation();
