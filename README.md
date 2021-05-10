@@ -1,6 +1,11 @@
 # Salesforce Order Management Template
 Salesforce Order Management Template (SOMT) is a boilerplate template aims to reduce development time by using reusable module, increase and maintain code quality by running static code analyzer and implement best practices/principles.
 
+<a href="https://githubsfdeploy.herokuapp.com">
+  <img alt="Deploy to Salesforce"
+       src="https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png">
+</a>
+
 Based on different topics, these are the items we are having or will have in the future for SOMT.
 
 ## One-Click Configuration Deployment
