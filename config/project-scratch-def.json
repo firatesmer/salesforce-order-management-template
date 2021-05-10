@@ -1,5 +1,5 @@
 {
-  "orgName": "Demo company",
+  "orgName": "salesforce-order-management-template",
   "edition": "Developer",
-  "features": []
+  "features": ["PersonAccounts", "MultiCurrency", "ProcessBuilder", "StateAndCountryPicklist", "OrderManagement"]
 }
