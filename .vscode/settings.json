@@ -1,5 +1,5 @@
 {
     "apexPMD.rulesets": [
-        "pmd-ruleset.xml"
+        "pmd-settings.xml"
     ]
 }

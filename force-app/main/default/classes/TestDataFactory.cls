@@ -239,6 +239,21 @@ public class TestDataFactory {
     }
 
     /**
+    * @description Creates payment authorization
+    * @param amount Payment amount
+    * @param paymentGroupId Id of the PaymentGroup (createPaymentGroup)
+    * @return PaymentAuthorization
+    */
+    public static PaymentAuthorization createPaymentAuthorization(Double amount, String paymentGroupId) {
+        PaymentAuthorization paymentAuthorization = new PaymentAuthorization();
+        paymentAuthorization.Amount = amount;
+        paymentAuthorization.Status = Constants.PROCESSED;
+        paymentAuthorization.ProcessingMode = Constants.EXTERNAL;
+        paymentAuthorization.PaymentGroupId = paymentGroupId;
+        return paymentAuthorization;
+    }
+
+    /**
     * @description Creates order and related objects
     * @param orderItemList CreateOrderItem list
     * @param locationId Location id

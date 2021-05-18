@@ -17,7 +17,6 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     * @param createFulfillmentOrder CreateFulfillmentOrder model
     * @return FulfillmentOrder output
     */
-    @SuppressWarnings('PMD.OperationWithLimitsInLoop')
     public ConnectApi.FulfillmentOrderOutputRepresentation createFulfillmentOrders(CreateFulfillmentOrder createFulfillmentOrder) {
         String orderSummaryId = createFulfillmentOrder.orderSummaryId;
         String locationId = createFulfillmentOrder.locationId;
@@ -104,7 +103,6 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     * @param createFulfillmentOrderList CreateFulfillmentOrder model list
     * @return MultipleFulfillmentOrder output
     */
-    @SuppressWarnings('PMD.OperationWithLimitsInLoop')
     public ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrder(List<CreateFulfillmentOrder> createFulfillmentOrderList) {
         ConnectApi.MultipleFulfillmentOrderInputRepresentation multipleFulfillmentOrderInput = new ConnectApi.MultipleFulfillmentOrderInputRepresentation();
         multipleFulfillmentOrderInput.fulfillmentOrders = new List<ConnectApi.FulfillmentOrderInputRepresentation>();
@@ -147,8 +145,6 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
 
             multipleFulfillmentOrderInput.fulfillmentOrders.add(fulfillmentOrderInput);
         }
-
-        System.debug('multipleFulfillmentOrderInput: ' + multipleFulfillmentOrderInput);
 
         ConnectApi.MultipleFulfillmentOrderOutputRepresentation output = ConnectApi.FulfillmentOrder.createMultipleFulfillmentOrder(multipleFulfillmentOrderInput);
         super.insertFailedResults(output);

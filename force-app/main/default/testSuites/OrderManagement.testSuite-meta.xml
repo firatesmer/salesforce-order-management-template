@@ -8,7 +8,10 @@
     <testClassName>FulfillmentOrderApiTest</testClassName>
     <testClassName>LogUtilsTest</testClassName>
     <testClassName>OrderSummaryApiTest</testClassName>
+    <testClassName>RestFailMock</testClassName>
+    <testClassName>RestSuccessMock</testClassName>
     <testClassName>SalesforceAdapterTest</testClassName>
+    <testClassName>TestDataFactory</testClassName>
     <testClassName>XmlParserDocumentTest</testClassName>
     <testClassName>XmlParserTest</testClassName>
 </ApexTestSuite>

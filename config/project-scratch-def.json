@@ -1,5 +1,5 @@
 {
   "orgName": "salesforce-order-management-template",
   "edition": "Developer",
-  "features": ["PersonAccounts", "MultiCurrency", "ProcessBuilder", "StateAndCountryPicklist", "OrderManagement"]
+  "features": ["PersonAccounts", "MultiCurrency", "ProcessBuilder", "OrderManagement"]
 }
