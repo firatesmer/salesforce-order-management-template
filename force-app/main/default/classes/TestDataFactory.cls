@@ -4,6 +4,7 @@
 * @description Test data factory class
 */
 @isTest
+@SuppressWarnings('PMD.ExcessivePublicCount')
 public class TestDataFactory {
     /**
     * @description Returns default success Http response body
@@ -341,7 +342,7 @@ public class TestDataFactory {
 
         // PaymentAuthorization 
         PaymentAuthorization paymentAuthorization = TestDataFactory.createPaymentAuthorization(subTotal, paymentGroup.Id, paymentMethod.Id);
-        insert paymentAuthorization;
+        insert paymentAuthorization;          
 
         order.Status = Constants.ACTIVATED;
         update order;
@@ -350,10 +351,10 @@ public class TestDataFactory {
     }
 
     /**
-     * @description Creates CardPaymentMethod
-     * @param account Account
-     * @return CardPaymentMethod
-     */
+    * @description Creates CardPaymentMethod
+    * @param account Account
+    * @return CardPaymentMethod
+    */
     public static CardPaymentMethod createCardPaymentMethod(Account account) {
         CardPaymentMethod paymentMethod = new CardPaymentMethod();
         paymentMethod.CardType = CardPaymentMethodType.VISA.toString();

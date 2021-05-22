@@ -15,28 +15,30 @@ private class FulfillmentOrderApiTest {
         String orderId = createOrder();
 
         /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
         */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
 
-        if(orderSummary == null) {
+        if(orderSummaries.isEmpty()) {
             createOrderSummary(orderId);
             orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
         }
+        else {
+            orderSummary = orderSummaries[0];
+        }
 
-        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE];
-
-        FulfillmentOrderApi api = new FulfillmentOrderApi();
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
         // createFulfillmentOrders request
         FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
 
         Test.startTest();
-        ConnectApi.FulfillmentOrderOutputRepresentation output = api.createFulfillmentOrders(createFulfillmentOrder);
+        ConnectApi.FulfillmentOrderOutputRepresentation output = new FulfillmentOrderApi().createFulfillmentOrders(createFulfillmentOrder);
         Test.stopTest();
 
         List<FulfillmentOrder> fulfillmentOrders = [SELECT Id FROM FulfillmentOrder WHERE OrderSummaryId =: orderSummary.Id];
@@ -54,23 +56,27 @@ private class FulfillmentOrderApiTest {
     static void shouldCreateInvoice() {
         String orderId = createOrder();
 
-        /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
-        */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        FulfillmentOrderApi api = new FulfillmentOrderApi();
 
-        if(orderSummary == null) {
+        /**
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
+        */
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
+
+        if(orderSummaries.isEmpty()) {
             createOrderSummary(orderId);
             orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
         }
+        else {
+            orderSummary = orderSummaries[0];
+        }
 
-        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE];
-
-        FulfillmentOrderApi api = new FulfillmentOrderApi();
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
         // createFulfillmentOrders request
         FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
@@ -98,20 +104,24 @@ private class FulfillmentOrderApiTest {
         String orderId = createOrder();
 
         /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
         */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
 
-        if(orderSummary == null) {
+        if(orderSummaries.isEmpty()) {
             createOrderSummary(orderId);
             orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
         }
+        else {
+            orderSummary = orderSummaries[0];
+        }
 
-        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE];
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
         FulfillmentOrderApi api = new FulfillmentOrderApi();
 
@@ -148,18 +158,16 @@ private class FulfillmentOrderApiTest {
     @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateMultipleFulfillmentOrders() {
-        Test.startTest();
-
         String order1Id = createOrder();
         String order2Id = createOrder();
         List<String> orderIds = new List<String>{ order1Id, order2Id };
 
         /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
         */
         List<OrderSummary> orderSummaries = [SELECT Id FROM OrderSummary WHERE OriginalOrderId IN: orderIds];
 
@@ -180,6 +188,7 @@ private class FulfillmentOrderApiTest {
             createFulfillmentOrderList.add(createFulfillmentOrder);
         }
 
+        Test.startTest();
         ConnectApi.MultipleFulfillmentOrderOutputRepresentation output = api.createMultipleFulfillmentOrder(createFulfillmentOrderList);
         Test.stopTest();
 

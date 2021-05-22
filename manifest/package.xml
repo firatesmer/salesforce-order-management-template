@@ -64,5 +64,9 @@
 		<members>SendErrorLog</members>
 		<name>Flow</name>
 	</types>
+	<types>
+		<members>TestNamedCredential</members>
+		<name>NamedCredential</name>
+	</types>
 	<version>51.0</version>
 </Package>

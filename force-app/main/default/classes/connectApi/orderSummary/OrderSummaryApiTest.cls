@@ -15,27 +15,25 @@ private class OrderSummaryApiTest {
         String orderId = createOrder();
 
         /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
         */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        Boolean isOrderSummaryAlreadyCreated = orderSummary != null;
-
-        ConnectApi.OrderSummaryOutputRepresentation output;
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
 
         Test.startTest();
-        if(!isOrderSummaryAlreadyCreated) {
-            output = createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        if(orderSummaries.isEmpty()) {
+            createOrderSummary(orderId);
+            orderSummary = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        }
+        else {
+            orderSummary = orderSummaries[0];
         }
         Test.stopTest();
 
-        if (!isOrderSummaryAlreadyCreated) {
-            System.assert(output.success, 'Create order summary action failed');
-        }
         System.assert(orderSummary != null, 'Order summary not found');
     }
 
@@ -49,28 +47,25 @@ private class OrderSummaryApiTest {
         String orderId = createOrder();
 
         /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
         */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        Boolean isOrderSummaryAlreadyCreated = orderSummary != null;
-
-        ConnectApi.OrderSummaryOutputRepresentation output;
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
 
         Test.startTest();
-        if(!isOrderSummaryAlreadyCreated) {
-            OrderSummaryApi api = new OrderSummaryApi();
-            output = api.createOrderSummary(orderId, '000001', 'MANAGED', OrderSummaryStatus.CREATED);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        if(orderSummaries.isEmpty()) {
+            new OrderSummaryApi().createOrderSummary(orderId, '000001', 'MANAGED', OrderSummaryStatus.CREATED);
+            orderSummary = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        }
+        else {
+            orderSummary = orderSummaries[0];
         }
         Test.stopTest();
 
-        if (!isOrderSummaryAlreadyCreated) {
-            System.assert(output.success, 'Create order summary action failed');
-        }
         System.assert(orderSummary != null, 'Order summary not found');
     }
 
@@ -83,22 +78,24 @@ private class OrderSummaryApiTest {
     static void shouldAdjustPreview() {
         String orderId = createOrder();
 
-        Double adjustment = -1;
+        Double adjustment = -2;
 
         /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
         */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
 
-        ConnectApi.OrderSummaryOutputRepresentation output;
-
-        if(orderSummary == null) {
-            output = createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        if(orderSummaries.isEmpty()) {
+            createOrderSummary(orderId);
+            orderSummary = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        }
+        else {
+            orderSummary = orderSummaries[0];
         }
 
         OrderItemSummary orderItemSummary = [
@@ -106,9 +103,13 @@ private class OrderSummaryApiTest {
             Quantity, QuantityReturnInitiated, QuantityReturned, 
             QuantityAllocated, QuantityFulfilled, TotalAmtWithTax 
             FROM OrderItemSummary 
-            WHERE Type =: OrderProductType.ORDER_PRODUCT.toString() LIMIT 1];
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderProductType.ORDER_PRODUCT.toString()
+            LIMIT 1];
         
         Boolean isOrderItemDiscountable = OrderSummaryService.isOrderItemDiscountable(orderItemSummary);
+
+        System.assert(isOrderItemDiscountable, 'Order product is not discountable.');
 
         if (isOrderItemDiscountable) {
             List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = buildAdjustInput(orderItemSummary, orderSummary, adjustment);
@@ -117,16 +118,11 @@ private class OrderSummaryApiTest {
 
             Test.startTest();
             ConnectApi.AdjustOrderSummaryOutputRepresentation adjustPreviewOutput = api.adjustPreview(orderSummary.Id, adjustItemInputList);
+            ConnectApi.ChangeItemOutputRepresentation adjustItem = adjustPreviewOutput.changeBalances;
             Test.stopTest();
 
-            orderItemSummary = [
-                SELECT 
-                TotalLineAdjustmentAmount
-                FROM OrderItemSummary 
-                WHERE Id =: orderItemSummary.Id];
-
             System.assert(adjustPreviewOutput.success, 'Adjust preview failed');
-            System.assert(orderItemSummary.TotalLineAdjustmentAmount == adjustment, String.format('Adjustment amount should be {0}', new List<String>{ String.valueOf(adjustment) }));
+            System.assert(adjustItem.totalAdjustedProductAmount == (adjustment * -1), 'Adjust amounts are not matching');
         }
     }
 
@@ -142,19 +138,21 @@ private class OrderSummaryApiTest {
         Double adjustment = -1;
 
         /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
         */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
 
-        ConnectApi.OrderSummaryOutputRepresentation output;
-
-        if(orderSummary == null) {
-            output = createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        if(orderSummaries.isEmpty()) {
+            createOrderSummary(orderId);
+            orderSummary = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        }
+        else {
+            orderSummary = orderSummaries[0];
         }
 
         OrderItemSummary orderItemSummary = [
@@ -162,7 +160,9 @@ private class OrderSummaryApiTest {
             Quantity, QuantityReturnInitiated, QuantityReturned, 
             QuantityAllocated, QuantityFulfilled, TotalAmtWithTax 
             FROM OrderItemSummary 
-            WHERE Type =: OrderProductType.ORDER_PRODUCT.toString() LIMIT 1];
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderProductType.ORDER_PRODUCT.toString() 
+            LIMIT 1];
         
         Boolean isOrderItemDiscountable = OrderSummaryService.isOrderItemDiscountable(orderItemSummary);
 
@@ -179,7 +179,8 @@ private class OrderSummaryApiTest {
                 SELECT 
                 TotalLineAdjustmentAmount
                 FROM OrderItemSummary 
-                WHERE Id =: orderItemSummary.Id];
+                WHERE Id =: orderItemSummary.Id
+                AND OrderSummaryId =: orderSummary.Id];
 
             System.assert(adjustSubmitOutput.success, 'Adjust submit failed');
             System.assert(orderItemSummary.TotalLineAdjustmentAmount == adjustment, String.format('Adjustment amount should be {0}', new List<String>{ String.valueOf(adjustment) }));
@@ -196,22 +197,24 @@ private class OrderSummaryApiTest {
         String orderId = createOrder();
 
         /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
         */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
 
-        ConnectApi.OrderSummaryOutputRepresentation output;
-
-        if(orderSummary == null) {
-            output = createOrderSummary(orderId);
+        if(orderSummaries.isEmpty()) {
+            createOrderSummary(orderId);
             orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
         }
+       else {
+            orderSummary = orderSummaries[0];
+        } 
 
-        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE];
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
         OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
         FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
@@ -235,7 +238,7 @@ private class OrderSummaryApiTest {
         Test.stopTest();
 
         OrderPaymentSummary orderPaymentSummary = [SELECT AuthorizationAmount, AvailableToCaptureAmount, BalanceAmount, CapturedAmount, PendingCaptureAmount FROM OrderPaymentSummary WHERE OrderSummaryId =: orderSummary.Id];
-
+        
         System.assert(ensureFundsOutput.success, 'Ensure funds action failed');
         System.assert(orderPaymentSummary.CapturedAmount > 0 || orderPaymentSummary.PendingCaptureAmount > 0 , 'CapturedAmount and PendingCaptureAmount is zero');
     }
@@ -286,8 +289,7 @@ private class OrderSummaryApiTest {
     * @return OutputRepresentation
     */
     private static ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId) {
-        OrderSummaryApi api = new OrderSummaryApi();
-        return api.createOrderSummary(orderId);
+        return new OrderSummaryApi().createOrderSummary(orderId);
     }
 
     /**
@@ -300,9 +302,10 @@ private class OrderSummaryApiTest {
     private static List<ConnectApi.AdjustItemInputRepresentation> buildAdjustInput(OrderItemSummary orderItemSummary, OrderSummary orderSummary, Double adjustment) {
         List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = new List<ConnectApi.AdjustItemInputRepresentation>();
         ConnectApi.AdjustItemInputRepresentation adjustItemInput = new ConnectApi.AdjustItemInputRepresentation();
-        adjustItemInput.adjustmentType = orderSummary.TaxLocaleType.equalsIgnoreCase(Constants.GROSS)
-            ? 'AmountWithTax'
-            : 'AmountWithoutTax';
+
+        adjustItemInput.adjustmentType = orderSummary.TaxLocaleType != null && orderSummary.TaxLocaleType.equalsIgnoreCase(Constants.GROSS)
+                ? 'AmountWithTax'
+                : 'AmountWithoutTax';
         adjustItemInput.amount = adjustment;
         adjustItemInput.orderItemSummaryId = orderItemSummary.Id;
         adjustItemInput.reason = 'Unknown';
