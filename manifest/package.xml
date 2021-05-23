@@ -6,6 +6,7 @@
 		<members>BaseEnumTest</members>
 		<members>CalloutUtils</members>
 		<members>CalloutUtilsTest</members>
+		<members>CardPaymentMethodStatus</members>
 		<members>CardPaymentMethodType</members>
 		<members>Constants</members>
 		<members>CsvParser</members>
@@ -24,6 +25,9 @@
 		<members>LocationType</members>
 		<members>LogUtils</members>
 		<members>LogUtilsTest</members>
+		<members>ObjectUtils</members>
+		<members>ObjectUtilsTest</members>
+		<members>OrderManagementSetup</members>
 		<members>OrderProductStatus</members>
 		<members>OrderProductType</members>
 		<members>OrderSummaryApi</members>

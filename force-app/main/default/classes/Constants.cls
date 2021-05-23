@@ -26,6 +26,7 @@ public class Constants {
     public static final String GROSS = 'Gross';
     public static final String HTTP_REQUEST = 'HTTP request';
     public static final String HTTP_RESPONSE = 'HTTP response';
+    public static final String ID = 'Id';
     public static final String IGNORED = 'Ignored';
     public static final String INACTIVE = 'Inactive';
     public static final String IN_STORE_PICKUP = 'In Store Pickup';

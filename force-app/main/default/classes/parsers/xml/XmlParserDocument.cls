@@ -2,10 +2,24 @@
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
 * @description XML parser document class
+*   suppress reason : //TODO needs refactor
 */
+@SuppressWarnings('PMD.CognitiveComplexity')
+@SuppressWarnings('PMD.CyclomaticComplexity')
+@SuppressWarnings('PMD.StdCyclomaticComplexity')
+@SuppressWarnings('PMD.NcssMethodCount')
 public class XmlParserDocument {
     private Integer count = 0;
 
+    /*
+    * @description Everything in the dom is found as childNodes under this root element
+    */
+    public Element root = new Element('#document');
+
+    /**
+     * @description Constructor to set input
+     * @param input String input
+     */
     public XmlParserDocument(String input) { 
         parseFromString(input); 
     }
@@ -15,7 +29,6 @@ public class XmlParserDocument {
     * @param parent Xml element
     * @param xmlStreamReader Xml stream reader
     */
-    @SuppressWarnings('PMD.CognitiveComplexity')
     public void parseXmlReader(Element parent, XmlStreamReader xmlStreamReader) {
         while(xmlStreamReader.hasNext()) {
             if (xmlStreamReader.getEventType() == XmlTag.START_ELEMENT) {
@@ -96,11 +109,6 @@ public class XmlParserDocument {
         return root; 
     }
 
-    /*
-    * @description Everything in the dom is found as childNodes under this root element
-    */
-    public Element root = new Element('#document');
-
     private void parseFromString(String input) {   
         XmlStreamReader xmlStreamReader = new XmlStreamReader(input);
         xmlStreamReader.setCoalescing(true);
@@ -108,6 +116,9 @@ public class XmlParserDocument {
         parseXmlReader(root, xmlStreamReader); 
     }
 
+    /**
+    * @description Element class to be used in parsing
+    */
     public class Element {
         public Element parentNode = null;
         public String nodeName = ''; 
@@ -115,6 +126,10 @@ public class XmlParserDocument {
         public List<Element> childNodes = new List<Element>();
         public Map<String, String> attributes = new Map<String, String>();
 
+        /**
+        * @description Constructor to set node
+        * @param nodeName Name of the node
+        */
         public Element(String nodeName) {
             this.nodeName = nodeName; 
         } 
@@ -149,17 +164,17 @@ public class XmlParserDocument {
         * @return List of elements
         */
         public List<Element> getElementsByTagName(String tagName) { 
-            List<Element> ret = new List<Element>{};
+            List<Element> elements = new List<Element>{};
 
             if (tagName.equalsIgnoreCase(this.nodeName)) {
-                ret.add(this);
+                elements.add(this);
             }
 
             for (Element childNode: this.childNodes) { 
-                ret.addAll(childNode.getElementsByTagName(tagName));
+                elements.addAll(childNode.getElementsByTagName(tagName));
             }
 
-            return ret;
+            return elements;
         }
     }
 }

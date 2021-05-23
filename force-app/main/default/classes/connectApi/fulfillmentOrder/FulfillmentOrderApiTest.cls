@@ -161,6 +161,7 @@ private class FulfillmentOrderApiTest {
         String order1Id = createOrder();
         String order2Id = createOrder();
         List<String> orderIds = new List<String>{ order1Id, order2Id };
+        List<String> orderSummaryIds = new List<String>{ };
 
         /**
         * In most cases we will have a flow that creates 
@@ -184,6 +185,7 @@ private class FulfillmentOrderApiTest {
         // createFulfillmentOrders request
         List<FulfillmentOrderApi.CreateFulfillmentOrder> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrder>();
         for (OrderSummary orderSummary : orderSummaries) {
+            orderSummaryIds.add(orderSummary.Id);
             FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
             createFulfillmentOrderList.add(createFulfillmentOrder);
         }
@@ -193,7 +195,7 @@ private class FulfillmentOrderApiTest {
         Test.stopTest();
 
         List<FulfillmentOrder> fulfillmentOrders = [SELECT Id FROM FulfillmentOrder 
-            WHERE OrderSummaryId =: orderSummaries[0].Id OR OrderSummaryId =: orderSummaries[1].Id];
+            WHERE OrderSummaryId IN: orderSummaryIds];
 
         System.assert(output.success, 'Create fulfillment orders action failed');
         System.assert(fulfillmentOrders.size() > 1, 'There should be multiple FulfillmentOrder records');

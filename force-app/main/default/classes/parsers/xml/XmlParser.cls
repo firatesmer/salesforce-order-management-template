@@ -2,6 +2,7 @@
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
 * @description XML parser class
+*   suppress reason: ignore
 */
 @SuppressWarnings('PMD.CognitiveComplexity')
 public class XmlParser {
