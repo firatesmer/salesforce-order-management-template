@@ -29,6 +29,7 @@
 		<members>ObjectUtilsTest</members>
 		<members>OrderManagementSetup</members>
 		<members>OrderProductStatus</members>
+		<members>OrderProductSummaryChangeReason</members>
 		<members>OrderProductType</members>
 		<members>OrderSummaryApi</members>
 		<members>OrderSummaryApiTest</members>
@@ -72,5 +73,5 @@
 		<members>TestNamedCredential</members>
 		<name>NamedCredential</name>
 	</types>
-	<version>51.0</version>
+	<version>52.0</version>
 </Package>

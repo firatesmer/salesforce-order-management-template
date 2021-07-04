@@ -115,6 +115,37 @@ public with sharing class OrderSummaryApi extends BaseApi {
         super.insertFailedResults(output);
         return output;
     }
+
+    /**
+    * @description Retrieve the expected change order values for returning 
+    *   one or more OrderItemSummaries from an OrderSummary, without actually
+    *   executing the return
+    * @param orderSummaryId Id of the OrderSummary - required
+    * @param changeInput A list of changes to OrderItemSummaries that make 
+    *   up an order change, such as a cancel or return - requrired
+    * @return Preview return output
+    */
+    public ConnectApi.PreviewReturnOutputRepresentation previewReturn(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput) {
+        ConnectApi.PreviewReturnOutputRepresentation output = ConnectApi.OrderSummary.previewReturn(orderSummaryId, changeInput);
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    // /**
+    // * @description Create a credit memo to represent the refund for one or 
+    // *  more change orders associated with an OrderSummary
+    // * @param orderSummaryId Id of the OrderSummary
+    // * @param changeOrderIds The list of change order Ids
+    // * @return Create credit memo output
+    // */
+    // public ConnectApi.CreateCreditMemoOutputRepresentation createCreditMemo(String orderSummaryId, List<String> changeOrderIds) {
+    //     ConnectApi.CreateCreditMemoInputRepresentation input = new ConnectApi.CreateCreditMemoInputRepresentation();
+    //     input.changeOrderIds = changeOrderIds;
+
+    //     ConnectApi.CreateCreditMemoOutputRepresentation output = ConnectApi.OrderSummary.createCreditMemo(orderSummaryId, input);
+    //     super.insertFailedResults(output);
+    //     return output;
+    // }
    
 
     // public ConnectApi.SubmitCancelOutputRepresentation submitCancel(String orderSummaryId, List<OrderItemSummary> orderItemSummaries) {

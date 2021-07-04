@@ -40,7 +40,7 @@ global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter
             }
             else if (requestType == commercepayments.RequestType.Tokenize) 
             {
-                response = createTokenizeResponse((commercepayments.PaymentMethodTokenizationRequest)gatewayContext.getPaymentRequest());
+                response = createTokenizeResponse();
             }
             return response;
         }

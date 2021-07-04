@@ -4,10 +4,7 @@
 * @description XML parser document class
 *   suppress reason : //TODO needs refactor
 */
-@SuppressWarnings('PMD.CognitiveComplexity')
-@SuppressWarnings('PMD.CyclomaticComplexity')
-@SuppressWarnings('PMD.StdCyclomaticComplexity')
-@SuppressWarnings('PMD.NcssMethodCount')
+@SuppressWarnings('PMD.CognitiveComplexity, PMD.CyclomaticComplexity, PMD.StdCyclomaticComplexity, PMD.NcssMethodCount')
 public class XmlParserDocument {
     private Integer count = 0;
 

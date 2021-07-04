@@ -4,14 +4,11 @@
 * @description Sandbox preparation class
 *   suppress reason: Salesforce limitation
 */
-@SuppressWarnings('PMD.AvoidGlobalModifier')
 public without sharing class OrderManagementSetup {
     /**
     * @description Calls all methods related data creation
     */
     public static void execute() {
-        // Savepoint point = Database.setSavepoint();
-
         try {
             insertPaymentGatewayAndProvider();
 
@@ -25,8 +22,7 @@ public without sharing class OrderManagementSetup {
 
             insertLocation();
         } catch (Exception ex) {
-            // Database.rollback(point);
-            System.debug(LoggingLevel.ERROR, String.format('Error - Line: {0} - Message {1}', new List<String>{ String.valueof(ex.getLineNumber()), ex.getMessage() }));
+            System.debug(LoggingLevel.ERROR, String.format('Error - Line: {0} - Message: {1}', new List<String>{ String.valueof(ex.getLineNumber()), ex.getMessage() }));
         }
     }
 

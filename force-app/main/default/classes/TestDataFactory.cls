@@ -369,6 +369,78 @@ public class TestDataFactory {
         return paymentMethod;
     }
 
+    /**
+    * @description Creates Order for test methods
+    *   Test class containing a test setup method cannot 
+    *   have any methods annotated with "SeeAllData=true"
+    * @return Id of the Order
+    */
+    public static String createOrder() {
+        Schema.Location location = TestDataFactory.createLocation(Constants.WAREHOUSE, Constants.WAREHOUSE);
+        insert location;
+
+        List<TestDataFactory.CreateOrderItem> orderItemList = new List<TestDataFactory.CreateOrderItem>();
+
+        // #1 order item
+        TestDataFactory.CreateOrderItem product1 = new TestDataFactory.CreateOrderItem();
+        product1.type = OrderProductType.ORDER_PRODUCT;
+        product1.productCode = '001';
+        product1.quantity = 2;
+        product1.unitPrice = 10;
+
+        // #2 order item
+        TestDataFactory.CreateOrderItem product2 = new TestDataFactory.CreateOrderItem();
+        product2.type = OrderProductType.ORDER_PRODUCT;
+        product2.productCode = '002';
+        product2.quantity = 2;
+        product2.unitPrice = 10;
+
+        // #3 order item
+        TestDataFactory.CreateOrderItem shipping = new TestDataFactory.CreateOrderItem();
+        shipping.type = OrderProductType.DELIVERY_CHARGE;
+        shipping.productCode = '003';
+        shipping.quantity = 2;
+        shipping.unitPrice = 10;
+        
+        orderItemList.add(product1);
+        orderItemList.add(product2);
+        orderItemList.add(shipping);
+
+        return TestDataFactory.createOrderAndRelatedObjects(orderItemList, location.Id)?.Id;
+    }
+
+    /**
+    * @description Creates OrderSummary for test methods
+    * @param orderId The Id of the order
+    * @return OutputRepresentation
+    */
+    public static ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId) {
+        return new OrderSummaryApi().createOrderSummary(orderId);
+    }
+
+    /**
+    * @description Builds input for adjustPreview & adjustSubmit
+    * @param orderItemSummary OrderItemSummary
+    * @param orderSummary OrderSummary
+    * @param reason Reason for change
+    * @param adjustment Adjustment amout of the items
+    * @return List of ConnectApi.AdjustItemInputRepresentation
+    */
+    @SuppressWarnings('PMD.ExcessiveParameterList')
+    public static List<ConnectApi.AdjustItemInputRepresentation> buildAdjustInput(OrderItemSummary orderItemSummary, OrderSummary orderSummary, String reason, Double adjustment) {
+        List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = new List<ConnectApi.AdjustItemInputRepresentation>();
+
+        ConnectApi.AdjustItemInputRepresentation adjustItemInput = new ConnectApi.AdjustItemInputRepresentation();
+        adjustItemInput.adjustmentType = orderSummary.TaxLocaleType != null && orderSummary.TaxLocaleType.equalsIgnoreCase(Constants.GROSS)
+                ? Constants.AMOUNT_WITH_TAX
+                : Constants.AMOUNT_WITHOUT_TAX;
+        adjustItemInput.amount = adjustment;
+        adjustItemInput.orderItemSummaryId = orderItemSummary.Id;
+        adjustItemInput.reason = reason;
+        adjustItemInputList.add(adjustItemInput);
+
+        return adjustItemInputList;
+    }
 
     /**
     * @description Model to use to create 

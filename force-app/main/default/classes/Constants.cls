@@ -8,6 +8,8 @@ public class Constants {
     public static final String ACTIVATED = 'Activated';
     public static final String ALLOCATED = 'Allocated';
     public static final String AMERICAN_EXPRESS = 'American Express';
+    public static final String AMOUNT_WITH_TAX = 'AmountWithTax';
+    public static final String AMOUNT_WITHOUT_TAX = 'AmountWithoutTax';
     public static final String APPROVED = 'Approved';
     public static final String ASSIGNED = 'Assigned';
     public static final String CANCELED = 'Canceled';
@@ -56,6 +58,7 @@ public class Constants {
     public static final String STORE = 'Store';
     public static final String SUBMITTED = 'Submitted';
     public static final String TEST = 'Test';
+    public static final String UNKNOWN = 'Unknown';
     public static final String VIRTUAL_C = 'Virtual';
     public static final String VISA = 'Visa';
     public static final String WAITING_TO_FULFILL = 'Waiting to Fulfill';
