@@ -17,12 +17,23 @@ public with sharing class OrderSummaryService {
     }
 
     /**
+    * @description Checks whether the order item is cancelable
+    * @param orderItemSummary OrderItemSummary
+    * @return Cancelable result
+    */
+    public static Boolean isOrderItemCancelable(OrderItemSummary orderItemSummary) {
+        return orderItemSummary.Type != OrderProductType.DELIVERY_CHARGE.toString()
+            && orderItemSummary.QuantityAvailableToCancel > 0;
+    }
+
+    /**
     * @description Checks whether the order item is returnable
     * @param orderItemSummary OrderItemSummary
     * @return Returnable result
     */
     public static Boolean isOrderItemReturnable(OrderItemSummary orderItemSummary) {
-        return orderItemSummary.QuantityAvailableToReturn > 0;
+        return orderItemSummary.Type != OrderProductType.DELIVERY_CHARGE.toString()
+            && orderItemSummary.QuantityAvailableToReturn > 0;
     }
 
     /**
@@ -42,6 +53,25 @@ public with sharing class OrderSummaryService {
         }
 
         return discountableOrderItems;
+    }
+
+    /**
+    * @description Gets cancelable OrderItemSummaries based on given list
+    * @param orderItemSummaries List of OrderItemSummary
+    * @return OrderItemSummary list
+    */
+    public static List<OrderItemSummary> getCancelableOrderItems(List<OrderItemSummary> orderItemSummaries) {
+        List<OrderItemSummary> cancelableOrderItems = new List<OrderItemSummary>();
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+            Boolean isOrderItemCancelable = isOrderItemCancelable(orderItemSummary);
+            
+            if (isOrderItemCancelable) {
+                cancelableOrderItems.add(orderItemSummary);
+            }
+        }
+
+        return cancelableOrderItems;
     }
 
     /**
