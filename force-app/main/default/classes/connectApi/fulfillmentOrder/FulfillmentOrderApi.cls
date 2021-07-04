@@ -101,7 +101,7 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     *   OrderDeliveryGroups in a single request
     *   suppress reason: ignore
     * @param createFulfillmentOrderList CreateFulfillmentOrder model list
-    * @return MultipleFulfillmentOrder output
+    * @return Create multiple fulfillment order output
     */
     public ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrder(List<CreateFulfillmentOrder> createFulfillmentOrderList) {
         ConnectApi.MultipleFulfillmentOrderInputRepresentation multipleFulfillmentOrderInput = new ConnectApi.MultipleFulfillmentOrderInputRepresentation();
@@ -158,6 +158,20 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     }
 
     /**
+    * @description Create Invoices for multiple FulfillmentOrders 
+    * @param fulfillmentOrderIds The list of FulfillmentOrder Ids
+    * @return Create multiple invoices output
+    */
+    public ConnectApi.MultipleFulfillmentOrderInvoicesOutputRepresentation createMultipleInvoices(List<String> fulfillmentOrderIds) {
+        ConnectApi.MultipleFulfillmentOrderInvoicesInputRepresentation input = new ConnectApi.MultipleFulfillmentOrderInvoicesInputRepresentation();
+        input.fulfillmentOrderIds = fulfillmentOrderIds;
+
+        ConnectApi.MultipleFulfillmentOrderInvoicesOutputRepresentation output = ConnectApi.FulfillmentOrder.createMultipleInvoices(input);
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    /**
     * @description Model for create FulfillmentOrder action
     */
     public class CreateFulfillmentOrder {
@@ -181,6 +195,11 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
         return orderSummaryIdList;
     }
 
+    /**
+    * @description Gets OrderSummaryId to OrderDeliveryGroupSummary map
+    * @param orderDeliveryGroupSummaryList List of OrderDeliveryGroupSummary records
+    * @return Map of OrderSummaryId to OrderDeliveryGroupSummary
+    */
     private Map<String, List<OrderDeliveryGroupSummary>> getOrderDeliveryGroupSummaryMap(List<OrderDeliveryGroupSummary> orderDeliveryGroupSummaryList) {
         Map<String, List<OrderDeliveryGroupSummary>> orderSummaryIdToOrderDeliveryGroupSummaryList = new Map<String, List<OrderDeliveryGroupSummary>>();
 
@@ -199,6 +218,11 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
         return orderSummaryIdToOrderDeliveryGroupSummaryList;
     }
 
+    /**
+    * @description Gets OrderDeliveryGroupSummaryId to list of OrderItemSummary map
+    * @param orderDeliveryGroupSummaryList List of OrderDeliveryGroupSummary records
+    * @return Map of  OrderDeliveryGroupSummaryId to list of OrderItemSummary
+    */
     private Map<String, List<OrderItemSummary>> getOrderItemSummaryMap(List<OrderDeliveryGroupSummary> orderDeliveryGroupSummaryList) {
         Map<String, List<OrderItemSummary>> orderDeliveryGroupSummaryIdToOrderItemSummaryList = new Map<String, List<OrderItemSummary>>();
 

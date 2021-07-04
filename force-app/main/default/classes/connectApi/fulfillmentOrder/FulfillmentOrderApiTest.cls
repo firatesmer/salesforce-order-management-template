@@ -12,7 +12,7 @@ private class FulfillmentOrderApiTest {
     @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateFulfillmentOrders() {
-        String orderId = createOrder();
+        String orderId = TestDataFactory.createOrder();
 
         /**
         * In most cases we will have a flow that creates 
@@ -25,7 +25,7 @@ private class FulfillmentOrderApiTest {
         OrderSummary orderSummary;
 
         if(orderSummaries.isEmpty()) {
-            createOrderSummary(orderId);
+            TestDataFactory.createOrderSummary(orderId);
             orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
         }
         else {
@@ -35,7 +35,7 @@ private class FulfillmentOrderApiTest {
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
         // createFulfillmentOrders request
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
+        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
 
         Test.startTest();
         ConnectApi.FulfillmentOrderOutputRepresentation output = new FulfillmentOrderApi().createFulfillmentOrders(createFulfillmentOrder);
@@ -54,7 +54,7 @@ private class FulfillmentOrderApiTest {
     @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateInvoice() {
-        String orderId = createOrder();
+        String orderId = TestDataFactory.createOrder();
 
         FulfillmentOrderApi api = new FulfillmentOrderApi();
 
@@ -69,7 +69,7 @@ private class FulfillmentOrderApiTest {
         OrderSummary orderSummary;
 
         if(orderSummaries.isEmpty()) {
-            createOrderSummary(orderId);
+            TestDataFactory.createOrderSummary(orderId);
             orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
         }
         else {
@@ -79,7 +79,7 @@ private class FulfillmentOrderApiTest {
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
         // createFulfillmentOrders request
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
+        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
         api.createFulfillmentOrders(createFulfillmentOrder);
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE OrderSummaryID =: orderSummary.Id];
@@ -100,8 +100,8 @@ private class FulfillmentOrderApiTest {
     */
     @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
-    static void shouldcancelFulfillmentOrderLineItems() {
-        String orderId = createOrder();
+    static void shouldCancelFulfillmentOrderLineItems() {
+        String orderId = TestDataFactory.createOrder();
 
         /**
         * In most cases we will have a flow that creates 
@@ -114,7 +114,7 @@ private class FulfillmentOrderApiTest {
         OrderSummary orderSummary;
 
         if(orderSummaries.isEmpty()) {
-            createOrderSummary(orderId);
+            TestDataFactory.createOrderSummary(orderId);
             orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
         }
         else {
@@ -126,7 +126,7 @@ private class FulfillmentOrderApiTest {
         FulfillmentOrderApi api = new FulfillmentOrderApi();
 
         // createFulfillmentOrders request
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
+        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
         api.createFulfillmentOrders(createFulfillmentOrder);
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE OrderSummaryID =: orderSummary.Id];
@@ -158,8 +158,8 @@ private class FulfillmentOrderApiTest {
     @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateMultipleFulfillmentOrders() {
-        String order1Id = createOrder();
-        String order2Id = createOrder();
+        String order1Id = TestDataFactory.createOrder();
+        String order2Id = TestDataFactory.createOrder();
         List<String> orderIds = new List<String>{ order1Id, order2Id };
         List<String> orderSummaryIds = new List<String>{ };
 
@@ -173,8 +173,8 @@ private class FulfillmentOrderApiTest {
         List<OrderSummary> orderSummaries = [SELECT Id FROM OrderSummary WHERE OriginalOrderId IN: orderIds];
 
         if(orderSummaries.isEmpty()) {
-            createOrderSummary(order1Id);
-            createOrderSummary(order2Id);
+            TestDataFactory.createOrderSummary(order1Id);
+            TestDataFactory.createOrderSummary(order2Id);
             orderSummaries = [SELECT Id FROM OrderSummary WHERE OriginalOrderId IN: orderIds];
         }
 
@@ -186,7 +186,7 @@ private class FulfillmentOrderApiTest {
         List<FulfillmentOrderApi.CreateFulfillmentOrder> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrder>();
         for (OrderSummary orderSummary : orderSummaries) {
             orderSummaryIds.add(orderSummary.Id);
-            FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
+            FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
             createFulfillmentOrderList.add(createFulfillmentOrder);
         }
 
@@ -202,67 +202,62 @@ private class FulfillmentOrderApiTest {
     }
 
     /**
-    * @description Creates Order for test methods
-    *   Test class containing a test setup method cannot 
-    *   have any methods annotated with "SeeAllData=true"
-    * @return Id of the Order
+    * @description Test method of FulfillmentOrderApi.createMultipleFulfillmentOrder
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    private static String createOrder() {
-        Schema.Location location = TestDataFactory.createLocation(Constants.WAREHOUSE, Constants.WAREHOUSE);
-        insert location;
+    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @IsTest(SeeAllData=true)
+    static void shouldCreateMultipleInvoices() {
+        String order1Id = TestDataFactory.createOrder();
+        String order2Id = TestDataFactory.createOrder();
+        List<String> orderIds = new List<String>{ order1Id, order2Id };
+        List<String> orderSummaryIds = new List<String>{ };
 
-        List<TestDataFactory.CreateOrderItem> orderItemList = new List<TestDataFactory.CreateOrderItem>();
+        /**
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
+        */
+        List<OrderSummary> orderSummaries = [SELECT Id FROM OrderSummary WHERE OriginalOrderId IN: orderIds];
 
-        // #1 order item
-        TestDataFactory.CreateOrderItem product1 = new TestDataFactory.CreateOrderItem();
-        product1.type = OrderProductType.ORDER_PRODUCT;
-        product1.productCode = '001';
-        product1.quantity = 2;
-        product1.unitPrice = 10;
+        if(orderSummaries.isEmpty()) {
+            TestDataFactory.createOrderSummary(order1Id);
+            TestDataFactory.createOrderSummary(order2Id);
+            orderSummaries = [SELECT Id FROM OrderSummary WHERE OriginalOrderId IN: orderIds];
+        }
 
-        // #2 order item
-        TestDataFactory.CreateOrderItem product2 = new TestDataFactory.CreateOrderItem();
-        product2.type = OrderProductType.ORDER_PRODUCT;
-        product2.productCode = '002';
-        product2.quantity = 2;
-        product2.unitPrice = 10;
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
-        // #3 order item
-        TestDataFactory.CreateOrderItem shipping = new TestDataFactory.CreateOrderItem();
-        shipping.type = OrderProductType.DELIVERY_CHARGE;
-        shipping.productCode = '003';
-        shipping.quantity = 2;
-        shipping.unitPrice = 10;
+        FulfillmentOrderApi api = new FulfillmentOrderApi();
+
+        // createFulfillmentOrders request
+        List<FulfillmentOrderApi.CreateFulfillmentOrder> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrder>();
+        for (OrderSummary orderSummary : orderSummaries) {
+            orderSummaryIds.add(orderSummary.Id);
+            FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
+            createFulfillmentOrderList.add(createFulfillmentOrder);
+        }
+
+        ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrderOutput = api.createMultipleFulfillmentOrder(createFulfillmentOrderList);
+
+        List<String> fulfillmentOrderIds = new List<String>();
+
+        for (ConnectApi.FulfillmentGroupOutputRepresentation fulfillmentGroupOutput : createMultipleFulfillmentOrderOutput.fulfillmentOrders) {
+            fulfillmentOrderIds.add(fulfillmentGroupOutput.fulfillmentOrderId);
+        }
+
+        Test.startTest();
+        ConnectApi.MultipleFulfillmentOrderInvoicesOutputRepresentation output = api.createMultipleInvoices(fulfillmentOrderIds);
+        Test.stopTest();
+
+        List<FulfillmentOrder> fulfillmentOrders = [SELECT InvoiceId FROM FulfillmentOrder WHERE Id IN: fulfillmentOrderIds];
+
+        System.assert(output.success, 'Create multiple invoices action failed');
         
-        orderItemList.add(product1);
-        orderItemList.add(product2);
-        orderItemList.add(shipping);
-
-        return TestDataFactory.createOrderAndRelatedObjects(orderItemList, location.Id)?.Id;
-    }
-
-    /**
-    * @description Creates OrderSummary for test methods
-    * @param orderId The Id of the Order
-    * @return OutputRepresentation
-    */
-    private static ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId) {
-        OrderSummaryApi api = new OrderSummaryApi();
-        return api.createOrderSummary(orderId);
-    }
-
-    /**
-    * @description Builds request for create FulfillmentOrder
-    * @param orderSummaryId The Id of the OrderSummary
-    * @param locationId The Id of the Location
-    * @param fulfillmentType The type of the FulfillmentOrder
-    * @return CreateFulfillmentOrder model
-    */
-    private static FulfillmentOrderApi.CreateFulfillmentOrder buildCreateFulfillmentOrderRequest(String orderSummaryId, String locationId, String fulfillmentType) {
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
-        createFulfillmentOrder.fulfillmentType = fulfillmentType;
-        createFulfillmentOrder.locationId = locationId;
-        createFulfillmentOrder.orderSummaryId = orderSummaryId;
-        return createFulfillmentOrder;
+        for (FulfillmentOrder fulfillmentOrder : fulfillmentOrders) {
+            System.assert(String.isNotEmpty(fulfillmentOrder.InvoiceId), 'No invoice found');
+        }
     }
 }
