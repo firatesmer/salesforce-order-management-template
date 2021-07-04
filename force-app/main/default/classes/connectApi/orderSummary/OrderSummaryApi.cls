@@ -174,55 +174,19 @@ public with sharing class OrderSummaryApi extends BaseApi {
         return output;
     }
 
+    /**
+    * @description Create a credit memo to represent the refund for one or 
+    *  more change orders associated with an OrderSummary
+    * @param orderSummaryId Id of the OrderSummary
+    * @param changeOrderIds The list of change order Ids
+    * @return Create credit memo output
+    */
+    public ConnectApi.CreateCreditMemoOutputRepresentation createCreditMemo(String orderSummaryId, List<String> changeOrderIds) {
+        ConnectApi.CreateCreditMemoInputRepresentation input = new ConnectApi.CreateCreditMemoInputRepresentation();
+        input.changeOrderIds = changeOrderIds;
 
-
-
-
-
-
-
-
-
-
-    // /**
-    // * @description Create a credit memo to represent the refund for one or 
-    // *  more change orders associated with an OrderSummary
-    // * @param orderSummaryId Id of the OrderSummary
-    // * @param changeOrderIds The list of change order Ids
-    // * @return Create credit memo output
-    // */
-    // public ConnectApi.CreateCreditMemoOutputRepresentation createCreditMemo(String orderSummaryId, List<String> changeOrderIds) {
-    //     ConnectApi.CreateCreditMemoInputRepresentation input = new ConnectApi.CreateCreditMemoInputRepresentation();
-    //     input.changeOrderIds = changeOrderIds;
-
-    //     ConnectApi.CreateCreditMemoOutputRepresentation output = ConnectApi.OrderSummary.createCreditMemo(orderSummaryId, input);
-    //     super.insertFailedResults(output);
-    //     return output;
-    // }
-   
-
-    // public ConnectApi.SubmitCancelOutputRepresentation submitCancel(String orderSummaryId, List<OrderItemSummary> orderItemSummaries) {
-    //     ConnectApi.ChangeInputRepresentation changeInput = new ConnectApi.ChangeInputRepresentation();
-    //     List<ConnectApi.ChangeItemInputRepresentation> changeItemInputs = new List<ConnectApi.ChangeItemInputRepresentation>();
-
-    //     for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-    //         // no cancellation for shipping items
-    //         if (orderItemSummary.Type.equalsIgnoreCase(OrderProductType.DELIVERY_CHARGE.toString())) {
-    //             continue;
-    //         }
-
-    //         ConnectApi.ChangeItemInputRepresentation changeItemInput = new ConnectApi.ChangeItemInputRepresentation();
-    //         changeItemInput.orderItemSummaryId = orderItemSummary.Id;
-    //         changeItemInput.quantity = orderItemSummary.Quantity;
-    //         changeItemInput.reason = 'Unknown';
-    //         changeItemInput.shippingReductionFlag = false;
-    //         changeItemInputs.add(changeItemInput);
-    //     }
-
-    //     changeInput.changeItems = changeItemInputs;
-
-    //     ConnectApi.SubmitCancelOutputRepresentation output = ConnectApi.OrderSummary.submitCancel(orderSummaryId, changeInput);
-    //     super.insertFailedResults(output);
-    //     return output;
-    // }
+        ConnectApi.CreateCreditMemoOutputRepresentation output = ConnectApi.OrderSummary.createCreditMemo(orderSummaryId, input);
+        super.insertFailedResults(output);
+        return output;
+    }
 }

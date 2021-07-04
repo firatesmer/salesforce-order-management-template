@@ -11,7 +11,7 @@ private class OrderSummaryApiTest {
     */
     @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
-    static void createOrderSummary() {
+    static void shouldCreateOrderSummary() {
         String orderId = TestDataFactory.createOrder();
 
         /**
@@ -522,6 +522,89 @@ private class OrderSummaryApiTest {
                 System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderProductStatus.CANCELED.toString()), 'Status of the order product is not CANCELED');
                 System.assert(orderItemSummary.QuantityCanceled > 0, 'The quantity canceled should greater than zero');
             }
+        }
+    }
+
+    /**
+    * @description Test method of OrderSummaryApi.createCreditMemo
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
+    */
+    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @IsTest(SeeAllData=true)
+    static void shouldCreateCreditMemo() {
+        String orderId = TestDataFactory.createOrder();
+
+        /**
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
+        */
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
+
+        if(orderSummaries.isEmpty()) {
+            TestDataFactory.createOrderSummary(orderId);
+            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        }
+       else {
+            orderSummary = orderSummaries[0];
+        } 
+
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
+
+        OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
+
+        // create FulfillmentOrder
+        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
+        createFulfillmentOrder.locationId = location.Id;
+        createFulfillmentOrder.orderSummaryId = orderSummary.Id;
+        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.toString();
+
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder);
+        String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
+
+        FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.toString();
+        DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
+
+        List<OrderItemSummary> orderItemSummaries = [
+            SELECT Type, Quantity, QuantityAvailableToReturn
+            FROM OrderItemSummary 
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderProductType.ORDER_PRODUCT.toString()];
+
+        Boolean areOrderItemsReturnable = false;
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            if (!areOrderItemsReturnable) {
+                break;
+            }
+        }
+
+        System.assert(areOrderItemsReturnable, 'Order product is not returnable');
+
+        if (areOrderItemsReturnable) {
+            // prepare change input
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN.toString(), true);
+
+            // return
+            ConnectApi.SubmitReturnOutputRepresentation submitReturnOutput = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
+            
+            Test.startTest();
+            ConnectApi.CreateCreditMemoOutputRepresentation output = orderSummaryApi.createCreditMemo(orderSummary.Id, new List<Id>{ submitReturnOutput.changeOrderId });
+            Test.stopTest();
+
+            String creditMemoId = output.creditMemoId;
+
+            System.assert(output.success, 'Create credit memo action failed');
+
+            List<CreditMemo> creditMemos = [SELECT Id FROM CreditMemo WHERE Id =: creditMemoId];
+
+            System.assert(!creditMemos.isEmpty(), 'No CreditMemo record found');
         }
     }
 }

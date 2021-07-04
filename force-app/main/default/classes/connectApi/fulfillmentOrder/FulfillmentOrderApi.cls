@@ -172,15 +172,6 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     }
 
     /**
-    * @description Model for create FulfillmentOrder action
-    */
-    public class CreateFulfillmentOrder {
-        public String locationId;
-        public String orderSummaryId;
-        public String fulfillmentType;
-    }
-
-    /**
     * @description Returns Ids of OrderSummary list from request
     * @param createFulfillmentOrderList Request list
     * @return OrderSummary Id list
@@ -244,5 +235,14 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
         }
 
         return orderDeliveryGroupSummaryIdToOrderItemSummaryList;
+    }
+
+    /**
+    * @description Model for create FulfillmentOrder action
+    */
+    public class CreateFulfillmentOrder {
+        public String locationId;
+        public String orderSummaryId;
+        public String fulfillmentType;
     }
 }
