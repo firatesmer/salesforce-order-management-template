@@ -157,7 +157,7 @@ private class FulfillmentOrderApiTest {
     */
     @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
-    static void shouldCreateMultipleFulfillmentOrders() {
+    static void shouldCreateMultipleFulfillmentOrder() {
         String order1Id = TestDataFactory.createOrder();
         String order2Id = TestDataFactory.createOrder();
         List<String> orderIds = new List<String>{ order1Id, order2Id };
