@@ -2,7 +2,9 @@
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
 * @description OrderSummary Api test class
+*   suppress reason : TODO needs refactor
 */
+@SuppressWarnings('PMD.CognitiveComplexity')
 @isTest
 private class OrderSummaryApiTest {
     /**
@@ -43,7 +45,7 @@ private class OrderSummaryApiTest {
     */
     @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
-    static void shouldCreateOrderSummaryWithName() {
+    static void shouldCreateOrderSummaryWithAdditionalInfo() {
         String orderId = TestDataFactory.createOrder();
 
         /**
@@ -554,7 +556,6 @@ private class OrderSummaryApiTest {
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
-        OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
         FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
         // create FulfillmentOrder
@@ -563,8 +564,7 @@ private class OrderSummaryApiTest {
         createFulfillmentOrder.orderSummaryId = orderSummary.Id;
         createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.toString();
 
-        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder);
-        String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
+        String fulfillmentOrderId = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder).fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
         fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.toString();
@@ -588,6 +588,8 @@ private class OrderSummaryApiTest {
         System.assert(areOrderItemsReturnable, 'Order product is not returnable');
 
         if (areOrderItemsReturnable) {
+            OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+
             // prepare change input
             ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN.toString(), true);
 
@@ -605,6 +607,86 @@ private class OrderSummaryApiTest {
             List<CreditMemo> creditMemos = [SELECT Id FROM CreditMemo WHERE Id =: creditMemoId];
 
             System.assert(!creditMemos.isEmpty(), 'No CreditMemo record found');
+        }
+    }
+
+    /**
+    * @description Test method of OrderSummaryApi.ensureRefundsAsync
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
+    */
+    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @IsTest(SeeAllData=true)
+    static void shouldEnsureRefunds() {
+        String orderId = TestDataFactory.createOrder();
+
+        /**
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
+        */
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
+
+        if(orderSummaries.isEmpty()) {
+            TestDataFactory.createOrderSummary(orderId);
+            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        }
+       else {
+            orderSummary = orderSummaries[0];
+        } 
+
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
+
+        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
+
+        // create FulfillmentOrder
+        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
+        createFulfillmentOrder.locationId = location.Id;
+        createFulfillmentOrder.orderSummaryId = orderSummary.Id;
+        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.toString();
+
+        String fulfillmentOrderId = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder).fulfillmentOrderIds[0];
+
+        FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.toString();
+        DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
+
+        List<OrderItemSummary> orderItemSummaries = [
+            SELECT Type, Quantity, QuantityAvailableToReturn
+            FROM OrderItemSummary 
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderProductType.ORDER_PRODUCT.toString()];
+
+        Boolean areOrderItemsReturnable = false;
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            if (!areOrderItemsReturnable) {
+                break;
+            }
+        }
+
+        System.assert(areOrderItemsReturnable, 'Order product is not returnable');
+
+        if (areOrderItemsReturnable) {
+            OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+
+            // prepare change input
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN.toString(), true);
+
+            // return
+            ConnectApi.SubmitReturnOutputRepresentation submitReturnOutput = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
+
+            // create credit memo
+            ConnectApi.CreateCreditMemoOutputRepresentation creditMemoOutput = orderSummaryApi.createCreditMemo(orderSummary.Id, new List<Id>{ submitReturnOutput.changeOrderId });
+
+            Test.startTest();
+            ConnectApi.EnsureRefundsAsyncOutputRepresentation output = orderSummaryApi.ensureRefundsAsync(orderSummary.Id, creditMemoOutput.creditMemoId, 0);
+            Test.stopTest();
+
+            System.assert(output.success, 'Ensure refunds action failed');
         }
     }
 }

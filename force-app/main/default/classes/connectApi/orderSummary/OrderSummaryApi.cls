@@ -177,8 +177,8 @@ public with sharing class OrderSummaryApi extends BaseApi {
     /**
     * @description Create a credit memo to represent the refund for one or 
     *  more change orders associated with an OrderSummary
-    * @param orderSummaryId Id of the OrderSummary
-    * @param changeOrderIds The list of change order Ids
+    * @param orderSummaryId Id of the OrderSummary - required
+    * @param changeOrderIds The list of change order Ids - required
     * @return Create credit memo output
     */
     public ConnectApi.CreateCreditMemoOutputRepresentation createCreditMemo(String orderSummaryId, List<String> changeOrderIds) {
@@ -186,6 +186,31 @@ public with sharing class OrderSummaryApi extends BaseApi {
         input.changeOrderIds = changeOrderIds;
 
         ConnectApi.CreateCreditMemoOutputRepresentation output = ConnectApi.OrderSummary.createCreditMemo(orderSummaryId, input);
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    /**
+    * @description Ensure refunds for a credit memo or excess 
+    *   funds by sending a request to a payment provider. This 
+    *   method inserts a background operation into an asynchronous
+    *   job queue and returns the ID of that operation so you can
+    *   track its status. Payment gateway responses appear in the
+    *   payment gateway log and do not affect the background operation status
+    * @param orderSummaryId Id of the OrderSummary - required
+    * @param creditMemoId The Id of the CreditMemo - required
+    * @param excessFundsAmount Amount of excess funds to refund - optional
+    * @return Ensure funds async output
+    */
+    public ConnectApi.EnsureRefundsAsyncOutputRepresentation ensureRefundsAsync(String orderSummaryId, String creditMemoId, Double excessFundsAmount) {
+        ConnectApi.EnsureRefundsAsyncInputRepresentation ensureRefundAsyncInput = new ConnectApi.EnsureRefundsAsyncInputRepresentation();
+        ensureRefundAsyncInput.creditMemoId = creditMemoId;
+
+        if (excessFundsAmount != null && excessFundsAmount > 0) {
+            ensureRefundAsyncInput.excessFundsAmount = excessFundsAmount;
+        }
+
+        ConnectApi.EnsureRefundsAsyncOutputRepresentation output = ConnectApi.OrderSummary.ensureRefundsAsync(orderSummaryId, ensureRefundAsyncInput);
         super.insertFailedResults(output);
         return output;
     }
