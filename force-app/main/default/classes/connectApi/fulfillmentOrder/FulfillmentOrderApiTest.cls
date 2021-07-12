@@ -14,23 +14,7 @@ private class FulfillmentOrderApiTest {
     static void shouldCreateFulfillmentOrders() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-        else {
-            orderSummary = orderSummaries[0];
-        }
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
@@ -58,23 +42,7 @@ private class FulfillmentOrderApiTest {
 
         FulfillmentOrderApi api = new FulfillmentOrderApi();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-        else {
-            orderSummary = orderSummaries[0];
-        }
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
@@ -103,23 +71,7 @@ private class FulfillmentOrderApiTest {
     static void shouldCancelFulfillmentOrderLineItems() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-        else {
-            orderSummary = orderSummaries[0];
-        }
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
@@ -160,23 +112,14 @@ private class FulfillmentOrderApiTest {
     static void shouldCreateMultipleFulfillmentOrder() {
         String order1Id = TestDataFactory.createOrder();
         String order2Id = TestDataFactory.createOrder();
-        List<String> orderIds = new List<String>{ order1Id, order2Id };
-        List<String> orderSummaryIds = new List<String>{ };
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT Id FROM OrderSummary WHERE OriginalOrderId IN: orderIds];
+        OrderSummary orderSummary1 = TestDataFactory.createOrderSummary(order1Id);
+        OrderSummary orderSummary2 = TestDataFactory.createOrderSummary(order2Id);
 
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(order1Id);
-            TestDataFactory.createOrderSummary(order2Id);
-            orderSummaries = [SELECT Id FROM OrderSummary WHERE OriginalOrderId IN: orderIds];
-        }
+        List<OrderSummary> orderSummaries = new List<OrderSummary>
+        {
+            orderSummary1, orderSummary2
+        };
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
@@ -185,7 +128,6 @@ private class FulfillmentOrderApiTest {
         // createFulfillmentOrders request
         List<FulfillmentOrderApi.CreateFulfillmentOrder> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrder>();
         for (OrderSummary orderSummary : orderSummaries) {
-            orderSummaryIds.add(orderSummary.Id);
             FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
             createFulfillmentOrderList.add(createFulfillmentOrder);
         }
@@ -195,7 +137,7 @@ private class FulfillmentOrderApiTest {
         Test.stopTest();
 
         List<FulfillmentOrder> fulfillmentOrders = [SELECT Id FROM FulfillmentOrder 
-            WHERE OrderSummaryId IN: orderSummaryIds];
+            WHERE OrderSummaryId =: orderSummaries];
 
         System.assert(output.success, 'Create fulfillment orders action failed');
         System.assert(fulfillmentOrders.size() > 1, 'There should be multiple FulfillmentOrder records');
@@ -210,23 +152,14 @@ private class FulfillmentOrderApiTest {
     static void shouldCreateMultipleInvoices() {
         String order1Id = TestDataFactory.createOrder();
         String order2Id = TestDataFactory.createOrder();
-        List<String> orderIds = new List<String>{ order1Id, order2Id };
-        List<String> orderSummaryIds = new List<String>{ };
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT Id FROM OrderSummary WHERE OriginalOrderId IN: orderIds];
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(order1Id);
-            TestDataFactory.createOrderSummary(order2Id);
-            orderSummaries = [SELECT Id FROM OrderSummary WHERE OriginalOrderId IN: orderIds];
-        }
+        OrderSummary orderSummary1 = TestDataFactory.createOrderSummary(order1Id);
+        OrderSummary orderSummary2 = TestDataFactory.createOrderSummary(order2Id);
+        
+        List<OrderSummary> orderSummaries = new List<OrderSummary>
+        {
+            orderSummary1, orderSummary2
+        };
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
@@ -235,7 +168,6 @@ private class FulfillmentOrderApiTest {
         // createFulfillmentOrders request
         List<FulfillmentOrderApi.CreateFulfillmentOrder> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrder>();
         for (OrderSummary orderSummary : orderSummaries) {
-            orderSummaryIds.add(orderSummary.Id);
             FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
             createFulfillmentOrderList.add(createFulfillmentOrder);
         }

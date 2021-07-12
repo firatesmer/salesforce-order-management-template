@@ -4,7 +4,7 @@
 * @description OrderSummary Api test class
 *   suppress reason : TODO needs refactor
 */
-@SuppressWarnings('PMD.CognitiveComplexity')
+@SuppressWarnings('PMD.CognitiveComplexity, PMD.CyclomaticComplexity')
 @isTest
 private class OrderSummaryApiTest {
     /**
@@ -16,24 +16,8 @@ private class OrderSummaryApiTest {
     static void shouldCreateOrderSummary() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
         Test.startTest();
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-        else {
-            orderSummary = orderSummaries[0];
-        }
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
         Test.stopTest();
 
         System.assert(orderSummary != null, 'Order summary not found');
@@ -48,24 +32,8 @@ private class OrderSummaryApiTest {
     static void shouldCreateOrderSummaryWithAdditionalInfo() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
         Test.startTest();
-        if(orderSummaries.isEmpty()) {
-            new OrderSummaryApi().createOrderSummary(orderId, '000001', 'MANAGED', OrderSummaryStatus.CREATED);
-            orderSummary = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-        else {
-            orderSummary = orderSummaries[0];
-        }
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
         Test.stopTest();
 
         System.assert(orderSummary != null, 'Order summary not found');
@@ -82,23 +50,7 @@ private class OrderSummaryApiTest {
 
         Double adjustment = -2;
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-        else {
-            orderSummary = orderSummaries[0];
-        }
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         OrderItemSummary orderItemSummary = [
             SELECT 
@@ -138,23 +90,7 @@ private class OrderSummaryApiTest {
 
         Double adjustment = -1;
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-        else {
-            orderSummary = orderSummaries[0];
-        }
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         OrderItemSummary orderItemSummary = [
             SELECT 
@@ -197,23 +133,7 @@ private class OrderSummaryApiTest {
     static void shouldEnsureFunds() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-       else {
-            orderSummary = orderSummaries[0];
-        } 
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId); 
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
@@ -250,23 +170,7 @@ private class OrderSummaryApiTest {
     static void shouldPreviewReturn() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-       else {
-            orderSummary = orderSummaries[0];
-        } 
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
@@ -324,23 +228,7 @@ private class OrderSummaryApiTest {
     static void shouldSubmitReturn() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-       else {
-            orderSummary = orderSummaries[0];
-        } 
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId); 
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
@@ -409,23 +297,7 @@ private class OrderSummaryApiTest {
     static void shouldPreviewCancel() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-       else {
-            orderSummary = orderSummaries[0];
-        } 
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
 
@@ -467,23 +339,7 @@ private class OrderSummaryApiTest {
     static void shouldSubmitCancel() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-       else {
-            orderSummary = orderSummaries[0];
-        } 
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
 
@@ -536,23 +392,7 @@ private class OrderSummaryApiTest {
     static void shouldCreateCreditMemo() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-       else {
-            orderSummary = orderSummaries[0];
-        } 
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
@@ -619,23 +459,7 @@ private class OrderSummaryApiTest {
     static void shouldEnsureRefunds() {
         String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we will have a flow that creates 
-        * OrderSummary automatically once the Order is 
-        * activated so we will check if the OrderSummary 
-        * is already created behind the scenes to prevent 
-        * test fail but in that case code will not be covered
-        */
-        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        OrderSummary orderSummary;
-
-        if(orderSummaries.isEmpty()) {
-            TestDataFactory.createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
-       else {
-            orderSummary = orderSummaries[0];
-        } 
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 

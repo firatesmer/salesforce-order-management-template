@@ -28,6 +28,8 @@
 		<members>ObjectUtils</members>
 		<members>ObjectUtilsTest</members>
 		<members>OrderManagementSetup</members>
+		<members>OrderPaymentSummaryApi</members>
+		<members>OrderPaymentSummaryApiTest</members>
 		<members>OrderProductStatus</members>
 		<members>OrderProductSummaryChangeReason</members>
 		<members>OrderProductType</members>
@@ -35,6 +37,8 @@
 		<members>OrderSummaryApiTest</members>
 		<members>OrderSummaryService</members>
 		<members>OrderSummaryStatus</members>
+		<members>PaymentStatus</members>
+		<members>PaymentType</members>
 		<members>ProcessExceptionStatus</members>
 		<members>ProcessExceptionType</members>
 		<members>RestFailMock</members>

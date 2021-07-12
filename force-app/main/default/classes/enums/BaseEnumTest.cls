@@ -21,6 +21,8 @@ private class BaseEnumTest {
         List<OrderProductSummaryChangeReason> orderProductSummaryChangeList = OrderProductSummaryChangeReason.values();
         List<OrderProductType> orderProductTypeList = OrderProductType.values();
         List<OrderSummaryStatus> orderSummaryStatusList = OrderSummaryStatus.values();
+        List<PaymentStatus> paymentStatusList = PaymentStatus.values();
+        List<PaymentType> paymentTypeList = PaymentType.values();
         List<ProcessExceptionStatus> processExceptionStatusList = ProcessExceptionStatus.values();
         List<ProcessExceptionType> processExceptionTypeList = ProcessExceptionType.values();
         List<ReturnOrderStatus> returnOrderStatusList = ReturnOrderStatus.values();
@@ -35,6 +37,8 @@ private class BaseEnumTest {
         System.assert(!orderProductSummaryChangeList.isEmpty(), 'OrderProductSummaryChangeReason list is empty');
         System.assert(!orderProductTypeList.isEmpty(), 'OrderProductType list is empty');
         System.assert(!orderSummaryStatusList.isEmpty(), 'OrderSummaryStatus list is empty');
+        System.assert(!paymentStatusList.isEmpty(), 'PaymentStatus list is empty');
+        System.assert(!paymentTypeList.isEmpty(), 'PaymentType list is empty');
         System.assert(!processExceptionStatusList.isEmpty(), 'ProcessExceptionStatus list is empty');
         System.assert(!processExceptionTypeList.isEmpty(), 'ProcessExceptionType list is empty');
         System.assert(!returnOrderStatusList.isEmpty(), 'ReturnOrderStatus list is empty');

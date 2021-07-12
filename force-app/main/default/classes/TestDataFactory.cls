@@ -370,6 +370,20 @@ public class TestDataFactory {
     }
 
     /**
+    * @description Creates Payment
+    * @param amount Amount of the Payment
+    * @return Payment
+    */
+    public static Payment createPayment(Double amount) {
+        Payment payment = new Payment();
+        payment.Amount = amount;
+        payment.Status = PaymentStatus.PROCESSED.toString();
+        payment.ProcessingMode = Constants.EXTERNAL;
+        payment.Type = PaymentType.CAPTURE.toString();
+        return payment;
+    }
+
+    /**
     * @description Creates Order for test methods
     *   Test class containing a test setup method cannot 
     *   have any methods annotated with "SeeAllData=true"
@@ -414,8 +428,26 @@ public class TestDataFactory {
     * @param orderId The Id of the order
     * @return OutputRepresentation
     */
-    public static ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId) {
-        return new OrderSummaryApi().createOrderSummary(orderId);
+    public static OrderSummary createOrderSummary(String orderId) {
+        /**
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
+        */
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
+
+        if(orderSummaries.isEmpty()) {
+            new OrderSummaryApi().createOrderSummary(orderId);
+            orderSummary = [SELECT TaxLocaleType, Account.Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        }
+        else {
+            orderSummary = orderSummaries[0];
+        }
+
+        return orderSummary;
     }
 
     /**

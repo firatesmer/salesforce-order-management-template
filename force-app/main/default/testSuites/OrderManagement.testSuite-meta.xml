@@ -8,6 +8,7 @@
     <testClassName>FulfillmentOrderApiTest</testClassName>
     <testClassName>LogUtilsTest</testClassName>
     <testClassName>ObjectUtilsTest</testClassName>
+    <testClassName>OrderPaymentSummaryApiTest</testClassName>
     <testClassName>OrderSummaryApiTest</testClassName>
     <testClassName>RestFailMock</testClassName>
     <testClassName>RestSuccessMock</testClassName>

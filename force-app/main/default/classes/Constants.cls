@@ -14,6 +14,7 @@ public class Constants {
     public static final String ASSIGNED = 'Assigned';
     public static final String CANCELED = 'Canceled';
     public static final String CANCELLED = 'Cancelled';
+    public static final String CAPTURE = 'Capture';
     public static final String CLOSED = 'Closed';
     public static final String CREATED = 'Created';
     public static final String DELIVERED = 'Delivered';
@@ -23,6 +24,7 @@ public class Constants {
     public static final String ERROR_POSTING = 'Error Posting';
     public static final String ESTIMATED = 'Estimated';
     public static final String EXTERNAL = 'External';
+    public static final String FAILED = 'Failed';
     public static final String FULFILLED = 'Fulfilled';
     public static final String FULFILLMENT = 'Fulfillment';
     public static final String GROSS = 'Gross';
@@ -54,6 +56,7 @@ public class Constants {
     public static final String RESOLVED = 'Resolved';
     public static final String RETAIL_STORE = 'Retail Store';
     public static final String RETURNED = 'Returned';
+    public static final String SALE = 'Sale';
     public static final String SHIPPED = 'Shipped';
     public static final String STORE = 'Store';
     public static final String SUBMITTED = 'Submitted';
