@@ -30,7 +30,7 @@ public with sharing class OrderSummaryApi extends BaseApi {
     * @return OrderSummary output
     */
     @SuppressWarnings('PMD.ExcessiveParameterList')
-    public ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId, String name, String orderLifeCycleType, OrderSummaryStatus status) {
+    public ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId, String name, LifeCycleType orderLifeCycleType, OrderSummaryStatus status) {
         ConnectApi.OrderSummaryInputRepresentation input = new ConnectApi.OrderSummaryInputRepresentation();
         input.orderId = orderId;
         
@@ -38,12 +38,12 @@ public with sharing class OrderSummaryApi extends BaseApi {
             input.name = name;
         }
 
-        if (String.isNotBlank(orderLifeCycleType)) {
-            input.orderLifeCycleType = orderLifeCycleType;
+        if (orderLifeCycleType != null) {
+            input.orderLifeCycleType = orderLifeCycleType.enumValue;
         }
 
-        if (status != null && String.isNotBlank(status.toString())) {
-            input.status = status.toString();
+        if (status != null) {
+            input.status = status.enumValue;
         }
 
         ConnectApi.OrderSummaryOutputRepresentation output = ConnectApi.OrderSummaryCreation.createOrderSummary(input);

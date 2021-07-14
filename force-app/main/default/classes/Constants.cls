@@ -37,6 +37,7 @@ public class Constants {
     public static final String INVOICING = 'Invoicing';
     public static final String JCB = 'JCB';
     public static final String MAESTRO = 'Maestro';
+    public static final String MANAGED = 'Managed';
     public static final String MASTER_CARD = 'Master Card';
     public static final String NEW_C = 'New';
     public static final String ORDER_ACTIVATION = 'Order Activation';
@@ -62,9 +63,9 @@ public class Constants {
     public static final String SUBMITTED = 'Submitted';
     public static final String TEST = 'Test';
     public static final String UNKNOWN = 'Unknown';
+    public static final String UNMANAGED = 'Unmanaged';
     public static final String VIRTUAL_C = 'Virtual';
     public static final String VISA = 'Visa';
-    public static final String WAITING_TO_FULFILL = 'Waiting to Fulfill';
     public static final String WAREHOUSE = 'Warehouse';
 
     public static final Integer HTTP_INTERNAL_ERROR_CODE = 500;

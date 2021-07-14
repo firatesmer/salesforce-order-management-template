@@ -22,6 +22,7 @@
 		<members>FulfillmentOrderStatus</members>
 		<members>FulfillmentOrderType</members>
 		<members>InvoiceStatus</members>
+		<members>LifeCycleType</members>
 		<members>LocationType</members>
 		<members>LogUtils</members>
 		<members>LogUtilsTest</members>

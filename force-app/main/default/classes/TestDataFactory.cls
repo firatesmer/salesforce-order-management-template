@@ -312,7 +312,7 @@ public class TestDataFactory {
             PricebookEntry pricebookEntry = codeToPricebookEntry.get(orderItem.productCode);
 
             OrderItem standardOrderItem = createOrderItem(order.Id, product.Id, pricebookEntry.Id, orderItem.unitPrice, 
-                orderItem.quantity, orderDeliveryGroup.Id, orderItem.type.toString());
+                orderItem.quantity, orderDeliveryGroup.Id, orderItem.type.enumValue);
             codeToOrderItem.put(orderItem.productCode, standardOrderItem);    
         }
         insert codeToOrderItem.values();
@@ -357,15 +357,14 @@ public class TestDataFactory {
     */
     public static CardPaymentMethod createCardPaymentMethod(Account account) {
         CardPaymentMethod paymentMethod = new CardPaymentMethod();
-        paymentMethod.CardType = CardPaymentMethodType.VISA.toString();
+        paymentMethod.CardType = CardPaymentMethodType.VISA.enumValue;
         paymentMethod.CardHolderName = String.format('{0} {1}', new List<String>{ account.FirstName, account.LastName });
         paymentMethod.ExpiryYear = System.today().year() + 1;
         paymentMethod.ExpiryMonth = 1;
         paymentMethod.CardCategory = 'CreditCard';
-        paymentMethod.Status = CardPaymentMethodStatus.ACTIVE.toString();
+        paymentMethod.Status = CardPaymentMethodStatus.ACTIVE.enumValue;
         paymentMethod.AccountId = account.Id;
         paymentMethod.ProcessingMode = Constants.EXTERNAL;
-        paymentMethod.PaymentGatewayId = [SELECT Id FROM PaymentGateway LIMIT 1].Id;
         return paymentMethod;
     }
 
@@ -377,9 +376,9 @@ public class TestDataFactory {
     public static Payment createPayment(Double amount) {
         Payment payment = new Payment();
         payment.Amount = amount;
-        payment.Status = PaymentStatus.PROCESSED.toString();
+        payment.Status = PaymentStatus.PROCESSED.enumValue;
         payment.ProcessingMode = Constants.EXTERNAL;
-        payment.Type = PaymentType.CAPTURE.toString();
+        payment.Type = PaymentType.CAPTURE.enumValue;
         return payment;
     }
 
@@ -459,7 +458,7 @@ public class TestDataFactory {
     * @return List of ConnectApi.AdjustItemInputRepresentation
     */
     @SuppressWarnings('PMD.ExcessiveParameterList')
-    public static List<ConnectApi.AdjustItemInputRepresentation> buildAdjustInput(OrderItemSummary orderItemSummary, OrderSummary orderSummary, String reason, Double adjustment) {
+    public static List<ConnectApi.AdjustItemInputRepresentation> buildAdjustInput(OrderItemSummary orderItemSummary, OrderSummary orderSummary, OrderProductSummaryChangeReason reason, Double adjustment) {
         List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = new List<ConnectApi.AdjustItemInputRepresentation>();
 
         ConnectApi.AdjustItemInputRepresentation adjustItemInput = new ConnectApi.AdjustItemInputRepresentation();
@@ -468,7 +467,7 @@ public class TestDataFactory {
                 : Constants.AMOUNT_WITHOUT_TAX;
         adjustItemInput.amount = adjustment;
         adjustItemInput.orderItemSummaryId = orderItemSummary.Id;
-        adjustItemInput.reason = reason;
+        adjustItemInput.reason = reason.enumValue;
         adjustItemInputList.add(adjustItemInput);
 
         return adjustItemInputList;

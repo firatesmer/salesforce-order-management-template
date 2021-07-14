@@ -32,9 +32,12 @@ private class OrderSummaryApiTest {
     static void shouldCreateOrderSummaryWithAdditionalInfo() {
         String orderId = TestDataFactory.createOrder();
 
+
         Test.startTest();
-        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
+        new OrderSummaryApi().createOrderSummary(orderId, 'ORDER-0001', LifeCycleType.MANAGED, OrderSummaryStatus.CREATED);
         Test.stopTest();
+
+        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
 
         System.assert(orderSummary != null, 'Order summary not found');
     }
@@ -58,14 +61,14 @@ private class OrderSummaryApiTest {
                 QuantityAllocated, QuantityFulfilled, TotalAmtWithTax 
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.toString() LIMIT 1];
+            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue LIMIT 1];
         
         Boolean isOrderItemDiscountable = OrderSummaryService.isOrderItemDiscountable(orderItemSummary);
 
         System.assert(isOrderItemDiscountable, 'Order product is not discountable');
 
         if (isOrderItemDiscountable) {
-            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderProductSummaryChangeReason.UNKNOWN.toString(), adjustment);
+            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderProductSummaryChangeReason.UNKNOWN, adjustment);
             
             OrderSummaryApi api = new OrderSummaryApi();
 
@@ -98,13 +101,13 @@ private class OrderSummaryApiTest {
             QuantityAllocated, QuantityFulfilled, TotalAmtWithTax 
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.toString() 
+            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue 
             LIMIT 1];
         
         Boolean isOrderItemDiscountable = OrderSummaryService.isOrderItemDiscountable(orderItemSummary);
 
         if (isOrderItemDiscountable) {
-            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderProductSummaryChangeReason.UNKNOWN.toString(), adjustment);
+            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderProductSummaryChangeReason.UNKNOWN, adjustment);
             
             OrderSummaryApi api = new OrderSummaryApi();
 
@@ -144,7 +147,7 @@ private class OrderSummaryApiTest {
         FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
         createFulfillmentOrder.locationId = location.Id;
         createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.toString();
+        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
 
         ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder);
 
@@ -181,20 +184,20 @@ private class OrderSummaryApiTest {
         FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
         createFulfillmentOrder.locationId = location.Id;
         createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.toString();
+        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
 
         ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder);
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
-        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.toString();
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;
         DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
 
         List<OrderItemSummary> orderItemSummaries = [
             SELECT Type, Quantity, QuantityAvailableToReturn
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.toString()];
+            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsReturnable = false;
 
@@ -209,7 +212,7 @@ private class OrderSummaryApiTest {
 
         if (areOrderItemsReturnable) {
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN.toString(), true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
             
             Test.startTest();
             ConnectApi.PreviewReturnOutputRepresentation output = orderSummaryApi.previewReturn(orderSummary.Id, changeInput);
@@ -239,20 +242,20 @@ private class OrderSummaryApiTest {
         FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
         createFulfillmentOrder.locationId = location.Id;
         createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.toString();
+        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
 
         ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder);
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
-        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.toString();
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;
         DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
 
         List<OrderItemSummary> orderItemSummaries = [
             SELECT Type, Quantity, QuantityAvailableToReturn
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.toString()];
+            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsReturnable = false;
 
@@ -267,7 +270,7 @@ private class OrderSummaryApiTest {
 
         if (areOrderItemsReturnable) {
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN.toString(), true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
             
             Test.startTest();
             ConnectApi.SubmitReturnOutputRepresentation output = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
@@ -279,10 +282,10 @@ private class OrderSummaryApiTest {
                 SELECT Status, QuantityReturned
                 FROM OrderItemSummary 
                 WHERE OrderSummaryId =: orderSummary.Id
-                AND Type =: OrderProductType.ORDER_PRODUCT.toString()];
+                AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
 
             for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-                System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderProductStatus.RETURNED.toString()), 'Status of the order product is not RETURNED');
+                System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderProductStatus.RETURNED.enumValue), 'Status of the order product is not RETURNED');
                 System.assert(orderItemSummary.QuantityReturned > 0, 'The quantity returned should greater than zero');
             }
         }
@@ -305,7 +308,7 @@ private class OrderSummaryApiTest {
             SELECT Type, Quantity, QuantityAvailableToCancel
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.toString()];
+            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsCancelable = false;
 
@@ -320,7 +323,7 @@ private class OrderSummaryApiTest {
 
         if (areOrderItemsCancelable) {
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN.toString(), true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
             
             Test.startTest();
             ConnectApi.PreviewCancelOutputRepresentation output = orderSummaryApi.previewCancel(orderSummary.Id, changeInput);
@@ -347,7 +350,7 @@ private class OrderSummaryApiTest {
             SELECT Type, Quantity, QuantityAvailableToCancel
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.toString()];
+            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsCancelable = false;
 
@@ -362,7 +365,7 @@ private class OrderSummaryApiTest {
 
         if (areOrderItemsCancelable) {
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN.toString(), true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
             
             Test.startTest();
             ConnectApi.SubmitCancelOutputRepresentation output = orderSummaryApi.submitCancel(orderSummary.Id, changeInput);
@@ -374,10 +377,10 @@ private class OrderSummaryApiTest {
                 SELECT Status, QuantityCanceled
                 FROM OrderItemSummary 
                 WHERE OrderSummaryId =: orderSummary.Id
-                AND Type =: OrderProductType.ORDER_PRODUCT.toString()];
+                AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
 
             for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-                System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderProductStatus.CANCELED.toString()), 'Status of the order product is not CANCELED');
+                System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderProductStatus.CANCELED.enumValue), 'Status of the order product is not CANCELED');
                 System.assert(orderItemSummary.QuantityCanceled > 0, 'The quantity canceled should greater than zero');
             }
         }
@@ -402,19 +405,19 @@ private class OrderSummaryApiTest {
         FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
         createFulfillmentOrder.locationId = location.Id;
         createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.toString();
+        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
 
         String fulfillmentOrderId = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder).fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
-        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.toString();
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;
         DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
 
         List<OrderItemSummary> orderItemSummaries = [
             SELECT Type, Quantity, QuantityAvailableToReturn
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.toString()];
+            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsReturnable = false;
 
@@ -431,7 +434,7 @@ private class OrderSummaryApiTest {
             OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
 
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN.toString(), true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
 
             // return
             ConnectApi.SubmitReturnOutputRepresentation submitReturnOutput = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
@@ -469,19 +472,19 @@ private class OrderSummaryApiTest {
         FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
         createFulfillmentOrder.locationId = location.Id;
         createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.toString();
+        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
 
         String fulfillmentOrderId = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder).fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
-        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.toString();
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;
         DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
 
         List<OrderItemSummary> orderItemSummaries = [
             SELECT Type, Quantity, QuantityAvailableToReturn
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.toString()];
+            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsReturnable = false;
 
@@ -498,7 +501,7 @@ private class OrderSummaryApiTest {
             OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
 
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN.toString(), true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
 
             // return
             ConnectApi.SubmitReturnOutputRepresentation submitReturnOutput = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);

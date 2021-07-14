@@ -16,6 +16,7 @@ private class BaseEnumTest {
         List<FulfillmentOrderStatus> fulfillmentOrderStatusList = FulfillmentOrderStatus.values();
         List<FulfillmentOrderType> fulfillmentOrderTypeList = FulfillmentOrderType.values();
         List<InvoiceStatus> invoiceStatusList = InvoiceStatus.values();
+        List<LifeCycleType> lifeCycleTypeList = LifeCycleType.values();
         List<LocationType> locationTypeList = LocationType.values();
         List<OrderProductStatus> orderProductStatusList = OrderProductStatus.values();
         List<OrderProductSummaryChangeReason> orderProductSummaryChangeList = OrderProductSummaryChangeReason.values();
@@ -43,7 +44,9 @@ private class BaseEnumTest {
         System.assert(!processExceptionTypeList.isEmpty(), 'ProcessExceptionType list is empty');
         System.assert(!returnOrderStatusList.isEmpty(), 'ReturnOrderStatus list is empty');
         System.assert(!shipmentStatusList.isEmpty(), 'ShipmentStatus list is empty');
+        System.assert(!lifeCycleTypeList.isEmpty(), 'LifeCycleType list is empty');
         System.assert(!locationTypeList.isEmpty(), 'LocationType list is empty');
-        System.assert(String.isNotBlank(fulfillmentOrderStatusList[0].toString()), 'Enum value is empty');
+        System.assert(String.isNotBlank(fulfillmentOrderStatusList[0].enumKey), 'Enum key is empty');
+        System.assert(String.isNotBlank(fulfillmentOrderStatusList[0].enumValue), 'Enum value is empty');
     }
 }
