@@ -17,10 +17,15 @@ public class Constants {
     public static final String CAPTURE = 'Capture';
     public static final String CLOSED = 'Closed';
     public static final String CREATED = 'Created';
+    public static final String CREDIT_CARD = 'CreditCard';
+    public static final String DAMAGED = 'Damaged';
+    public static final String DEBIT_CARD = 'DebitCard';
+    public static final String DEFECTIVE = 'Defective';
     public static final String DELIVERED = 'Delivered';
     public static final String DELIVERY_CHARGE = 'Delivery Charge';
     public static final String DINERS_CLUB = 'Diners Club';
     public static final String DRAFT = 'Draft';
+    public static final String DUPLICATE_ORDER = 'Duplicate Order';
     public static final String ERROR_POSTING = 'Error Posting';
     public static final String ESTIMATED = 'Estimated';
     public static final String EXTERNAL = 'External';
@@ -40,10 +45,13 @@ public class Constants {
     public static final String MANAGED = 'Managed';
     public static final String MASTER_CARD = 'Master Card';
     public static final String NEW_C = 'New';
+    public static final String NOT_SATISFIED = 'Not Satisfied';
     public static final String ORDER_ACTIVATION = 'Order Activation';
     public static final String ORDER_APPROVAL = 'Order Approval';
     public static final String ORDER_PRODUCT = 'Order Product';
     public static final String ORDERED = 'Ordered';
+    public static final String OTHER = 'Other';
+    public static final String OUTDATED = 'Outdated';
     public static final String PAID = 'PAID';
     public static final String PARTIALLY_ALLOCATED = 'Partially Allocated';
     public static final String PARTIALLY_FULFILLED = 'Partially Fulfilled';
@@ -58,6 +66,7 @@ public class Constants {
     public static final String RETAIL_STORE = 'Retail Store';
     public static final String RETURNED = 'Returned';
     public static final String SALE = 'Sale';
+    public static final String SALESFORCE = 'Salesforce';
     public static final String SHIPPED = 'Shipped';
     public static final String STORE = 'Store';
     public static final String SUBMITTED = 'Submitted';
@@ -67,6 +76,9 @@ public class Constants {
     public static final String VIRTUAL_C = 'Virtual';
     public static final String VISA = 'Visa';
     public static final String WAREHOUSE = 'Warehouse';
+    public static final String WRONG_ITEM = 'Wrong Item';
+    public static final String WRONG_QUANTITY = 'Wrong Quantity';
+    
 
     public static final Integer HTTP_INTERNAL_ERROR_CODE = 500;
     public static final Integer HTTP_SUCCESS_CODE = 200;

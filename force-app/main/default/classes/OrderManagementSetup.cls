@@ -153,7 +153,7 @@ public without sharing class OrderManagementSetup {
     * @param salesforceUrl Sandbox Url
     *   suppress reason: ignore
     */
-    @SuppressWarnings('PMD.ApexSuggestUsingNamedCred')
+    @suppressWarnings('PMD.ApexSuggestUsingNamedCred')
     public static void insertPaymentGateway(String salesforceUrl) {
         HttpRequest request = new HttpRequest();
         
@@ -173,7 +173,7 @@ public without sharing class OrderManagementSetup {
     * @param salesforceUrl Sandbox Url
     *   suppress reason: ignore
     */
-    @SuppressWarnings('PMD.ApexSuggestUsingNamedCred')
+    @suppressWarnings('PMD.ApexSuggestUsingNamedCred')
     public static void insertPaymentGatewayProvider(String salesforceUrl) {
         HttpRequest request = new HttpRequest();
         

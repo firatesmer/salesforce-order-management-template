@@ -9,7 +9,7 @@ private class FulfillmentOrderApiTest {
     * @description Test method of FulfillmentOrderApi.createFulfillmentOrders
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateFulfillmentOrders() {
         String orderId = TestDataFactory.createOrder();
@@ -35,7 +35,7 @@ private class FulfillmentOrderApiTest {
     * @description Test method of FulfillmentOrderApi.createInvoice
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateInvoice() {
         String orderId = TestDataFactory.createOrder();
@@ -66,7 +66,7 @@ private class FulfillmentOrderApiTest {
     * @description Test method of FulfillmentOrderApi.cancelFulfillmentOrderLineItems
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCancelFulfillmentOrderLineItems() {
         String orderId = TestDataFactory.createOrder();
@@ -107,7 +107,7 @@ private class FulfillmentOrderApiTest {
     * @description Test method of FulfillmentOrderApi.createMultipleFulfillmentOrder
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateMultipleFulfillmentOrder() {
         String order1Id = TestDataFactory.createOrder();
@@ -147,7 +147,7 @@ private class FulfillmentOrderApiTest {
     * @description Test method of FulfillmentOrderApi.createMultipleFulfillmentOrder
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateMultipleInvoices() {
         String order1Id = TestDataFactory.createOrder();

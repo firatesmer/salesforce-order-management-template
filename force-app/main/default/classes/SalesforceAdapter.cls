@@ -4,7 +4,7 @@
 * @description Salesforce mock adapter (provided by Salesforce)
 *   suppress reason: Adapter requires global access modifier
 */
-@SuppressWarnings('PMD.AvoidGlobalModifier')
+@suppressWarnings('PMD.AvoidGlobalModifier')
 global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter {
     private static final commercepayments.SalesforceResultCodeInfo SUCCESS_SALESFORCE_RESULT_CODE_INFO = 
         new commercepayments.SalesforceResultCodeInfo(commercepayments.SalesforceResultCode.Success);

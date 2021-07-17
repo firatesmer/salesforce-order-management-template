@@ -4,7 +4,7 @@
 * @description XML parser class
 *   suppress reason: ignore
 */
-@SuppressWarnings('PMD.CognitiveComplexity')
+@suppressWarnings('PMD.CognitiveComplexity')
 public class XmlParser {
     private Boolean serializeNulls = true;
     private String rootElement;

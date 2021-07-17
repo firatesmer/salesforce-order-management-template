@@ -29,7 +29,7 @@ public with sharing class OrderSummaryApi extends BaseApi {
     * @param status Status of the OrderSummary - optional
     * @return OrderSummary output
     */
-    @SuppressWarnings('PMD.ExcessiveParameterList')
+    @suppressWarnings('PMD.ExcessiveParameterList')
     public ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId, String name, LifeCycleType orderLifeCycleType, OrderSummaryStatus status) {
         ConnectApi.OrderSummaryInputRepresentation input = new ConnectApi.OrderSummaryInputRepresentation();
         input.orderId = orderId;

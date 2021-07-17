@@ -6,6 +6,7 @@
 		<members>BaseEnumTest</members>
 		<members>CalloutUtils</members>
 		<members>CalloutUtilsTest</members>
+		<members>CardPaymentMethodCategory</members>
 		<members>CardPaymentMethodStatus</members>
 		<members>CardPaymentMethodType</members>
 		<members>Constants</members>
@@ -34,16 +35,22 @@
 		<members>OrderProductStatus</members>
 		<members>OrderProductSummaryChangeReason</members>
 		<members>OrderProductType</members>
+		<members>OrderStatus</members>
 		<members>OrderSummaryApi</members>
 		<members>OrderSummaryApiTest</members>
 		<members>OrderSummaryService</members>
 		<members>OrderSummaryStatus</members>
+		<members>PaymentAuthorizationStatus</members>
 		<members>PaymentStatus</members>
 		<members>PaymentType</members>
 		<members>ProcessExceptionStatus</members>
 		<members>ProcessExceptionType</members>
+		<members>ProcessingMode</members>
 		<members>RestFailMock</members>
 		<members>RestSuccessMock</members>
+		<members>ReturnOrderApi</members>
+		<members>ReturnOrderApiTest</members>
+		<members>ReturnOrderLineItemReturnReason</members>
 		<members>ReturnOrderStatus</members>
 		<members>SalesforceAdapter</members>
 		<members>SalesforceAdapterTest</members>

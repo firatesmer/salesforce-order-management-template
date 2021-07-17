@@ -15,7 +15,7 @@ public class CsvParser {
      * @param includesFooter If Csv input includes footer row
      * @return String
      */
-    @SuppressWarnings('PMD.ExcessiveParameterList')
+    @suppressWarnings('PMD.ExcessiveParameterList')
     public static String parse(String csvInput, String newLine, String delimeter, List<String> fields, Boolean includesHeader, Boolean includesFooter) {
         Map<String, Object> objectFieldMap;
         List<Map<String, Object>> objectFieldMapList = new List<Map<String, Object>>();

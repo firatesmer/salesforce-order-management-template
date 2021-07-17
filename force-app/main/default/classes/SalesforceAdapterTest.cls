@@ -2,15 +2,15 @@
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 20/04/2021
 * @description Test class of SalesforceAdapter
-*   suppress reason: Query PaymentGateway
 */
 @isTest
-@SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
 private class SalesforceAdapterTest {
     /**
     * @description Test method of SalesforceAdapter capture
+    *   suppress reason: Query PaymentGateway
     */
     @isTest(SeeAllData=true)
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     static void shouldCapture() {
         Id orderId = createOrder();
 
@@ -35,8 +35,10 @@ private class SalesforceAdapterTest {
 
     /**
     * @description Test method of SalesforceAdapter refund
+    *   suppress reason: Query PaymentGateway
     */
     @isTest(SeeAllData=true)
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     static void shouldRefund() {
         Id orderId = createOrder();
 

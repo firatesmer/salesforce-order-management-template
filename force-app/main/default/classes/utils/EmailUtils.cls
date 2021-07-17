@@ -13,7 +13,7 @@ public with sharing class EmailUtils {
     * @param isHtml Is email body HTML
     * @return Send email result list
     */
-    @SuppressWarnings('PMD.ExcessiveParameterList')
+    @suppressWarnings('PMD.ExcessiveParameterList')
     public static Messaging.SendEmailResult[] sendEmail(String[] emailAddresses, String subject, String body, Messaging.EmailFileAttachment[] attachments, Boolean isHtml) {
         Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
         mail.setToAddresses(emailAddresses);

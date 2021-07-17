@@ -15,7 +15,7 @@ public with sharing class CalloutUtils {
 	* @param body String body (if any)
 	* @return Http response
 	*/
-	@SuppressWarnings('PMD.ExcessiveParameterList')
+	@suppressWarnings('PMD.ExcessiveParameterList')
 	public static HttpResponse doCallout(String endpoint, String method, Map<String, String> headers, String body) {
 		return doCallout(endpoint, method, headers, body, Enums.LogLevel.ERROR_ONLY, true);
 	}
@@ -30,7 +30,7 @@ public with sharing class CalloutUtils {
     * @param autoInsertLogs If true inserts the logs automatically after callout
 	* @return Http response
 	*/
-	@SuppressWarnings('PMD.ExcessiveParameterList')
+	@suppressWarnings('PMD.ExcessiveParameterList')
 	public static HttpResponse doCallout(String endpoint, String method, Map<String, String> headers, String body, Enums.LogLevel logLevel, Boolean autoInsertLogs) {
 		request = new HttpRequest();
 		request.setEndpoint(endpoint);
@@ -58,7 +58,7 @@ public with sharing class CalloutUtils {
 	* @param logLevel NONE | ERRORS_ONLY | ALL
 	* @param autoInsert If true inserts the logs automatically after callout
 	*/
-    @SuppressWarnings('PMD.ExcessiveParameterList')
+    @suppressWarnings('PMD.ExcessiveParameterList')
 	private static void createHttpLog(String request, HttpResponse response, Enums.LogLevel logLevel, Boolean autoInsert) {
 		if (logLevel == Enums.LogLevel.NONE) {
 			return;

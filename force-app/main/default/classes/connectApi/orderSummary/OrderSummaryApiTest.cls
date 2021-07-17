@@ -4,14 +4,14 @@
 * @description OrderSummary Api test class
 *   suppress reason : TODO needs refactor
 */
-@SuppressWarnings('PMD.CognitiveComplexity, PMD.CyclomaticComplexity')
+@suppressWarnings('PMD.CognitiveComplexity, PMD.CyclomaticComplexity')
 @isTest
 private class OrderSummaryApiTest {
     /**
     * @description Test method of OrderSummaryApi.createOrderSummary
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateOrderSummary() {
         String orderId = TestDataFactory.createOrder();
@@ -27,7 +27,7 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.createOrderSummary
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateOrderSummaryWithAdditionalInfo() {
         String orderId = TestDataFactory.createOrder();
@@ -46,7 +46,7 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.adjustPreview
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldAdjustPreview() {
         String orderId = TestDataFactory.createOrder();
@@ -86,7 +86,7 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.adjustSubmitm
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldAdjustSubmit() {
         String orderId = TestDataFactory.createOrder();
@@ -131,7 +131,7 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.ensureFundsAsync
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldEnsureFunds() {
         String orderId = TestDataFactory.createOrder();
@@ -168,7 +168,7 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.previewReturn
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldPreviewReturn() {
         String orderId = TestDataFactory.createOrder();
@@ -226,7 +226,7 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.submitReturn
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldSubmitReturn() {
         String orderId = TestDataFactory.createOrder();
@@ -295,7 +295,7 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.previewCancel
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldPreviewCancel() {
         String orderId = TestDataFactory.createOrder();
@@ -337,7 +337,7 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.submitCancel
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldSubmitCancel() {
         String orderId = TestDataFactory.createOrder();
@@ -390,7 +390,7 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.createCreditMemo
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldCreateCreditMemo() {
         String orderId = TestDataFactory.createOrder();
@@ -457,7 +457,7 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.ensureRefundsAsync
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @IsTest(SeeAllData=true)
     static void shouldEnsureRefunds() {
         String orderId = TestDataFactory.createOrder();

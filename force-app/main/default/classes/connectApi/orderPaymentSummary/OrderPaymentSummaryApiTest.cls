@@ -9,7 +9,7 @@ private class OrderPaymentSummaryApiTest {
     * @description Test method of OrderPaymentSummaryApi.createOrderPaymentSummary
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @isTest(SeeAllData=true)
     static void shouldCreateOrderPaymentSummary() {
         String orderId = TestDataFactory.createOrder();
