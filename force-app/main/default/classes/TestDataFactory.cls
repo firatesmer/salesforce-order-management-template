@@ -145,18 +145,18 @@ public class TestDataFactory {
     * @param unitPrice Unit price
     * @param quantity Quantity
     * @param orderDeliveryGroupId Order delivery group Id (createOrderDeliveryGroup)
-    * @param orderProductType Order item type
+    * @param OrderItemType Order item type
     * @return OrderDeliveryGroup
     */
     @suppressWarnings('PMD.ExcessiveParameterList')
-    public static OrderItem createOrderItem(Id orderId, Id productId, Id priceBookEntryId, Decimal unitPrice, Integer quantity, Id orderDeliveryGroupId, String orderProductType) {
+    public static OrderItem createOrderItem(Id orderId, Id productId, Id priceBookEntryId, Decimal unitPrice, Integer quantity, Id orderDeliveryGroupId, String OrderItemType) {
         OrderItem item = new OrderItem();
         item.OrderId = orderId;
         item.Product2Id = productId;
         item.PricebookentryId = priceBookEntryId;
         item.UnitPrice = unitPrice;
         item.Quantity = quantity;
-        item.Type = orderProductType;
+        item.Type = OrderItemType;
         item.OrderDeliveryGroupId = orderDeliveryGroupId;
         item.TotalLineAmount = unitPrice * quantity;
         return item;
@@ -376,21 +376,21 @@ public class TestDataFactory {
 
         // #1 order item
         TestDataFactory.CreateOrderItem product1 = new TestDataFactory.CreateOrderItem();
-        product1.type = OrderProductType.ORDER_PRODUCT;
+        product1.type = OrderItemType.ORDER_PRODUCT;
         product1.productCode = '001';
         product1.quantity = 2;
         product1.unitPrice = 10;
 
         // #2 order item
         TestDataFactory.CreateOrderItem product2 = new TestDataFactory.CreateOrderItem();
-        product2.type = OrderProductType.ORDER_PRODUCT;
+        product2.type = OrderItemType.ORDER_PRODUCT;
         product2.productCode = '002';
         product2.quantity = 2;
         product2.unitPrice = 10;
 
         // #3 order item
         TestDataFactory.CreateOrderItem shipping = new TestDataFactory.CreateOrderItem();
-        shipping.type = OrderProductType.DELIVERY_CHARGE;
+        shipping.type = OrderItemType.DELIVERY_CHARGE;
         shipping.productCode = '003';
         shipping.quantity = 2;
         shipping.unitPrice = 10;
@@ -438,7 +438,7 @@ public class TestDataFactory {
     * @return List of ConnectApi.AdjustItemInputRepresentation
     */
     @suppressWarnings('PMD.ExcessiveParameterList')
-    public static List<ConnectApi.AdjustItemInputRepresentation> buildAdjustInput(OrderItemSummary orderItemSummary, OrderSummary orderSummary, OrderProductSummaryChangeReason reason, Double adjustment) {
+    public static List<ConnectApi.AdjustItemInputRepresentation> buildAdjustInput(OrderItemSummary orderItemSummary, OrderSummary orderSummary, OrderItemSummaryChangeReason reason, Double adjustment) {
         List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = new List<ConnectApi.AdjustItemInputRepresentation>();
 
         ConnectApi.AdjustItemInputRepresentation adjustItemInput = new ConnectApi.AdjustItemInputRepresentation();
@@ -484,7 +484,7 @@ public class TestDataFactory {
         * @description Type of the item 
         *   DELIVERY CHARGE|ORDER PRODUCT
         */
-        public OrderProductType type { get; set; }
+        public OrderItemType type { get; set; }
 
         /**
         * @description Tax amount for the item (optional)

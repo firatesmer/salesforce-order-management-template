@@ -21,9 +21,9 @@ private class BaseEnumTest {
         List<InvoiceStatus> invoiceStatusList = InvoiceStatus.values();
         List<LifeCycleType> lifeCycleTypeList = LifeCycleType.values();
         List<LocationType> locationTypeList = LocationType.values();
-        List<OrderProductStatus> orderProductStatusList = OrderProductStatus.values();
-        List<OrderProductSummaryChangeReason> orderProductSummaryChangeList = OrderProductSummaryChangeReason.values();
-        List<OrderProductType> orderProductTypeList = OrderProductType.values();
+        List<OrderItemStatus> OrderItemStatusList = OrderItemStatus.values();
+        List<OrderItemSummaryChangeReason> OrderItemSummaryChangeList = OrderItemSummaryChangeReason.values();
+        List<OrderItemType> OrderItemTypeList = OrderItemType.values();
         List<OrderStatus> orderStatusList = OrderStatus.values();
         List<OrderSummaryStatus> orderSummaryStatusList = OrderSummaryStatus.values();
         List<PaymentAuthorizationStatus> paymentAuthorizationStatusList = PaymentAuthorizationStatus.values();
@@ -42,9 +42,9 @@ private class BaseEnumTest {
         System.assert(!fulfillmentOrderStatusList.isEmpty(), 'FulfillmentOrderStatus list is empty');
         System.assert(!fulfillmentOrderTypeList.isEmpty(), 'FulfillmentOrderType list is empty');
         System.assert(!invoiceStatusList.isEmpty(), 'InvoiceStatus list is empty');
-        System.assert(!orderProductStatusList.isEmpty(), 'OrderProductStatus list is empty');
-        System.assert(!orderProductSummaryChangeList.isEmpty(), 'OrderProductSummaryChangeReason list is empty');
-        System.assert(!orderProductTypeList.isEmpty(), 'OrderProductType list is empty');
+        System.assert(!OrderItemStatusList.isEmpty(), 'OrderItemStatus list is empty');
+        System.assert(!OrderItemSummaryChangeList.isEmpty(), 'OrderItemSummaryChangeReason list is empty');
+        System.assert(!OrderItemTypeList.isEmpty(), 'OrderItemType list is empty');
         System.assert(!orderStatusList.isEmpty(), 'OrderStatus list is empty');
         System.assert(!orderSummaryStatusList.isEmpty(), 'OrderSummaryStatus list is empty');
         System.assert(!paymentAuthorizationStatusList.isEmpty(), 'PaymentAuthorizationStatus list is empty');

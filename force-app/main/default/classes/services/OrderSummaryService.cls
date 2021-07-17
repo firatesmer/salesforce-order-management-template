@@ -22,7 +22,7 @@ public with sharing class OrderSummaryService {
     * @return Cancelable result
     */
     public static Boolean isOrderItemCancelable(OrderItemSummary orderItemSummary) {
-        return orderItemSummary.Type != OrderProductType.DELIVERY_CHARGE.enumValue
+        return orderItemSummary.Type != OrderItemType.DELIVERY_CHARGE.enumValue
             && orderItemSummary.QuantityAvailableToCancel > 0;
     }
 
@@ -32,7 +32,7 @@ public with sharing class OrderSummaryService {
     * @return Returnable result
     */
     public static Boolean isOrderItemReturnable(OrderItemSummary orderItemSummary) {
-        return orderItemSummary.Type != OrderProductType.DELIVERY_CHARGE.enumValue
+        return orderItemSummary.Type != OrderItemType.DELIVERY_CHARGE.enumValue
             && orderItemSummary.QuantityAvailableToReturn > 0;
     }
 
@@ -100,7 +100,7 @@ public with sharing class OrderSummaryService {
     * @param shippingReductionFlag Reduction shipping
     * @return ConnectApi.ChangeInputRepresentation
     */
-    public static ConnectApi.ChangeInputRepresentation buildChangeInput(List<OrderItemSummary> orderItemSummaries, OrderProductSummaryChangeReason reason, Boolean shippingReductionFlag) {
+    public static ConnectApi.ChangeInputRepresentation buildChangeInput(List<OrderItemSummary> orderItemSummaries, OrderItemSummaryChangeReason reason, Boolean shippingReductionFlag) {
         ConnectApi.ChangeInputRepresentation changeInput = new ConnectApi.ChangeInputRepresentation();
         List<ConnectApi.ChangeItemInputRepresentation> changeItemInputList = new List<ConnectApi.ChangeItemInputRepresentation>();
 

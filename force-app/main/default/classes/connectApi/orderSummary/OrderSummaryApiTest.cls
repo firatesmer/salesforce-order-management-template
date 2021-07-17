@@ -61,14 +61,14 @@ private class OrderSummaryApiTest {
                 QuantityAllocated, QuantityFulfilled, TotalAmtWithTax 
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue LIMIT 1];
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue LIMIT 1];
         
         Boolean isOrderItemDiscountable = OrderSummaryService.isOrderItemDiscountable(orderItemSummary);
 
-        System.assert(isOrderItemDiscountable, 'Order product is not discountable');
+        System.assert(isOrderItemDiscountable, 'Order item is not discountable');
 
         if (isOrderItemDiscountable) {
-            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderProductSummaryChangeReason.UNKNOWN, adjustment);
+            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderItemSummaryChangeReason.UNKNOWN, adjustment);
             
             OrderSummaryApi api = new OrderSummaryApi();
 
@@ -101,13 +101,13 @@ private class OrderSummaryApiTest {
             QuantityAllocated, QuantityFulfilled, TotalAmtWithTax 
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue 
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue 
             LIMIT 1];
         
         Boolean isOrderItemDiscountable = OrderSummaryService.isOrderItemDiscountable(orderItemSummary);
 
         if (isOrderItemDiscountable) {
-            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderProductSummaryChangeReason.UNKNOWN, adjustment);
+            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderItemSummaryChangeReason.UNKNOWN, adjustment);
             
             OrderSummaryApi api = new OrderSummaryApi();
 
@@ -197,7 +197,7 @@ private class OrderSummaryApiTest {
             SELECT Type, Quantity, QuantityAvailableToReturn
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsReturnable = false;
 
@@ -208,11 +208,11 @@ private class OrderSummaryApiTest {
             }
         }
 
-        System.assert(areOrderItemsReturnable, 'Order product is not returnable');
+        System.assert(areOrderItemsReturnable, 'Order item is not returnable');
 
         if (areOrderItemsReturnable) {
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
             
             Test.startTest();
             ConnectApi.PreviewReturnOutputRepresentation output = orderSummaryApi.previewReturn(orderSummary.Id, changeInput);
@@ -255,7 +255,7 @@ private class OrderSummaryApiTest {
             SELECT Type, Quantity, QuantityAvailableToReturn
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsReturnable = false;
 
@@ -266,11 +266,11 @@ private class OrderSummaryApiTest {
             }
         }
 
-        System.assert(areOrderItemsReturnable, 'Order product is not returnable');
+        System.assert(areOrderItemsReturnable, 'Order item is not returnable');
 
         if (areOrderItemsReturnable) {
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
             
             Test.startTest();
             ConnectApi.SubmitReturnOutputRepresentation output = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
@@ -282,10 +282,10 @@ private class OrderSummaryApiTest {
                 SELECT Status, QuantityReturned
                 FROM OrderItemSummary 
                 WHERE OrderSummaryId =: orderSummary.Id
-                AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
+                AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
             for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-                System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderProductStatus.RETURNED.enumValue), 'Status of the order product is not RETURNED');
+                System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderItemStatus.RETURNED.enumValue), 'Status of the Order item is not RETURNED');
                 System.assert(orderItemSummary.QuantityReturned > 0, 'The quantity returned should greater than zero');
             }
         }
@@ -308,7 +308,7 @@ private class OrderSummaryApiTest {
             SELECT Type, Quantity, QuantityAvailableToCancel
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsCancelable = false;
 
@@ -319,11 +319,11 @@ private class OrderSummaryApiTest {
             }
         }
 
-        System.assert(areOrderItemsCancelable, 'Order product is not returnable');
+        System.assert(areOrderItemsCancelable, 'Order item is not returnable');
 
         if (areOrderItemsCancelable) {
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
             
             Test.startTest();
             ConnectApi.PreviewCancelOutputRepresentation output = orderSummaryApi.previewCancel(orderSummary.Id, changeInput);
@@ -350,7 +350,7 @@ private class OrderSummaryApiTest {
             SELECT Type, Quantity, QuantityAvailableToCancel
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsCancelable = false;
 
@@ -361,11 +361,11 @@ private class OrderSummaryApiTest {
             }
         }
 
-        System.assert(areOrderItemsCancelable, 'Order product is not cancelable');
+        System.assert(areOrderItemsCancelable, 'Order item is not cancelable');
 
         if (areOrderItemsCancelable) {
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
             
             Test.startTest();
             ConnectApi.SubmitCancelOutputRepresentation output = orderSummaryApi.submitCancel(orderSummary.Id, changeInput);
@@ -377,10 +377,10 @@ private class OrderSummaryApiTest {
                 SELECT Status, QuantityCanceled
                 FROM OrderItemSummary 
                 WHERE OrderSummaryId =: orderSummary.Id
-                AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
+                AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
             for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-                System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderProductStatus.CANCELED.enumValue), 'Status of the order product is not CANCELED');
+                System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderItemStatus.CANCELED.enumValue), 'Status of the Order item is not CANCELED');
                 System.assert(orderItemSummary.QuantityCanceled > 0, 'The quantity canceled should greater than zero');
             }
         }
@@ -417,7 +417,7 @@ private class OrderSummaryApiTest {
             SELECT Type, Quantity, QuantityAvailableToReturn
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsReturnable = false;
 
@@ -428,13 +428,13 @@ private class OrderSummaryApiTest {
             }
         }
 
-        System.assert(areOrderItemsReturnable, 'Order product is not returnable');
+        System.assert(areOrderItemsReturnable, 'Order item is not returnable');
 
         if (areOrderItemsReturnable) {
             OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
 
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
 
             // return
             ConnectApi.SubmitReturnOutputRepresentation submitReturnOutput = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
@@ -484,7 +484,7 @@ private class OrderSummaryApiTest {
             SELECT Type, Quantity, QuantityAvailableToReturn
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsReturnable = false;
 
@@ -495,13 +495,13 @@ private class OrderSummaryApiTest {
             }
         }
 
-        System.assert(areOrderItemsReturnable, 'Order product is not returnable');
+        System.assert(areOrderItemsReturnable, 'Order item is not returnable');
 
         if (areOrderItemsReturnable) {
             OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
 
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderProductSummaryChangeReason.UNKNOWN, true);
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
 
             // return
             ConnectApi.SubmitReturnOutputRepresentation submitReturnOutput = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);

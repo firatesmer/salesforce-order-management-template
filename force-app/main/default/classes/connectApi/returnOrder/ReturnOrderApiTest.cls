@@ -32,7 +32,7 @@ private class ReturnOrderApiTest {
             SELECT Type, Quantity, QuantityAvailableToReturn
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
-            AND Type =: OrderProductType.ORDER_PRODUCT.enumValue];
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
         Boolean areOrderItemsReturnable = false;
 
@@ -43,7 +43,7 @@ private class ReturnOrderApiTest {
             }
         }
 
-        System.assert(areOrderItemsReturnable, 'Order product is not returnable');
+        System.assert(areOrderItemsReturnable, 'Order item is not returnable');
 
         if (areOrderItemsReturnable) {
             List<ConnectApi.ReturnOrderLineItemInputRepresentation> returnOrderLineItemInputList = new List<ConnectApi.ReturnOrderLineItemInputRepresentation>();

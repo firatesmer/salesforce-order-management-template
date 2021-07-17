@@ -32,9 +32,9 @@
 		<members>OrderManagementSetup</members>
 		<members>OrderPaymentSummaryApi</members>
 		<members>OrderPaymentSummaryApiTest</members>
-		<members>OrderProductStatus</members>
-		<members>OrderProductSummaryChangeReason</members>
-		<members>OrderProductType</members>
+		<members>OrderItemStatus</members>
+		<members>OrderItemSummaryChangeReason</members>
+		<members>OrderItemType</members>
 		<members>OrderStatus</members>
 		<members>OrderSummaryApi</members>
 		<members>OrderSummaryApiTest</members>
