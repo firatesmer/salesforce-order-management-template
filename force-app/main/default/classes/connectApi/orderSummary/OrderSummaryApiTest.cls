@@ -2,40 +2,24 @@
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
 * @description OrderSummary Api test class
+*   suppress reason : TODO needs refactor
 */
+@suppressWarnings('PMD.CognitiveComplexity, PMD.CyclomaticComplexity')
 @isTest
 private class OrderSummaryApiTest {
     /**
     * @description Test method of OrderSummaryApi.createOrderSummary
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
     static void shouldCreateOrderSummary() {
-        String orderId = createOrder();
-
-        /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
-        */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        Boolean isOrderSummaryAlreadyCreated = orderSummary != null;
-
-        ConnectApi.OrderSummaryOutputRepresentation output;
+        String orderId = TestDataFactory.createOrder();
 
         Test.startTest();
-        if(!isOrderSummaryAlreadyCreated) {
-            output = createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
         Test.stopTest();
 
-        if (!isOrderSummaryAlreadyCreated) {
-            System.assert(output.success, 'Create order summary action failed');
-        }
         System.assert(orderSummary != null, 'Order summary not found');
     }
 
@@ -43,34 +27,18 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.createOrderSummary
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
-    static void shouldCreateOrderSummaryWithName() {
-        String orderId = createOrder();
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
+    static void shouldCreateOrderSummaryWithAdditionalInfo() {
+        String orderId = TestDataFactory.createOrder();
 
-        /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
-        */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        Boolean isOrderSummaryAlreadyCreated = orderSummary != null;
-
-        ConnectApi.OrderSummaryOutputRepresentation output;
 
         Test.startTest();
-        if(!isOrderSummaryAlreadyCreated) {
-            OrderSummaryApi api = new OrderSummaryApi();
-            output = api.createOrderSummary(orderId, '000001', 'MANAGED', OrderSummaryStatus.CREATED);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
+        new OrderSummaryApi().createOrderSummary(orderId, 'ORDER-0001', LifeCycleType.MANAGED, OrderSummaryStatus.CREATED);
         Test.stopTest();
 
-        if (!isOrderSummaryAlreadyCreated) {
-            System.assert(output.success, 'Create order summary action failed');
-        }
+        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+
         System.assert(orderSummary != null, 'Order summary not found');
     }
 
@@ -78,55 +46,39 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.adjustPreview
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
     static void shouldAdjustPreview() {
-        String orderId = createOrder();
+        String orderId = TestDataFactory.createOrder();
 
-        Double adjustment = -1;
+        Double adjustment = -2;
 
-        /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
-        */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-
-        ConnectApi.OrderSummaryOutputRepresentation output;
-
-        if(orderSummary == null) {
-            output = createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         OrderItemSummary orderItemSummary = [
             SELECT 
-            Quantity, QuantityReturnInitiated, QuantityReturned, 
-            QuantityAllocated, QuantityFulfilled, TotalAmtWithTax 
+                Quantity, QuantityReturnInitiated, QuantityReturned, 
+                QuantityAllocated, QuantityFulfilled, TotalAmtWithTax 
             FROM OrderItemSummary 
-            WHERE Type =: OrderProductType.ORDER_PRODUCT.toString() LIMIT 1];
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue LIMIT 1];
         
         Boolean isOrderItemDiscountable = OrderSummaryService.isOrderItemDiscountable(orderItemSummary);
 
+        System.assert(isOrderItemDiscountable, 'Order item is not discountable');
+
         if (isOrderItemDiscountable) {
-            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = buildAdjustInput(orderItemSummary, orderSummary, adjustment);
+            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderItemSummaryChangeReason.UNKNOWN, adjustment);
             
             OrderSummaryApi api = new OrderSummaryApi();
 
             Test.startTest();
             ConnectApi.AdjustOrderSummaryOutputRepresentation adjustPreviewOutput = api.adjustPreview(orderSummary.Id, adjustItemInputList);
+            ConnectApi.ChangeItemOutputRepresentation adjustItem = adjustPreviewOutput.changeBalances;
             Test.stopTest();
 
-            orderItemSummary = [
-                SELECT 
-                TotalLineAdjustmentAmount
-                FROM OrderItemSummary 
-                WHERE Id =: orderItemSummary.Id];
-
             System.assert(adjustPreviewOutput.success, 'Adjust preview failed');
-            System.assert(orderItemSummary.TotalLineAdjustmentAmount == adjustment, String.format('Adjustment amount should be {0}', new List<String>{ String.valueOf(adjustment) }));
+            System.assert(adjustItem.totalAdjustedProductAmount == (adjustment * -1), 'Adjust amounts are not matching');
         }
     }
 
@@ -134,40 +86,28 @@ private class OrderSummaryApiTest {
     * @description Test method of OrderSummaryApi.adjustSubmitm
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @SuppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
     static void shouldAdjustSubmit() {
-        String orderId = createOrder();
+        String orderId = TestDataFactory.createOrder();
 
         Double adjustment = -1;
 
-        /**
-        * In most cases we have a flow creates order summary
-        * automatically once the order is activated so we will
-        * check if the order summary is already created or not
-        * to prevent test fail but in that case code will not
-        * be covered
-        */
-        OrderSummary orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-
-        ConnectApi.OrderSummaryOutputRepresentation output;
-
-        if(orderSummary == null) {
-            output = createOrderSummary(orderId);
-            orderSummary = [SELECT Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
-        }
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         OrderItemSummary orderItemSummary = [
             SELECT 
             Quantity, QuantityReturnInitiated, QuantityReturned, 
             QuantityAllocated, QuantityFulfilled, TotalAmtWithTax 
             FROM OrderItemSummary 
-            WHERE Type =: OrderProductType.ORDER_PRODUCT.toString() LIMIT 1];
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue 
+            LIMIT 1];
         
         Boolean isOrderItemDiscountable = OrderSummaryService.isOrderItemDiscountable(orderItemSummary);
 
         if (isOrderItemDiscountable) {
-            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = buildAdjustInput(orderItemSummary, orderSummary, adjustment);
+            List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderItemSummaryChangeReason.UNKNOWN, adjustment);
             
             OrderSummaryApi api = new OrderSummaryApi();
 
@@ -179,7 +119,8 @@ private class OrderSummaryApiTest {
                 SELECT 
                 TotalLineAdjustmentAmount
                 FROM OrderItemSummary 
-                WHERE Id =: orderItemSummary.Id];
+                WHERE Id =: orderItemSummary.Id
+                AND OrderSummaryId =: orderSummary.Id];
 
             System.assert(adjustSubmitOutput.success, 'Adjust submit failed');
             System.assert(orderItemSummary.TotalLineAdjustmentAmount == adjustment, String.format('Adjustment amount should be {0}', new List<String>{ String.valueOf(adjustment) }));
@@ -187,73 +128,360 @@ private class OrderSummaryApiTest {
     }
 
     /**
-    * @description Creates Order for test methods
-    *   Test class containing a test setup method cannot 
-    *   have any methods annotated with "SeeAllData=true"
-    * @return Id of the Order
+    * @description Test method of OrderSummaryApi.ensureFundsAsync
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    private static String createOrder() {
-        Schema.Location location = TestDataFactory.createLocation(Constants.WAREHOUSE, Constants.WAREHOUSE);
-        insert location;
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
+    static void shouldEnsureFunds() {
+        String orderId = TestDataFactory.createOrder();
 
-        List<TestDataFactory.CreateOrderItem> orderItemList = new List<TestDataFactory.CreateOrderItem>();
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId); 
 
-        // #1 order item
-        TestDataFactory.CreateOrderItem product1 = new TestDataFactory.CreateOrderItem();
-        product1.type = OrderProductType.ORDER_PRODUCT;
-        product1.productCode = '001';
-        product1.quantity = 2;
-        product1.unitPrice = 10;
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
-        // #2 order item
-        TestDataFactory.CreateOrderItem product2 = new TestDataFactory.CreateOrderItem();
-        product2.type = OrderProductType.ORDER_PRODUCT;
-        product2.productCode = '002';
-        product2.quantity = 2;
-        product2.unitPrice = 10;
+        OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
-        // #3 order item
-        TestDataFactory.CreateOrderItem shipping = new TestDataFactory.CreateOrderItem();
-        shipping.type = OrderProductType.DELIVERY_CHARGE;
-        shipping.productCode = '003';
-        shipping.quantity = 2;
-        shipping.unitPrice = 10;
-        
-        orderItemList.add(product1);
-        orderItemList.add(product2);
-        orderItemList.add(shipping);
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
 
-        return TestDataFactory.createOrderAndRelatedObjects(orderItemList, location.Id)?.Id;
+        String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
+
+        ConnectApi.FulfillmentOrderInvoiceOutputRepresentation invoiceOutput = fulfillmentOrderApi.createInvoice(fulfillmentOrderId);
+
+        List<Invoice> invoices = [SELECT Id FROM Invoice WHERE Id =: invoiceOutput.invoiceId];
+
+        Test.startTest();
+        ConnectApi.EnsureFundsAsyncOutputRepresentation ensureFundsOutput = orderSummaryApi.ensureFundsAsync(orderSummary.Id, invoices[0].Id);
+        Test.stopTest();
+
+        System.assert(ensureFundsOutput.success, 'Ensure funds action failed');
     }
 
     /**
-    * @description Creates OrderSummary for test methods
-    * @param orderId The Id of the order
-    * @return OutputRepresentation
+    * @description Test method of OrderSummaryApi.previewReturn
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    private static ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId) {
-        OrderSummaryApi api = new OrderSummaryApi();
-        return api.createOrderSummary(orderId);
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
+    static void shouldPreviewReturn() {
+        String orderId = TestDataFactory.createOrder();
+
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
+
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
+
+        OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
+
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
+        String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
+
+        FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;
+        DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
+
+        List<OrderItemSummary> orderItemSummaries = [
+            SELECT Type, Quantity, QuantityAvailableToReturn
+            FROM OrderItemSummary 
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
+
+        Boolean areOrderItemsReturnable = false;
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            if (!areOrderItemsReturnable) {
+                break;
+            }
+        }
+
+        System.assert(areOrderItemsReturnable, 'Order item is not returnable');
+
+        if (areOrderItemsReturnable) {
+            // prepare change input
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
+            
+            Test.startTest();
+            ConnectApi.PreviewReturnOutputRepresentation output = orderSummaryApi.previewReturn(orderSummary.Id, changeInput);
+            Test.stopTest();
+
+            System.assert(output.success, 'Preview return action failed');
+        }
     }
 
     /**
-    * @description Builds input for adjustPreview & adjustSubmit
-    * @param orderItemSummary OrderItemSummary
-    * @param orderSummary OrderSummary
-    * @param adjustment Adjustment amout of the items
-    * @return OutputRepresentation
+    * @description Test method of OrderSummaryApi.submitReturn
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    private static List<ConnectApi.AdjustItemInputRepresentation> buildAdjustInput(OrderItemSummary orderItemSummary, OrderSummary orderSummary, Double adjustment) {
-        List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = new List<ConnectApi.AdjustItemInputRepresentation>();
-        ConnectApi.AdjustItemInputRepresentation adjustItemInput = new ConnectApi.AdjustItemInputRepresentation();
-        adjustItemInput.adjustmentType = orderSummary.TaxLocaleType.equalsIgnoreCase(Constants.GROSS)
-            ? 'AmountWithTax'
-            : 'AmountWithoutTax';
-        adjustItemInput.amount = adjustment;
-        adjustItemInput.orderItemSummaryId = orderItemSummary.Id;
-        adjustItemInput.reason = 'Unknown';
-        adjustItemInputList.add(adjustItemInput);
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
+    static void shouldSubmitReturn() {
+        String orderId = TestDataFactory.createOrder();
 
-        return adjustItemInputList;
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId); 
+
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
+
+        OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
+
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
+        String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
+
+        FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;
+        DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
+
+        List<OrderItemSummary> orderItemSummaries = [
+            SELECT Type, Quantity, QuantityAvailableToReturn
+            FROM OrderItemSummary 
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
+
+        Boolean areOrderItemsReturnable = false;
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            if (!areOrderItemsReturnable) {
+                break;
+            }
+        }
+
+        System.assert(areOrderItemsReturnable, 'Order item is not returnable');
+
+        if (areOrderItemsReturnable) {
+            // prepare change input
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
+            
+            Test.startTest();
+            ConnectApi.SubmitReturnOutputRepresentation output = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
+            Test.stopTest();
+
+            System.assert(output.success, 'Submit return action failed');
+
+            orderItemSummaries = [
+                SELECT Status, QuantityReturned
+                FROM OrderItemSummary 
+                WHERE OrderSummaryId =: orderSummary.Id
+                AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
+
+            for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+                System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderItemStatus.RETURNED.enumValue), 'Status of the Order item is not RETURNED');
+                System.assert(orderItemSummary.QuantityReturned > 0, 'The quantity returned should greater than zero');
+            }
+        }
+    }
+
+    /**
+    * @description Test method of OrderSummaryApi.previewCancel
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
+    */
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
+    static void shouldPreviewCancel() {
+        String orderId = TestDataFactory.createOrder();
+
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
+
+        OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+
+        List<OrderItemSummary> orderItemSummaries = [
+            SELECT Type, Quantity, QuantityAvailableToCancel
+            FROM OrderItemSummary 
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
+
+        Boolean areOrderItemsCancelable = false;
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+            areOrderItemsCancelable = OrderSummaryService.isOrderItemCancelable(orderItemSummary);
+            if (!areOrderItemsCancelable) {
+                break;
+            }
+        }
+
+        System.assert(areOrderItemsCancelable, 'Order item is not returnable');
+
+        if (areOrderItemsCancelable) {
+            // prepare change input
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
+            
+            Test.startTest();
+            ConnectApi.PreviewCancelOutputRepresentation output = orderSummaryApi.previewCancel(orderSummary.Id, changeInput);
+            Test.stopTest();
+
+            System.assert(output.success, 'Preview cancel action failed');
+        }
+    }
+
+    /**
+    * @description Test method of OrderSummaryApi.submitCancel
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
+    */
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
+    static void shouldSubmitCancel() {
+        String orderId = TestDataFactory.createOrder();
+
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
+
+        OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+
+        List<OrderItemSummary> orderItemSummaries = [
+            SELECT Type, Quantity, QuantityAvailableToCancel
+            FROM OrderItemSummary 
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
+
+        Boolean areOrderItemsCancelable = false;
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+            areOrderItemsCancelable = OrderSummaryService.isOrderItemCancelable(orderItemSummary);
+            if (!areOrderItemsCancelable) {
+                break;
+            }
+        }
+
+        System.assert(areOrderItemsCancelable, 'Order item is not cancelable');
+
+        if (areOrderItemsCancelable) {
+            // prepare change input
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
+            
+            Test.startTest();
+            ConnectApi.SubmitCancelOutputRepresentation output = orderSummaryApi.submitCancel(orderSummary.Id, changeInput);
+            Test.stopTest();
+
+            System.assert(output.success, 'Submit cancel action failed');
+
+            orderItemSummaries = [
+                SELECT Status, QuantityCanceled
+                FROM OrderItemSummary 
+                WHERE OrderSummaryId =: orderSummary.Id
+                AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
+
+            for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+                System.assert(orderItemSummary.Status.equalsIgnoreCase(OrderItemStatus.CANCELED.enumValue), 'Status of the Order item is not CANCELED');
+                System.assert(orderItemSummary.QuantityCanceled > 0, 'The quantity canceled should greater than zero');
+            }
+        }
+    }
+
+    /**
+    * @description Test method of OrderSummaryApi.createCreditMemo
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
+    */
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
+    static void shouldCreateCreditMemo() {
+        String orderId = TestDataFactory.createOrder();
+
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
+
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
+
+        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
+
+        String fulfillmentOrderId = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE).fulfillmentOrderIds[0];
+
+        FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;
+        DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
+
+        List<OrderItemSummary> orderItemSummaries = [
+            SELECT Type, Quantity, QuantityAvailableToReturn
+            FROM OrderItemSummary 
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
+
+        Boolean areOrderItemsReturnable = false;
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            if (!areOrderItemsReturnable) {
+                break;
+            }
+        }
+
+        System.assert(areOrderItemsReturnable, 'Order item is not returnable');
+
+        if (areOrderItemsReturnable) {
+            OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+
+            // prepare change input
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
+
+            // return
+            ConnectApi.SubmitReturnOutputRepresentation submitReturnOutput = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
+            
+            Test.startTest();
+            ConnectApi.CreateCreditMemoOutputRepresentation output = orderSummaryApi.createCreditMemo(orderSummary.Id, new List<Id>{ submitReturnOutput.changeOrderId });
+            Test.stopTest();
+
+            String creditMemoId = output.creditMemoId;
+
+            System.assert(output.success, 'Create credit memo action failed');
+
+            List<CreditMemo> creditMemos = [SELECT Id FROM CreditMemo WHERE Id =: creditMemoId];
+
+            System.assert(!creditMemos.isEmpty(), 'No CreditMemo record found');
+        }
+    }
+
+    /**
+    * @description Test method of OrderSummaryApi.ensureRefundsAsync
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
+    */
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
+    static void shouldEnsureRefunds() {
+        String orderId = TestDataFactory.createOrder();
+
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
+
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
+
+        String fulfillmentOrderId = new FulfillmentOrderApi().createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE).fulfillmentOrderIds[0];
+
+        FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;
+        DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
+
+        List<OrderItemSummary> orderItemSummaries = [
+            SELECT Type, Quantity, QuantityAvailableToReturn
+            FROM OrderItemSummary 
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
+
+        Boolean areOrderItemsReturnable = false;
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            if (!areOrderItemsReturnable) {
+                break;
+            }
+        }
+
+        System.assert(areOrderItemsReturnable, 'Order item is not returnable');
+
+        if (areOrderItemsReturnable) {
+            OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
+
+            // prepare change input
+            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
+
+            // return
+            ConnectApi.SubmitReturnOutputRepresentation submitReturnOutput = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
+
+            // create credit memo
+            ConnectApi.CreateCreditMemoOutputRepresentation creditMemoOutput = orderSummaryApi.createCreditMemo(orderSummary.Id, new List<Id>{ submitReturnOutput.changeOrderId });
+
+            Test.startTest();
+            ConnectApi.EnsureRefundsAsyncOutputRepresentation output = orderSummaryApi.ensureRefundsAsync(orderSummary.Id, creditMemoOutput.creditMemoId, 0);
+            Test.stopTest();
+
+            System.assert(output.success, 'Ensure refunds action failed');
+        }
     }
 }

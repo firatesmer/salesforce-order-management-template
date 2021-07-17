@@ -2,8 +2,9 @@
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
 * @description XML parser class
+*   suppress reason: ignore
 */
-@SuppressWarnings('PMD.CognitiveComplexity')
+@suppressWarnings('PMD.CognitiveComplexity')
 public class XmlParser {
     private Boolean serializeNulls = true;
     private String rootElement;

@@ -14,19 +14,17 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     *   OrderItemSummary, a FulfillmentOrderLineItem is created and assigned 
     *   to the corresponding FulfillmentOrder
     *   suppress reason: ignore
-    * @param createFulfillmentOrder CreateFulfillmentOrder model
+    * @param orderSummaryId Id of the OrderSummary
+    * @param locationId Id of the Location
+    * @param fulfillmentOrderType Type of the FulfillmentOrder (enum)
     * @return FulfillmentOrder output
     */
-    @SuppressWarnings('PMD.OperationWithLimitsInLoop')
-    public ConnectApi.FulfillmentOrderOutputRepresentation createFulfillmentOrders(CreateFulfillmentOrder createFulfillmentOrder) {
-        String orderSummaryId = createFulfillmentOrder.orderSummaryId;
-        String locationId = createFulfillmentOrder.locationId;
-        String fulfillmentType = createFulfillmentOrder.fulfillmentType;
-
+    public ConnectApi.FulfillmentOrderOutputRepresentation createFulfillmentOrders(String orderSummaryId, String locationId, FulfillmentOrderType fulfillmentOrderType) {
         ConnectApi.FulfillmentOrderInputRepresentation fulfillmentOrderInput = new ConnectApi.FulfillmentOrderInputRepresentation();
         fulfillmentOrderInput.orderSummaryId = orderSummaryId;
         
         List<OrderDeliveryGroupSummary> orderDeliveryGroupSummaryList = [SELECT Id FROM OrderDeliveryGroupSummary WHERE OrderSummaryId =: orderSummaryId WITH SECURITY_ENFORCED];
+        Map<String, List<OrderItemSummary>> orderDeliveryGroupSummaryIdToOrderItemSummaryList = getOrderItemSummaryMap(orderDeliveryGroupSummaryList);
 
         for (OrderDeliveryGroupSummary orderDeliveryGroupSummary: orderDeliveryGroupSummaryList) {
             fulfillmentOrderInput.orderDeliveryGroupSummaryId = orderDeliveryGroupSummary.Id;
@@ -34,11 +32,10 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
             List<ConnectApi.FulfillmentGroupInputRepresentation> fulfillmentGroups = new List<ConnectApi.FulfillmentGroupInputRepresentation>();
             ConnectApi.FulfillmentGroupInputRepresentation fulfillmentGroup = new ConnectApi.FulfillmentGroupInputRepresentation();
             fulfillmentGroup.fulfilledFromLocationId = locationId;
-            fulfillmentGroup.fulfillmentType = fulfillmentType;
+            fulfillmentGroup.fulfillmentType = fulfillmentOrderType.enumValue;
 
             List<ConnectApi.OrderItemSummaryInputRepresentation> orderItemSummaryInputList = new List<ConnectApi.OrderItemSummaryInputRepresentation>();
-            List<OrderItemSummary> orderItemSummaryList = [SELECT Quantity FROM OrderItemSummary 
-                WHERE OrderSummaryId =: orderSummaryId AND OrderDeliveryGroupSummaryId =: orderDeliveryGroupSummary.Id WITH SECURITY_ENFORCED];
+            List<OrderItemSummary> orderItemSummaryList = orderDeliveryGroupSummaryIdToOrderItemSummaryList.get(orderDeliveryGroupSummary.Id);
 
             for(OrderItemSummary orderItemSummary : orderItemSummaryList) {
                 ConnectApi.OrderItemSummaryInputRepresentation orderItemSummaryInput = new ConnectApi.OrderItemSummaryInputRepresentation();
@@ -101,37 +98,42 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     * @description Create FulfillmentOrders for multiple 
     *   OrderDeliveryGroups in a single request
     *   suppress reason: ignore
-    * @param createFulfillmentOrderList CreateFulfillmentOrder model list
-    * @return MultipleFulfillmentOrder output
+    * @param createFulfillmentOrderList CreateFulfillmentOrderInput model list
+    * @return Create multiple fulfillment order output
     */
-    @SuppressWarnings('PMD.OperationWithLimitsInLoop')
-    public ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrder(List<CreateFulfillmentOrder> createFulfillmentOrderList) {
+    public ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrder(List<CreateFulfillmentOrderInput> createFulfillmentOrderList) {
         ConnectApi.MultipleFulfillmentOrderInputRepresentation multipleFulfillmentOrderInput = new ConnectApi.MultipleFulfillmentOrderInputRepresentation();
         multipleFulfillmentOrderInput.fulfillmentOrders = new List<ConnectApi.FulfillmentOrderInputRepresentation>();
 
-        for (CreateFulfillmentOrder createFulfillmentOrder : createFulfillmentOrderList) {
-            String orderSummaryId = createFulfillmentOrder.orderSummaryId;
-            String locationId = createFulfillmentOrder.locationId;
-            String fulfillmentType = createFulfillmentOrder.fulfillmentType;
+        // prevent query in loop
+        Set<Id> orderSummaryIdList = getOrderSummaryIdList(createFulfillmentOrderList);
+        List<OrderDeliveryGroupSummary> orderDeliveryGroupSummaryList = [SELECT OrderSummaryId FROM OrderDeliveryGroupSummary 
+                                                                        WHERE OrderSummaryId IN: orderSummaryIdList 
+                                                                        WITH SECURITY_ENFORCED];
+        Map<String, List<OrderDeliveryGroupSummary>> orderSummaryIdToOrderDeliveryGroupSummaryList = getOrderDeliveryGroupSummaryMap(orderDeliveryGroupSummaryList);
+        Map<String, List<OrderItemSummary>> orderDeliveryGroupSummaryIdToOrderItemSummaryList = getOrderItemSummaryMap(orderDeliveryGroupSummaryList);
+
+        for (CreateFulfillmentOrderInput createFulfillmentOrderInput : createFulfillmentOrderList) {
+            String orderSummaryId = CreateFulfillmentOrderInput.orderSummaryId;
+            String locationId = CreateFulfillmentOrderInput.locationId;
+            String fulfillmentType = CreateFulfillmentOrderInput.fulfillmentType;
 
             ConnectApi.FulfillmentOrderInputRepresentation fulfillmentOrderInput = new ConnectApi.FulfillmentOrderInputRepresentation();
             fulfillmentOrderInput.orderSummaryId = orderSummaryId;
+
+            List<OrderDeliveryGroupSummary> currentOrderDeliveryGroupSummaryList = orderSummaryIdToOrderDeliveryGroupSummaryList.get(orderSummaryId);
             
-            List<OrderDeliveryGroupSummary> orderDeliveryGroupSummaryList = [SELECT Id FROM OrderDeliveryGroupSummary 
-                WHERE OrderSummaryId =: orderSummaryId WITH SECURITY_ENFORCED];
-    
-            for (OrderDeliveryGroupSummary orderDeliveryGroupSummary: orderDeliveryGroupSummaryList) {
+            for (OrderDeliveryGroupSummary orderDeliveryGroupSummary: currentOrderDeliveryGroupSummaryList) {
                 fulfillmentOrderInput.orderDeliveryGroupSummaryId = orderDeliveryGroupSummary.Id;
     
                 List<ConnectApi.FulfillmentGroupInputRepresentation> fulfillmentGroups = new List<ConnectApi.FulfillmentGroupInputRepresentation>();
                 ConnectApi.FulfillmentGroupInputRepresentation fulfillmentGroup = new ConnectApi.FulfillmentGroupInputRepresentation();
                 fulfillmentGroup.fulfilledFromLocationId = locationId;
                 fulfillmentGroup.fulfillmentType = fulfillmentType;
-                fulfillmentGroup.referenceId = orderDeliveryGroupSummary.Id;
+                fulfillmentGroup.referenceId = CreateFulfillmentOrderInput.orderSummaryId;
     
                 List<ConnectApi.OrderItemSummaryInputRepresentation> orderItemSummaryInputList = new List<ConnectApi.OrderItemSummaryInputRepresentation>();
-                List<OrderItemSummary> orderItemSummaryList = [SELECT Quantity FROM OrderItemSummary 
-                    WHERE OrderSummaryId =: orderSummaryId AND OrderDeliveryGroupSummaryId =: orderDeliveryGroupSummary.Id WITH SECURITY_ENFORCED];
+                List<OrderItemSummary> orderItemSummaryList = orderDeliveryGroupSummaryIdToOrderItemSummaryList.get(orderDeliveryGroupSummary.Id);
     
                 for(OrderItemSummary orderItemSummary : orderItemSummaryList) {
                     ConnectApi.OrderItemSummaryInputRepresentation orderItemSummaryInput = new ConnectApi.OrderItemSummaryInputRepresentation();
@@ -154,9 +156,89 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     }
 
     /**
-     * @description Model for create FulfillmentOrder action
-     */
-    public class CreateFulfillmentOrder {
+    * @description Create Invoices for multiple FulfillmentOrders 
+    * @param fulfillmentOrderIds The list of FulfillmentOrder Ids
+    * @return Create multiple invoices output
+    */
+    public ConnectApi.MultipleFulfillmentOrderInvoicesOutputRepresentation createMultipleInvoices(List<String> fulfillmentOrderIds) {
+        ConnectApi.MultipleFulfillmentOrderInvoicesInputRepresentation input = new ConnectApi.MultipleFulfillmentOrderInvoicesInputRepresentation();
+        input.fulfillmentOrderIds = fulfillmentOrderIds;
+
+        ConnectApi.MultipleFulfillmentOrderInvoicesOutputRepresentation output = ConnectApi.FulfillmentOrder.createMultipleInvoices(input);
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    /**
+    * @description Returns Ids of OrderSummary list from request
+    * @param createFulfillmentOrderList Request list
+    * @return OrderSummary Id list
+    */
+    private Set<Id> getOrderSummaryIdList(List<CreateFulfillmentOrderInput> createFulfillmentOrderList) {
+        Set<Id> orderSummaryIdList = new Set<Id>();
+
+        for (CreateFulfillmentOrderInput createFulfillmentOrderInput : createFulfillmentOrderList) {
+            orderSummaryIdList.add(CreateFulfillmentOrderInput.orderSummaryId);
+        }
+
+        return orderSummaryIdList;
+    }
+
+    /**
+    * @description Gets OrderSummaryId to OrderDeliveryGroupSummary map
+    * @param orderDeliveryGroupSummaryList List of OrderDeliveryGroupSummary records
+    * @return Map of OrderSummaryId to OrderDeliveryGroupSummary
+    */
+    private Map<String, List<OrderDeliveryGroupSummary>> getOrderDeliveryGroupSummaryMap(List<OrderDeliveryGroupSummary> orderDeliveryGroupSummaryList) {
+        Map<String, List<OrderDeliveryGroupSummary>> orderSummaryIdToOrderDeliveryGroupSummaryList = new Map<String, List<OrderDeliveryGroupSummary>>();
+
+        // map OrderSummary.Id to OrderDeliveryGroupSummary list
+        for (OrderDeliveryGroupSummary orderDeliveryGroupSummary : orderDeliveryGroupSummaryList) {
+            List<OrderDeliveryGroupSummary> existingOrderDeliveryGroupSummaryList =  orderSummaryIdToOrderDeliveryGroupSummaryList.get(orderDeliveryGroupSummary.OrderSummaryId);
+
+            if (existingOrderDeliveryGroupSummaryList == null) {
+                orderSummaryIdToOrderDeliveryGroupSummaryList.put(orderDeliveryGroupSummary.OrderSummaryId, new List<OrderDeliveryGroupSummary>{ orderDeliveryGroupSummary });
+            }
+            else {
+                existingOrderDeliveryGroupSummaryList.add(orderDeliveryGroupSummary);
+            }
+        }
+
+        return orderSummaryIdToOrderDeliveryGroupSummaryList;
+    }
+
+    /**
+    * @description Gets OrderDeliveryGroupSummaryId to list of OrderItemSummary map
+    * @param orderDeliveryGroupSummaryList List of OrderDeliveryGroupSummary records
+    * @return Map of  OrderDeliveryGroupSummaryId to list of OrderItemSummary
+    */
+    private Map<String, List<OrderItemSummary>> getOrderItemSummaryMap(List<OrderDeliveryGroupSummary> orderDeliveryGroupSummaryList) {
+        Map<String, List<OrderItemSummary>> orderDeliveryGroupSummaryIdToOrderItemSummaryList = new Map<String, List<OrderItemSummary>>();
+
+        Set<String> orderDeliveryGroupSummaryIdList = ObjectUtils.getIdList(orderDeliveryGroupSummaryList);
+
+        List<OrderItemSummary> orderItemSummaryList = [SELECT Quantity, OrderDeliveryGroupSummaryId FROM OrderItemSummary 
+                                                    WHERE OrderDeliveryGroupSummaryId IN: orderDeliveryGroupSummaryIdList 
+                                                    WITH SECURITY_ENFORCED];
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaryList) {
+            List<OrderItemSummary> existingOrderItemSummaryList = orderDeliveryGroupSummaryIdToOrderItemSummaryList.get(orderItemSummary.OrderDeliveryGroupSummaryId);
+
+            if (existingOrderItemSummaryList == null) {
+                orderDeliveryGroupSummaryIdToOrderItemSummaryList.put(orderItemSummary.OrderDeliveryGroupSummaryId, new List<OrderItemSummary>{ orderItemSummary });
+            }
+            else {
+                existingOrderItemSummaryList.add(orderItemSummary);
+            }
+        }
+
+        return orderDeliveryGroupSummaryIdToOrderItemSummaryList;
+    }
+
+    /**
+    * @description Model for create FulfillmentOrder action
+    */
+    public class CreateFulfillmentOrderInput {
         public String locationId;
         public String orderSummaryId;
         public String fulfillmentType;

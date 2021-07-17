@@ -4,6 +4,7 @@
 * @description Test data factory class
 */
 @isTest
+@suppressWarnings('PMD.ExcessivePublicCount')
 public class TestDataFactory {
     /**
     * @description Returns default success Http response body
@@ -80,18 +81,6 @@ public class TestDataFactory {
     }
 
     /**
-    * @description Creates contract
-    * @param accountId Account Id (createAccount)
-    * @return Contract
-    */
-    public static Contract createContract(Id accountId) {
-        Contract contract = new Contract();
-        contract.AccountId = accountId;
-        contract.Status = Constants.DRAFT;
-        return contract;
-    }
-
-    /**
     * @description Creates saleschannel
     * @param saleschannelName Saleschannel name
     * @return Saleschannel
@@ -105,17 +94,15 @@ public class TestDataFactory {
     /**
     * @description Creates order
     * @param accountId Account Id (createAccount)
-    * @param contractId Contract Id (createContract)
     * @param saleschannelId Saleschannel Id (createSaleschannel)
     * @return Order
     */
-    public static Order createOrder(Id accountId, Id contractId, Id saleschannelId) {
+    public static Order createOrder(Id accountId, Id saleschannelId) {
         Order order = new Order();
         order.AccountId = accountId;
         order.Pricebook2Id = Test.getStandardPricebookId();
         order.EffectiveDate = Date.today();
-        order.Status = Constants.DRAFT;
-        order.ContractId = contractId;
+        order.Status = OrderStatus.DRAFT.enumValue;
         order.SalesChannelId = saleschannelId;
         return order;
     }
@@ -158,18 +145,18 @@ public class TestDataFactory {
     * @param unitPrice Unit price
     * @param quantity Quantity
     * @param orderDeliveryGroupId Order delivery group Id (createOrderDeliveryGroup)
-    * @param orderProductType Order item type
+    * @param orderItemType Order item type
     * @return OrderDeliveryGroup
     */
-    @SuppressWarnings('PMD.ExcessiveParameterList')
-    public static OrderItem createOrderItem(Id orderId, Id productId, Id priceBookEntryId, Decimal unitPrice, Integer quantity, Id orderDeliveryGroupId, String orderProductType) {
+    @suppressWarnings('PMD.ExcessiveParameterList')
+    public static OrderItem createOrderItem(Id orderId, Id productId, Id priceBookEntryId, Decimal unitPrice, Integer quantity, Id orderDeliveryGroupId, String orderItemType) {
         OrderItem item = new OrderItem();
         item.OrderId = orderId;
         item.Product2Id = productId;
         item.PricebookentryId = priceBookEntryId;
         item.UnitPrice = unitPrice;
         item.Quantity = quantity;
-        item.Type = orderProductType;
+        item.Type = OrderItemType;
         item.OrderDeliveryGroupId = orderDeliveryGroupId;
         item.TotalLineAmount = unitPrice * quantity;
         return item;
@@ -198,7 +185,7 @@ public class TestDataFactory {
     * @param rate Tax rate
     * @return OrderItemTaxLineItem
     */
-    @SuppressWarnings('PMD.ExcessiveParameterList')
+    @suppressWarnings('PMD.ExcessiveParameterList')
     public static OrderItemTaxLineItem createOrderItemTaxLineItem(String name, Id orderItemId, String type, Double amount, Double rate) {
         OrderItemTaxLineItem itemTax = new OrderItemTaxLineItem();
         itemTax.Name = name;
@@ -224,14 +211,31 @@ public class TestDataFactory {
     /**
     * @description Creates payment authorization
     * @param amount Payment amount
-    * @param paymentGroupId Payment group Id (createPaymentGroup)
+    * @param paymentGroupId Id of the PaymentGroup (createPaymentGroup)
+    * @param paymentMethodId Id of the PaymentMethod (createPaymentMethod)
+    * @return PaymentAuthorization
+    */
+    public static PaymentAuthorization createPaymentAuthorization(Double amount, String paymentGroupId, String paymentMethodId) {
+        PaymentAuthorization paymentAuthorization = new PaymentAuthorization();
+        paymentAuthorization.Amount = amount;
+        paymentAuthorization.Status = Constants.PROCESSED;
+        paymentAuthorization.ProcessingMode = ProcessingMode.EXTERNAL.enumValue;
+        paymentAuthorization.PaymentMethodId = paymentMethodId;
+        paymentAuthorization.PaymentGroupId = paymentGroupId;
+        return paymentAuthorization;
+    }
+
+    /**
+    * @description Creates payment authorization
+    * @param amount Payment amount
+    * @param paymentGroupId Id of the PaymentGroup (createPaymentGroup)
     * @return PaymentAuthorization
     */
     public static PaymentAuthorization createPaymentAuthorization(Double amount, String paymentGroupId) {
         PaymentAuthorization paymentAuthorization = new PaymentAuthorization();
         paymentAuthorization.Amount = amount;
-        paymentAuthorization.Status = Constants.PROCESSED;
-        paymentAuthorization.ProcessingMode = Constants.EXTERNAL;
+        paymentAuthorization.Status = PaymentAuthorizationStatus.PROCESSED.enumValue;
+        paymentAuthorization.ProcessingMode = ProcessingMode.EXTERNAL.enumValue;
         paymentAuthorization.PaymentGroupId = paymentGroupId;
         return paymentAuthorization;
     }
@@ -243,6 +247,8 @@ public class TestDataFactory {
     * @return Order
     */
     public static Order createOrderAndRelatedObjects(List<CreateOrderItem> orderItemList, String locationId) {
+        Double subTotal = 0; 
+
         // Product2
         Map<String, Product2> codeToProduct = new Map<String, Product2>();
         for (CreateOrderItem orderItem : orderItemList) {
@@ -255,6 +261,7 @@ public class TestDataFactory {
         for (CreateOrderItem orderItem : orderItemList) {
             Product2 product = codeToProduct.get(orderItem.productCode);
             codeToPricebookEntry.put(orderItem.productCode, createPricebookEntry(orderItem.unitPrice, product.Id));
+            subTotal += (Double)(orderItem.unitPrice * orderItem.quantity);
         }
         insert codeToPricebookEntry.values();
 
@@ -262,18 +269,12 @@ public class TestDataFactory {
         Account account = createAccount(Constants.TEST, Constants.TEST, 'joe@doe.com');
         insert account;
 
-        // Contract
-        Contract contract = createContract(account.Id);
-        insert contract;
-        contract.Status = Constants.ACTIVATED;
-        update contract;
-
         // Saleschannel
         Saleschannel saleschannel = createSaleschannel(Constants.TEST);
         insert saleschannel;
 
         // Order
-        Order order = createOrder(account.Id, contract.Id, saleschannel.Id);
+        Order order = createOrder(account.Id, saleschannel.Id);
         insert order;
         
         // OrderDeliveryMethod
@@ -291,7 +292,7 @@ public class TestDataFactory {
             PricebookEntry pricebookEntry = codeToPricebookEntry.get(orderItem.productCode);
 
             OrderItem standardOrderItem = createOrderItem(order.Id, product.Id, pricebookEntry.Id, orderItem.unitPrice, 
-                orderItem.quantity, orderDeliveryGroup.Id, orderItem.type.toString());
+                orderItem.quantity, orderDeliveryGroup.Id, orderItem.type.enumValue);
             codeToOrderItem.put(orderItem.productCode, standardOrderItem);    
         }
         insert codeToOrderItem.values();
@@ -311,10 +312,145 @@ public class TestDataFactory {
             insert orderItemTaxLineItems;
         }
 
-        order.Status = Constants.ACTIVATED;
+        // CardPaymentMethod
+        CardPaymentMethod paymentMethod = createCardPaymentMethod(account);
+        insert paymentMethod;
+
+        // PaymentGroup
+        PaymentGroup paymentGroup = TestDataFactory.createPaymentGroup(order.Id);
+        insert paymentGroup;
+
+        // PaymentAuthorization 
+        PaymentAuthorization paymentAuthorization = TestDataFactory.createPaymentAuthorization(subTotal, paymentGroup.Id, paymentMethod.Id);
+        insert paymentAuthorization;          
+
+        order.Status = OrderStatus.ACTIVATED.enumValue;
         update order;
 
         return order;
+    }
+
+    /**
+    * @description Creates CardPaymentMethod
+    * @param account Account
+    * @return CardPaymentMethod
+    */
+    public static CardPaymentMethod createCardPaymentMethod(Account account) {
+        CardPaymentMethod paymentMethod = new CardPaymentMethod();
+        paymentMethod.CardType = CardPaymentMethodType.VISA.enumValue;
+        paymentMethod.CardHolderName = String.format('{0} {1}', new List<String>{ account.FirstName, account.LastName });
+        paymentMethod.ExpiryYear = System.today().year() + 1;
+        paymentMethod.ExpiryMonth = 1;
+        paymentMethod.CardCategory = CardPaymentMethodCategory.CREDIT_CARD.enumValue;
+        paymentMethod.Status = CardPaymentMethodStatus.ACTIVE.enumValue;
+        paymentMethod.AccountId = account.Id;
+        paymentMethod.ProcessingMode = ProcessingMode.EXTERNAL.enumValue;
+        return paymentMethod;
+    }
+
+    /**
+    * @description Creates Payment
+    * @param amount Amount of the Payment
+    * @return Payment
+    */
+    public static Payment createPayment(Double amount) {
+        Payment payment = new Payment();
+        payment.Amount = amount;
+        payment.Status = PaymentStatus.PROCESSED.enumValue;
+        payment.ProcessingMode = ProcessingMode.EXTERNAL.enumValue;
+        payment.Type = PaymentType.CAPTURE.enumValue;
+        return payment;
+    }
+
+    /**
+    * @description Creates Order for test methods
+    *   Test class containing a test setup method cannot 
+    *   have any methods annotated with "SeeAllData=true"
+    * @return Id of the Order
+    */
+    public static String createOrder() {
+        Schema.Location location = TestDataFactory.createLocation(Constants.WAREHOUSE, Constants.WAREHOUSE);
+        insert location;
+
+        List<TestDataFactory.CreateOrderItem> orderItemList = new List<TestDataFactory.CreateOrderItem>();
+
+        // #1 order item
+        TestDataFactory.CreateOrderItem product1 = new TestDataFactory.CreateOrderItem();
+        product1.type = OrderItemType.ORDER_PRODUCT;
+        product1.productCode = '001';
+        product1.quantity = 2;
+        product1.unitPrice = 10;
+
+        // #2 order item
+        TestDataFactory.CreateOrderItem product2 = new TestDataFactory.CreateOrderItem();
+        product2.type = OrderItemType.ORDER_PRODUCT;
+        product2.productCode = '002';
+        product2.quantity = 2;
+        product2.unitPrice = 10;
+
+        // #3 order item
+        TestDataFactory.CreateOrderItem shipping = new TestDataFactory.CreateOrderItem();
+        shipping.type = OrderItemType.DELIVERY_CHARGE;
+        shipping.productCode = '003';
+        shipping.quantity = 2;
+        shipping.unitPrice = 10;
+        
+        orderItemList.add(product1);
+        orderItemList.add(product2);
+        orderItemList.add(shipping);
+
+        return TestDataFactory.createOrderAndRelatedObjects(orderItemList, location.Id)?.Id;
+    }
+
+    /**
+    * @description Creates OrderSummary for test methods
+    * @param orderId The Id of the order
+    * @return OutputRepresentation
+    */
+    public static OrderSummary createOrderSummary(String orderId) {
+        /**
+        * In most cases we will have a flow that creates 
+        * OrderSummary automatically once the Order is 
+        * activated so we will check if the OrderSummary 
+        * is already created behind the scenes to prevent 
+        * test fail but in that case code will not be covered
+        */
+        List<OrderSummary> orderSummaries = [SELECT TaxLocaleType FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        OrderSummary orderSummary;
+
+        if(orderSummaries.isEmpty()) {
+            new OrderSummaryApi().createOrderSummary(orderId);
+            orderSummary = [SELECT TaxLocaleType, Account.Id FROM OrderSummary WHERE OriginalOrderId =: orderId];
+        }
+        else {
+            orderSummary = orderSummaries[0];
+        }
+
+        return orderSummary;
+    }
+
+    /**
+    * @description Builds input for adjustPreview & adjustSubmit
+    * @param orderItemSummary OrderItemSummary
+    * @param orderSummary OrderSummary
+    * @param reason Reason for change
+    * @param adjustment Adjustment amout of the items
+    * @return List of ConnectApi.AdjustItemInputRepresentation
+    */
+    @suppressWarnings('PMD.ExcessiveParameterList')
+    public static List<ConnectApi.AdjustItemInputRepresentation> buildAdjustInput(OrderItemSummary orderItemSummary, OrderSummary orderSummary, OrderItemSummaryChangeReason reason, Double adjustment) {
+        List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = new List<ConnectApi.AdjustItemInputRepresentation>();
+
+        ConnectApi.AdjustItemInputRepresentation adjustItemInput = new ConnectApi.AdjustItemInputRepresentation();
+        adjustItemInput.adjustmentType = orderSummary.TaxLocaleType != null && orderSummary.TaxLocaleType.equalsIgnoreCase(Constants.GROSS)
+                ? Constants.AMOUNT_WITH_TAX
+                : Constants.AMOUNT_WITHOUT_TAX;
+        adjustItemInput.amount = adjustment;
+        adjustItemInput.orderItemSummaryId = orderItemSummary.Id;
+        adjustItemInput.reason = reason.enumValue;
+        adjustItemInputList.add(adjustItemInput);
+
+        return adjustItemInputList;
     }
 
     /**
@@ -348,7 +484,7 @@ public class TestDataFactory {
         * @description Type of the item 
         *   DELIVERY CHARGE|ORDER PRODUCT
         */
-        public OrderProductType type { get; set; }
+        public OrderItemType type { get; set; }
 
         /**
         * @description Tax amount for the item (optional)

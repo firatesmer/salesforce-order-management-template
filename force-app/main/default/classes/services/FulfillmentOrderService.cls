@@ -4,4 +4,5 @@
 * @description FulfillmentOrder/FulfillmentOrderLineItem service class
 */
 public with sharing class FulfillmentOrderService {
+
 }

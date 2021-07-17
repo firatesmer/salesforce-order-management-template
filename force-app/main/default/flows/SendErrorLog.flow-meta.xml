@@ -27,7 +27,7 @@
             </value>
         </inputParameters>
     </actionCalls>
-    <apiVersion>51.0</apiVersion>
+    <apiVersion>52.0</apiVersion>
     <description>Sends e-mail if the field isTrue is checked/true.</description>
     <interviewLabel>Send Error Log {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Send Error Log</label>

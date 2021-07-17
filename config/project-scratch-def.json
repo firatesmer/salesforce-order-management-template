@@ -1,5 +1,19 @@
 {
   "orgName": "salesforce-order-management-template",
   "edition": "Developer",
-  "features": ["PersonAccounts", "MultiCurrency", "ProcessBuilder", "StateAndCountryPicklist", "OrderManagement"]
+  "features": ["PersonAccounts", "MultiCurrency", "ProcessBuilder", "OrderManagement"],
+  "settings": {
+    "orderSettings": {
+      "enableOrders": true,
+      "enableNegativeQuantity": true,
+      "enableZeroQuantity": true,
+      "enableEnhancedCommerceOrders": true
+    },
+    "orderManagementSettings": {
+        "enableOrderManagement": true,
+        "enableB2CIntegration": true,
+        "enableB2CSelfService": true,
+        "enablePersonAccountsForShoppers": true
+    }
+  }
 }

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexTestSuite xmlns="http://soap.sforce.com/2006/04/metadata">
+    <testClassName>BaseEnumTest</testClassName>
+    <testClassName>CalloutUtilsTest</testClassName>
+    <testClassName>CsvParserTest</testClassName>
+    <testClassName>DatabaseUtilsTest</testClassName>
+    <testClassName>EmailUtilsTest</testClassName>
+    <testClassName>FulfillmentOrderApiTest</testClassName>
+    <testClassName>LogUtilsTest</testClassName>
+    <testClassName>ObjectUtilsTest</testClassName>
+    <testClassName>OrderPaymentSummaryApiTest</testClassName>
+    <testClassName>OrderSummaryApiTest</testClassName>
+    <testClassName>RestFailMock</testClassName>
+    <testClassName>RestSuccessMock</testClassName>
+    <testClassName>ReturnOrderApiTest</testClassName>
+    <testClassName>SalesforceAdapterTest</testClassName>
+    <testClassName>TestDataFactory</testClassName>
+    <testClassName>XmlParserDocumentTest</testClassName>
+    <testClassName>XmlParserTest</testClassName>
+</ApexTestSuite>

@@ -6,6 +6,9 @@
 		<members>BaseEnumTest</members>
 		<members>CalloutUtils</members>
 		<members>CalloutUtilsTest</members>
+		<members>CardPaymentMethodCategory</members>
+		<members>CardPaymentMethodStatus</members>
+		<members>CardPaymentMethodType</members>
 		<members>Constants</members>
 		<members>CsvParser</members>
 		<members>CsvParserTest</members>
@@ -20,19 +23,34 @@
 		<members>FulfillmentOrderStatus</members>
 		<members>FulfillmentOrderType</members>
 		<members>InvoiceStatus</members>
+		<members>LifeCycleType</members>
 		<members>LocationType</members>
 		<members>LogUtils</members>
 		<members>LogUtilsTest</members>
-		<members>OrderProductStatus</members>
-		<members>OrderProductType</members>
+		<members>ObjectUtils</members>
+		<members>ObjectUtilsTest</members>
+		<members>OrderManagementSetup</members>
+		<members>OrderPaymentSummaryApi</members>
+		<members>OrderPaymentSummaryApiTest</members>
+		<members>OrderItemStatus</members>
+		<members>OrderItemSummaryChangeReason</members>
+		<members>OrderItemType</members>
+		<members>OrderStatus</members>
 		<members>OrderSummaryApi</members>
 		<members>OrderSummaryApiTest</members>
 		<members>OrderSummaryService</members>
 		<members>OrderSummaryStatus</members>
+		<members>PaymentAuthorizationStatus</members>
+		<members>PaymentStatus</members>
+		<members>PaymentType</members>
 		<members>ProcessExceptionStatus</members>
 		<members>ProcessExceptionType</members>
+		<members>ProcessingMode</members>
 		<members>RestFailMock</members>
 		<members>RestSuccessMock</members>
+		<members>ReturnOrderApi</members>
+		<members>ReturnOrderApiTest</members>
+		<members>ReturnOrderLineItemReturnReason</members>
 		<members>ReturnOrderStatus</members>
 		<members>SalesforceAdapter</members>
 		<members>SalesforceAdapterTest</members>
@@ -45,7 +63,7 @@
 		<name>ApexClass</name>
 	</types>
 	<types>
-		<members>OMS</members>
+		<members>OrderManagement</members>
 		<name>ApexTestSuite</name>
 	</types>
 	<types>
@@ -63,5 +81,9 @@
 		<members>SendErrorLog</members>
 		<name>Flow</name>
 	</types>
-	<version>50.0</version>
+	<types>
+		<members>TestNamedCredential</members>
+		<name>NamedCredential</name>
+	</types>
+	<version>52.0</version>
 </Package>

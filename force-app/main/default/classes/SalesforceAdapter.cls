@@ -2,14 +2,20 @@
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/08/2021
 * @description Salesforce mock adapter (provided by Salesforce)
+*   suppress reason: Adapter requires global access modifier
 */
-@SuppressWarnings('PMD.AvoidGlobalModifier')
+@suppressWarnings('PMD.AvoidGlobalModifier')
 global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter {
     private static final commercepayments.SalesforceResultCodeInfo SUCCESS_SALESFORCE_RESULT_CODE_INFO = 
         new commercepayments.SalesforceResultCodeInfo(commercepayments.SalesforceResultCode.Success);
     private static final commercepayments.SalesforceResultCodeInfo DECLINE_SALESFORCE_RESULT_CODE_INFO = 
         new commercepayments.SalesforceResultCodeInfo(commercepayments.SalesforceResultCode.Decline);
     
+    /**
+    * @description Processes request
+    * @param gatewayContext PaymentGateway context
+    * @return PaymentGateway response
+    */
     global commercepayments.GatewayResponse processRequest(commercepayments.paymentGatewayContext gatewayContext) {
         commercepayments.RequestType requestType = gatewayContext.getPaymentRequestType();
         commercepayments.GatewayResponse response;
@@ -34,7 +40,7 @@ global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter
             }
             else if (requestType == commercepayments.RequestType.Tokenize) 
             {
-                response = createTokenizeResponse((commercepayments.PaymentMethodTokenizationRequest)gatewayContext.getPaymentRequest());
+                response = createTokenizeResponse();
             }
             return response;
         }
@@ -45,7 +51,11 @@ global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter
         }
     }
 
-    public commercepayments.GatewayResponse createTokenizeResponse(commercepayments.PaymentMethodTokenizationRequest tokenizeRequest) {
+    /**
+    * @description Creates response for tokenize request
+    * @return PaymentGateway response
+    */
+    public commercepayments.GatewayResponse createTokenizeResponse() {
         commercepayments.PaymentMethodTokenizationResponse tokenizeResponse = new commercepayments.PaymentMethodTokenizationResponse();
         tokenizeResponse.setGatewayToken(getRandomNumber(8) + getRandomNumber(8));
         tokenizeResponse.setGatewayTokenDetails(getRandomNumber(8) + getRandomNumber(8));
@@ -59,6 +69,11 @@ global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter
         return tokenizeResponse;
     }
     
+    /**
+    * @description Creates response for authorization request
+    * @param authRequest Authorization request
+    * @return PaymentGateway response
+    */
     public commercepayments.GatewayResponse createAuthResponse(commercepayments.AuthorizationRequest authRequest) {
         commercepayments.AuthorizationResponse authResponse = new commercepayments.AuthorizationResponse();
         commercepayments.PaymentMethodTokenizationResponse paymentMethodTokenizationResponse = new commercepayments.PaymentMethodTokenizationResponse();
@@ -83,6 +98,11 @@ global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter
         return authResponse;
     }
     
+    /**
+    * @description Creates response for capture request
+    * @param captureRequest Capture request
+    * @return PaymentGateway response
+    */
     public commercepayments.GatewayResponse createCaptureResponse(commercepayments.CaptureRequest captureRequest) {
         commercepayments.CaptureResponse captureResponse = new commercepayments.CaptureResponse();
 
@@ -92,7 +112,7 @@ global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter
         }
         else
         {
-             throw new SalesforceAdapterException('Required Field Missing : Amount');             
+            throw new SalesforceAdapterException('Required Field Missing : Amount');             
         }
    
         captureResponse.setGatewayDate(System.now());
@@ -103,6 +123,11 @@ global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter
         return captureResponse;
     }
     
+    /**
+    * @description Creates response for sale request
+    * @param saleRequest Sale request
+    * @return PaymentGateway response
+    */
     public commercepayments.GatewayResponse createSaleResponse(commercepayments.SaleRequest saleRequest) {
         commercepayments.SaleResponse saleResponse = new commercepayments.SaleResponse();
         commercepayments.PaymentMethodTokenizationResponse paymentMethodTokenizationResponse = new commercepayments.PaymentMethodTokenizationResponse();
@@ -126,6 +151,11 @@ global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter
         return saleResponse;
     }
     
+    /**
+    * @description Creates response for refund request
+    * @param refundRequest Refund request
+    * @return PaymentGateway response
+    */
     public commercepayments.GatewayResponse createRefundResponse(commercepayments.ReferencedRefundRequest refundRequest) {
         commercepayments.ReferencedRefundResponse refundResponse = new commercepayments.ReferencedRefundResponse();
         
@@ -146,7 +176,12 @@ global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter
         return refundResponse;
     }  
 
-    private String getRandomNumber(integer stringLength){
+    /**
+    * @description Generates random number based on length
+    * @param stringLength Length of the string
+    * @return Random number as string
+    */
+    private String getRandomNumber(integer stringLength) {
         Integer max = integer.valueOf(Math.pow(10, stringLength) - 1);
         return String.valueOf(Math.Round(Math.Random() * MAX)).leftPad(stringLength, '0');
     }

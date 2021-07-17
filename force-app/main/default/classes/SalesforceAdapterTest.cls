@@ -6,19 +6,13 @@
 @isTest
 private class SalesforceAdapterTest {
     /**
-    * @description Test setup to create Order
-    */
-    @testSetup
-    static void prepareOrder() {
-        createOrder();
-    }
-
-    /**
     * @description Test method of SalesforceAdapter capture
+    *   suppress reason: Query PaymentGateway
     */
-    @isTest
+    @isTest(SeeAllData=true)
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     static void shouldCapture() {
-        Id orderId = [SELECT Id FROM Order][0].Id;
+        Id orderId = createOrder();
 
         PaymentGroup paymentGroup = TestDataFactory.createPaymentGroup(orderId);
         insert paymentGroup;
@@ -41,10 +35,12 @@ private class SalesforceAdapterTest {
 
     /**
     * @description Test method of SalesforceAdapter refund
+    *   suppress reason: Query PaymentGateway
     */
-    @isTest
+    @isTest(SeeAllData=true)
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     static void shouldRefund() {
-        Id orderId = [SELECT Id FROM Order][0].Id;
+        Id orderId = createOrder();
 
         PaymentGroup paymentGroup = TestDataFactory.createPaymentGroup(orderId);
         insert paymentGroup;
@@ -133,21 +129,21 @@ private class SalesforceAdapterTest {
 
         // #1 order item
         TestDataFactory.CreateOrderItem product1 = new TestDataFactory.CreateOrderItem();
-        product1.type = OrderProductType.ORDER_PRODUCT;
+        product1.type = OrderItemType.ORDER_PRODUCT;
         product1.productCode = '001';
         product1.quantity = 2;
         product1.unitPrice = 10;
 
         // #2 order item
         TestDataFactory.CreateOrderItem product2 = new TestDataFactory.CreateOrderItem();
-        product2.type = OrderProductType.ORDER_PRODUCT;
+        product2.type = OrderItemType.ORDER_PRODUCT;
         product2.productCode = '002';
         product2.quantity = 2;
         product2.unitPrice = 10;
 
         // #3 order item
         TestDataFactory.CreateOrderItem shipping = new TestDataFactory.CreateOrderItem();
-        shipping.type = OrderProductType.DELIVERY_CHARGE;
+        shipping.type = OrderItemType.DELIVERY_CHARGE;
         shipping.productCode = '003';
         shipping.quantity = 2;
         shipping.unitPrice = 10;
