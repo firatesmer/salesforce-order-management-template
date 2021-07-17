@@ -10,7 +10,7 @@ private class FulfillmentOrderApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldCreateFulfillmentOrders() {
         String orderId = TestDataFactory.createOrder();
 
@@ -18,11 +18,8 @@ private class FulfillmentOrderApiTest {
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
-        // createFulfillmentOrders request
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
-
         Test.startTest();
-        ConnectApi.FulfillmentOrderOutputRepresentation output = new FulfillmentOrderApi().createFulfillmentOrders(createFulfillmentOrder);
+        ConnectApi.FulfillmentOrderOutputRepresentation output = new FulfillmentOrderApi().createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
         Test.stopTest();
 
         List<FulfillmentOrder> fulfillmentOrders = [SELECT Id FROM FulfillmentOrder WHERE OrderSummaryId =: orderSummary.Id];
@@ -36,7 +33,7 @@ private class FulfillmentOrderApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldCreateInvoice() {
         String orderId = TestDataFactory.createOrder();
 
@@ -46,9 +43,7 @@ private class FulfillmentOrderApiTest {
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
-        // createFulfillmentOrders request
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
-        api.createFulfillmentOrders(createFulfillmentOrder);
+        api.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE OrderSummaryID =: orderSummary.Id];
 
@@ -67,7 +62,7 @@ private class FulfillmentOrderApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldCancelFulfillmentOrderLineItems() {
         String orderId = TestDataFactory.createOrder();
 
@@ -77,9 +72,7 @@ private class FulfillmentOrderApiTest {
 
         FulfillmentOrderApi api = new FulfillmentOrderApi();
 
-        // createFulfillmentOrders request
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
-        api.createFulfillmentOrders(createFulfillmentOrder);
+        api.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE OrderSummaryID =: orderSummary.Id];
 
@@ -108,7 +101,7 @@ private class FulfillmentOrderApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldCreateMultipleFulfillmentOrder() {
         String order1Id = TestDataFactory.createOrder();
         String order2Id = TestDataFactory.createOrder();
@@ -126,10 +119,10 @@ private class FulfillmentOrderApiTest {
         FulfillmentOrderApi api = new FulfillmentOrderApi();
 
         // createFulfillmentOrders request
-        List<FulfillmentOrderApi.CreateFulfillmentOrder> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrder>();
+        List<FulfillmentOrderApi.CreateFulfillmentOrderInput> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrderInput>();
         for (OrderSummary orderSummary : orderSummaries) {
-            FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
-            createFulfillmentOrderList.add(createFulfillmentOrder);
+            FulfillmentOrderApi.CreateFulfillmentOrderInput createFulfillmentOrderInput = FulfillmentOrderService.buildCreateFulfillmentOrderInput(orderSummary.Id, location.Id, Constants.WAREHOUSE);
+            createFulfillmentOrderList.add(CreateFulfillmentOrderInput);
         }
 
         Test.startTest();
@@ -148,7 +141,7 @@ private class FulfillmentOrderApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldCreateMultipleInvoices() {
         String order1Id = TestDataFactory.createOrder();
         String order2Id = TestDataFactory.createOrder();
@@ -166,10 +159,10 @@ private class FulfillmentOrderApiTest {
         FulfillmentOrderApi api = new FulfillmentOrderApi();
 
         // createFulfillmentOrders request
-        List<FulfillmentOrderApi.CreateFulfillmentOrder> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrder>();
+        List<FulfillmentOrderApi.CreateFulfillmentOrderInput> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrderInput>();
         for (OrderSummary orderSummary : orderSummaries) {
-            FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = FulfillmentOrderService.buildCreateFulfillmentOrderRequest(orderSummary.Id, location.Id, Constants.WAREHOUSE);
-            createFulfillmentOrderList.add(createFulfillmentOrder);
+            FulfillmentOrderApi.CreateFulfillmentOrderInput createFulfillmentOrderInput = FulfillmentOrderService.buildCreateFulfillmentOrderInput(orderSummary.Id, location.Id, Constants.WAREHOUSE);
+            createFulfillmentOrderList.add(CreateFulfillmentOrderInput);
         }
 
         ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrderOutput = api.createMultipleFulfillmentOrder(createFulfillmentOrderList);

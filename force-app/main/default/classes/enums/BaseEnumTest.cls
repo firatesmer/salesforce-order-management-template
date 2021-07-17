@@ -21,9 +21,9 @@ private class BaseEnumTest {
         List<InvoiceStatus> invoiceStatusList = InvoiceStatus.values();
         List<LifeCycleType> lifeCycleTypeList = LifeCycleType.values();
         List<LocationType> locationTypeList = LocationType.values();
-        List<OrderItemStatus> OrderItemStatusList = OrderItemStatus.values();
-        List<OrderItemSummaryChangeReason> OrderItemSummaryChangeList = OrderItemSummaryChangeReason.values();
-        List<OrderItemType> OrderItemTypeList = OrderItemType.values();
+        List<OrderItemStatus> orderItemStatusList = OrderItemStatus.values();
+        List<OrderItemSummaryChangeReason> orderItemSummaryChangeList = OrderItemSummaryChangeReason.values();
+        List<OrderItemType> orderItemTypeList = OrderItemType.values();
         List<OrderStatus> orderStatusList = OrderStatus.values();
         List<OrderSummaryStatus> orderSummaryStatusList = OrderSummaryStatus.values();
         List<PaymentAuthorizationStatus> paymentAuthorizationStatusList = PaymentAuthorizationStatus.values();

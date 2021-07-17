@@ -14,14 +14,12 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     *   OrderItemSummary, a FulfillmentOrderLineItem is created and assigned 
     *   to the corresponding FulfillmentOrder
     *   suppress reason: ignore
-    * @param createFulfillmentOrder CreateFulfillmentOrder model
+    * @param orderSummaryId Id of the OrderSummary
+    * @param locationId Id of the Location
+    * @param fulfillmentOrderType Type of the FulfillmentOrder (enum)
     * @return FulfillmentOrder output
     */
-    public ConnectApi.FulfillmentOrderOutputRepresentation createFulfillmentOrders(CreateFulfillmentOrder createFulfillmentOrder) {
-        String orderSummaryId = createFulfillmentOrder.orderSummaryId;
-        String locationId = createFulfillmentOrder.locationId;
-        String fulfillmentType = createFulfillmentOrder.fulfillmentType;
-
+    public ConnectApi.FulfillmentOrderOutputRepresentation createFulfillmentOrders(String orderSummaryId, String locationId, FulfillmentOrderType fulfillmentOrderType) {
         ConnectApi.FulfillmentOrderInputRepresentation fulfillmentOrderInput = new ConnectApi.FulfillmentOrderInputRepresentation();
         fulfillmentOrderInput.orderSummaryId = orderSummaryId;
         
@@ -34,7 +32,7 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
             List<ConnectApi.FulfillmentGroupInputRepresentation> fulfillmentGroups = new List<ConnectApi.FulfillmentGroupInputRepresentation>();
             ConnectApi.FulfillmentGroupInputRepresentation fulfillmentGroup = new ConnectApi.FulfillmentGroupInputRepresentation();
             fulfillmentGroup.fulfilledFromLocationId = locationId;
-            fulfillmentGroup.fulfillmentType = fulfillmentType;
+            fulfillmentGroup.fulfillmentType = fulfillmentOrderType.enumValue;
 
             List<ConnectApi.OrderItemSummaryInputRepresentation> orderItemSummaryInputList = new List<ConnectApi.OrderItemSummaryInputRepresentation>();
             List<OrderItemSummary> orderItemSummaryList = orderDeliveryGroupSummaryIdToOrderItemSummaryList.get(orderDeliveryGroupSummary.Id);
@@ -100,10 +98,10 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     * @description Create FulfillmentOrders for multiple 
     *   OrderDeliveryGroups in a single request
     *   suppress reason: ignore
-    * @param createFulfillmentOrderList CreateFulfillmentOrder model list
+    * @param createFulfillmentOrderList CreateFulfillmentOrderInput model list
     * @return Create multiple fulfillment order output
     */
-    public ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrder(List<CreateFulfillmentOrder> createFulfillmentOrderList) {
+    public ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrder(List<CreateFulfillmentOrderInput> createFulfillmentOrderList) {
         ConnectApi.MultipleFulfillmentOrderInputRepresentation multipleFulfillmentOrderInput = new ConnectApi.MultipleFulfillmentOrderInputRepresentation();
         multipleFulfillmentOrderInput.fulfillmentOrders = new List<ConnectApi.FulfillmentOrderInputRepresentation>();
 
@@ -115,10 +113,10 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
         Map<String, List<OrderDeliveryGroupSummary>> orderSummaryIdToOrderDeliveryGroupSummaryList = getOrderDeliveryGroupSummaryMap(orderDeliveryGroupSummaryList);
         Map<String, List<OrderItemSummary>> orderDeliveryGroupSummaryIdToOrderItemSummaryList = getOrderItemSummaryMap(orderDeliveryGroupSummaryList);
 
-        for (CreateFulfillmentOrder createFulfillmentOrder : createFulfillmentOrderList) {
-            String orderSummaryId = createFulfillmentOrder.orderSummaryId;
-            String locationId = createFulfillmentOrder.locationId;
-            String fulfillmentType = createFulfillmentOrder.fulfillmentType;
+        for (CreateFulfillmentOrderInput createFulfillmentOrderInput : createFulfillmentOrderList) {
+            String orderSummaryId = CreateFulfillmentOrderInput.orderSummaryId;
+            String locationId = CreateFulfillmentOrderInput.locationId;
+            String fulfillmentType = CreateFulfillmentOrderInput.fulfillmentType;
 
             ConnectApi.FulfillmentOrderInputRepresentation fulfillmentOrderInput = new ConnectApi.FulfillmentOrderInputRepresentation();
             fulfillmentOrderInput.orderSummaryId = orderSummaryId;
@@ -132,7 +130,7 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
                 ConnectApi.FulfillmentGroupInputRepresentation fulfillmentGroup = new ConnectApi.FulfillmentGroupInputRepresentation();
                 fulfillmentGroup.fulfilledFromLocationId = locationId;
                 fulfillmentGroup.fulfillmentType = fulfillmentType;
-                fulfillmentGroup.referenceId = createFulfillmentOrder.orderSummaryId;
+                fulfillmentGroup.referenceId = CreateFulfillmentOrderInput.orderSummaryId;
     
                 List<ConnectApi.OrderItemSummaryInputRepresentation> orderItemSummaryInputList = new List<ConnectApi.OrderItemSummaryInputRepresentation>();
                 List<OrderItemSummary> orderItemSummaryList = orderDeliveryGroupSummaryIdToOrderItemSummaryList.get(orderDeliveryGroupSummary.Id);
@@ -176,11 +174,11 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     * @param createFulfillmentOrderList Request list
     * @return OrderSummary Id list
     */
-    private Set<Id> getOrderSummaryIdList(List<CreateFulfillmentOrder> createFulfillmentOrderList) {
+    private Set<Id> getOrderSummaryIdList(List<CreateFulfillmentOrderInput> createFulfillmentOrderList) {
         Set<Id> orderSummaryIdList = new Set<Id>();
 
-        for (CreateFulfillmentOrder createFulfillmentOrder : createFulfillmentOrderList) {
-            orderSummaryIdList.add(createFulfillmentOrder.orderSummaryId);
+        for (CreateFulfillmentOrderInput createFulfillmentOrderInput : createFulfillmentOrderList) {
+            orderSummaryIdList.add(CreateFulfillmentOrderInput.orderSummaryId);
         }
 
         return orderSummaryIdList;
@@ -240,7 +238,7 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     /**
     * @description Model for create FulfillmentOrder action
     */
-    public class CreateFulfillmentOrder {
+    public class CreateFulfillmentOrderInput {
         public String locationId;
         public String orderSummaryId;
         public String fulfillmentType;

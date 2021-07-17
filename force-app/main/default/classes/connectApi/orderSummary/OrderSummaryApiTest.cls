@@ -12,7 +12,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldCreateOrderSummary() {
         String orderId = TestDataFactory.createOrder();
 
@@ -28,7 +28,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldCreateOrderSummaryWithAdditionalInfo() {
         String orderId = TestDataFactory.createOrder();
 
@@ -47,7 +47,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldAdjustPreview() {
         String orderId = TestDataFactory.createOrder();
 
@@ -87,7 +87,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldAdjustSubmit() {
         String orderId = TestDataFactory.createOrder();
 
@@ -132,7 +132,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldEnsureFunds() {
         String orderId = TestDataFactory.createOrder();
 
@@ -143,13 +143,7 @@ private class OrderSummaryApiTest {
         OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
         FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
-        // create FulfillmentOrder
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
-        createFulfillmentOrder.locationId = location.Id;
-        createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
-
-        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder);
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
 
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
 
@@ -169,7 +163,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldPreviewReturn() {
         String orderId = TestDataFactory.createOrder();
 
@@ -180,13 +174,7 @@ private class OrderSummaryApiTest {
         OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
         FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
-        // create FulfillmentOrder
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
-        createFulfillmentOrder.locationId = location.Id;
-        createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
-
-        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder);
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
@@ -227,7 +215,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldSubmitReturn() {
         String orderId = TestDataFactory.createOrder();
 
@@ -238,13 +226,7 @@ private class OrderSummaryApiTest {
         OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
         FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
-        // create FulfillmentOrder
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
-        createFulfillmentOrder.locationId = location.Id;
-        createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
-
-        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder);
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
@@ -296,7 +278,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldPreviewCancel() {
         String orderId = TestDataFactory.createOrder();
 
@@ -338,7 +320,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldSubmitCancel() {
         String orderId = TestDataFactory.createOrder();
 
@@ -391,7 +373,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldCreateCreditMemo() {
         String orderId = TestDataFactory.createOrder();
 
@@ -401,13 +383,7 @@ private class OrderSummaryApiTest {
 
         FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
-        // create FulfillmentOrder
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
-        createFulfillmentOrder.locationId = location.Id;
-        createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
-
-        String fulfillmentOrderId = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder).fulfillmentOrderIds[0];
+        String fulfillmentOrderId = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE).fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
         fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;
@@ -458,7 +434,7 @@ private class OrderSummaryApiTest {
     *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @IsTest(SeeAllData=true)
+    @isTest(SeeAllData=true)
     static void shouldEnsureRefunds() {
         String orderId = TestDataFactory.createOrder();
 
@@ -466,15 +442,7 @@ private class OrderSummaryApiTest {
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
-        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
-
-        // create FulfillmentOrder
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
-        createFulfillmentOrder.locationId = location.Id;
-        createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
-
-        String fulfillmentOrderId = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder).fulfillmentOrderIds[0];
+        String fulfillmentOrderId = new FulfillmentOrderApi().createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE).fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
         fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;

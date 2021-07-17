@@ -5,6 +5,11 @@
 */
 @isTest
 private class ReturnOrderApiTest {
+    /**
+    * @description Test method of ReturnOrderApi.createReturnOrder
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
+    */
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @isTest(SeeAllData=true)
     static void shouldCreateReturnOrder() {
         String orderId = TestDataFactory.createOrder();
@@ -15,13 +20,7 @@ private class ReturnOrderApiTest {
 
         FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
-        // create FulfillmentOrder
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
-        createFulfillmentOrder.locationId = location.Id;
-        createFulfillmentOrder.orderSummaryId = orderSummary.Id;
-        createFulfillmentOrder.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
-
-        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(createFulfillmentOrder);
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(location.Id, orderSummary.Id, FulfillmentOrderType.WAREHOUSE);
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];

@@ -9,13 +9,13 @@ public with sharing class FulfillmentOrderService {
     * @param orderSummaryId The Id of the OrderSummary
     * @param locationId The Id of the Location
     * @param fulfillmentType The type of the FulfillmentOrder
-    * @return CreateFulfillmentOrder model
+    * @return CreateFulfillmentOrderInput model
     */
-    public static FulfillmentOrderApi.CreateFulfillmentOrder buildCreateFulfillmentOrderRequest(String orderSummaryId, String locationId, String fulfillmentType) {
-        FulfillmentOrderApi.CreateFulfillmentOrder createFulfillmentOrder = new FulfillmentOrderApi.CreateFulfillmentOrder();
-        createFulfillmentOrder.fulfillmentType = fulfillmentType;
-        createFulfillmentOrder.locationId = locationId;
-        createFulfillmentOrder.orderSummaryId = orderSummaryId;
-        return createFulfillmentOrder;
+    public static FulfillmentOrderApi.CreateFulfillmentOrderInput buildCreateFulfillmentOrderInput(String orderSummaryId, String locationId, String fulfillmentType) {
+        FulfillmentOrderApi.CreateFulfillmentOrderInput createFulfillmentOrderInput = new FulfillmentOrderApi.CreateFulfillmentOrderInput();
+        CreateFulfillmentOrderInput.fulfillmentType = fulfillmentType;
+        CreateFulfillmentOrderInput.locationId = locationId;
+        CreateFulfillmentOrderInput.orderSummaryId = orderSummaryId;
+        return CreateFulfillmentOrderInput;
     }
 }

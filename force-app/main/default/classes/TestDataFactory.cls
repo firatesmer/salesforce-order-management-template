@@ -145,11 +145,11 @@ public class TestDataFactory {
     * @param unitPrice Unit price
     * @param quantity Quantity
     * @param orderDeliveryGroupId Order delivery group Id (createOrderDeliveryGroup)
-    * @param OrderItemType Order item type
+    * @param orderItemType Order item type
     * @return OrderDeliveryGroup
     */
     @suppressWarnings('PMD.ExcessiveParameterList')
-    public static OrderItem createOrderItem(Id orderId, Id productId, Id priceBookEntryId, Decimal unitPrice, Integer quantity, Id orderDeliveryGroupId, String OrderItemType) {
+    public static OrderItem createOrderItem(Id orderId, Id productId, Id priceBookEntryId, Decimal unitPrice, Integer quantity, Id orderDeliveryGroupId, String orderItemType) {
         OrderItem item = new OrderItem();
         item.OrderId = orderId;
         item.Product2Id = productId;
