@@ -121,8 +121,11 @@ private class FulfillmentOrderApiTest {
         // createFulfillmentOrders request
         List<FulfillmentOrderApi.CreateFulfillmentOrderInput> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrderInput>();
         for (OrderSummary orderSummary : orderSummaries) {
-            FulfillmentOrderApi.CreateFulfillmentOrderInput createFulfillmentOrderInput = FulfillmentOrderService.buildCreateFulfillmentOrderInput(orderSummary.Id, location.Id, Constants.WAREHOUSE);
-            createFulfillmentOrderList.add(CreateFulfillmentOrderInput);
+            FulfillmentOrderApi.CreateFulfillmentOrderInput createFulfillmentOrderInput = new FulfillmentOrderApi.CreateFulfillmentOrderInput();
+            CreateFulfillmentOrderInput.orderSummaryId = orderSummary.Id;
+            CreateFulfillmentOrderInput.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
+            CreateFulfillmentOrderInput.locationId = location.Id;
+            createFulfillmentOrderList.add(createFulfillmentOrderInput);
         }
 
         Test.startTest();
@@ -161,8 +164,11 @@ private class FulfillmentOrderApiTest {
         // createFulfillmentOrders request
         List<FulfillmentOrderApi.CreateFulfillmentOrderInput> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrderInput>();
         for (OrderSummary orderSummary : orderSummaries) {
-            FulfillmentOrderApi.CreateFulfillmentOrderInput createFulfillmentOrderInput = FulfillmentOrderService.buildCreateFulfillmentOrderInput(orderSummary.Id, location.Id, Constants.WAREHOUSE);
-            createFulfillmentOrderList.add(CreateFulfillmentOrderInput);
+            FulfillmentOrderApi.CreateFulfillmentOrderInput createFulfillmentOrderInput = new FulfillmentOrderApi.CreateFulfillmentOrderInput();
+            CreateFulfillmentOrderInput.orderSummaryId = orderSummary.Id;
+            CreateFulfillmentOrderInput.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
+            CreateFulfillmentOrderInput.locationId = location.Id;
+            createFulfillmentOrderList.add(createFulfillmentOrderInput);
         }
 
         ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrderOutput = api.createMultipleFulfillmentOrder(createFulfillmentOrderList);
