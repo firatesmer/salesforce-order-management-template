@@ -155,7 +155,7 @@ private class OrderSummaryApiTest {
         ConnectApi.EnsureFundsAsyncOutputRepresentation ensureFundsOutput = orderSummaryApi.ensureFundsAsync(orderSummary.Id, invoices[0].Id);
         Test.stopTest();
 
-        System.assert(ensureFundsOutput.success, 'Ensure funds action failed');
+        System.assert(ensureFundsOutput.success, 'Ensure funds action is failed');
     }
 
     /**
@@ -206,7 +206,7 @@ private class OrderSummaryApiTest {
             ConnectApi.PreviewReturnOutputRepresentation output = orderSummaryApi.previewReturn(orderSummary.Id, changeInput);
             Test.stopTest();
 
-            System.assert(output.success, 'Preview return action failed');
+            System.assert(output.success, 'Preview return action is failed');
         }
     }
 
@@ -258,7 +258,7 @@ private class OrderSummaryApiTest {
             ConnectApi.SubmitReturnOutputRepresentation output = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
             Test.stopTest();
 
-            System.assert(output.success, 'Submit return action failed');
+            System.assert(output.success, 'Submit return action is failed');
 
             orderItemSummaries = [
                 SELECT Status, QuantityReturned
@@ -311,7 +311,7 @@ private class OrderSummaryApiTest {
             ConnectApi.PreviewCancelOutputRepresentation output = orderSummaryApi.previewCancel(orderSummary.Id, changeInput);
             Test.stopTest();
 
-            System.assert(output.success, 'Preview cancel action failed');
+            System.assert(output.success, 'Preview cancel action is failed');
         }
     }
 
@@ -353,7 +353,7 @@ private class OrderSummaryApiTest {
             ConnectApi.SubmitCancelOutputRepresentation output = orderSummaryApi.submitCancel(orderSummary.Id, changeInput);
             Test.stopTest();
 
-            System.assert(output.success, 'Submit cancel action failed');
+            System.assert(output.success, 'Submit cancel action is failed');
 
             orderItemSummaries = [
                 SELECT Status, QuantityCanceled
@@ -421,7 +421,7 @@ private class OrderSummaryApiTest {
 
             String creditMemoId = output.creditMemoId;
 
-            System.assert(output.success, 'Create credit memo action failed');
+            System.assert(output.success, 'Create credit memo action is failed');
 
             List<CreditMemo> creditMemos = [SELECT Id FROM CreditMemo WHERE Id =: creditMemoId];
 
@@ -481,7 +481,7 @@ private class OrderSummaryApiTest {
             ConnectApi.EnsureRefundsAsyncOutputRepresentation output = orderSummaryApi.ensureRefundsAsync(orderSummary.Id, creditMemoOutput.creditMemoId, 0);
             Test.stopTest();
 
-            System.assert(output.success, 'Ensure refunds action failed');
+            System.assert(output.success, 'Ensure refunds action is failed');
         }
     }
 }

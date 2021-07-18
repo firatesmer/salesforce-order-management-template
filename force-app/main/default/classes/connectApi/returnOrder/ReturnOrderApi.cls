@@ -34,10 +34,13 @@ public with sharing class ReturnOrderApi extends BaseApi {
     *   has any remaining expected quantity, then the
     *   API creates a separate ReturnOrderLineItem
     *   representing that quantity
-    * @param returnOrderId Id of the Return
+    * @param returnOrderId Id of the ReturnOrder
+    * @param input Data about product|delivery to return
     * @return Return items output
     */
-    // public static void returnItems(String returnOrderId) {
-
-    // }
+    public ConnectApi.ReturnItemsOutputRepresentation returnItems(String returnOrderId, ConnectApi.ReturnItemsInputRepresentation input) {
+        ConnectApi.ReturnItemsOutputRepresentation output = ConnectApi.ReturnOrder.returnItems(returnOrderId, input);
+        super.insertFailedResults(output);
+        return output;
+    }
 }
