@@ -1,7 +1,7 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 11/07/2021
-* @description OrderPaymentSummary Api class
+* @description Work with payments in Order Management
 */
 public with sharing class OrderPaymentSummaryApi extends BaseApi {
     /**
@@ -17,7 +17,7 @@ public with sharing class OrderPaymentSummaryApi extends BaseApi {
     *   - either this or paymentIds should be set
     * @param paymentIds List of Ids of the payments
     *   - either this or paymentAuthorizationId should be set
-    * @return Order payment summary output
+    * @return Id of the created OrderPaymentSummary
     */
     public ConnectApi.CreateOrderPaymentSummaryOutputRepresentation createOrderPaymentSummary(String orderSummaryId, String paymentAuthorizationId, List<String> paymentIds) {
         ConnectApi.CreateOrderPaymentSummaryInputRepresentation input = new ConnectApi.CreateOrderPaymentSummaryInputRepresentation();

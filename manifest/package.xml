@@ -52,6 +52,8 @@
 		<members>ReturnOrderApiTest</members>
 		<members>ReturnOrderLineItemReturnReason</members>
 		<members>ReturnOrderStatus</members>
+		<members>RoutingApi</members>
+		<members>RoutingApiTest</members>
 		<members>SalesforceAdapter</members>
 		<members>SalesforceAdapterTest</members>
 		<members>ShipmentStatus</members>

@@ -122,7 +122,8 @@ private class SalesforceAdapterTest {
     * @return Id of the Order
     */
     private static String createOrder() {
-        Schema.Location location = TestDataFactory.createLocation(Constants.WAREHOUSE, Constants.WAREHOUSE);
+        String locationName = LocationType.WAREHOUSE.enumValue;
+        Schema.Location location = TestDataFactory.createLocation(locationName, locationName, LocationType.WAREHOUSE);
         insert location;
 
         List<TestDataFactory.CreateOrderItem> orderItemList = new List<TestDataFactory.CreateOrderItem>();

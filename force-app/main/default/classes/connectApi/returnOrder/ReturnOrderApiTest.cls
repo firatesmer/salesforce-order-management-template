@@ -125,7 +125,6 @@ private class ReturnOrderApiTest {
 
             List<ReturnOrderLineItem> returnOrderLineItems = [SELECT Id FROM ReturnOrderLineItem WHERE ReturnOrderId =: returnOrderId];
 
-            List<ConnectApi.ReturnOrderItemInputRepresentation> returnOrderItemInputList = new List<ConnectApi.ReturnOrderItemInputRepresentation>();
             ConnectApi.ReturnOrderItemInputRepresentation returnOrderItemInput = new ConnectApi.ReturnOrderItemInputRepresentation();
             returnOrderItemInput.quantityReceived = 1;
             returnOrderItemInput.quantityRejected = 0;
@@ -133,10 +132,9 @@ private class ReturnOrderApiTest {
             returnOrderItemInput.quantityToCancel = 0;
             returnOrderItemInput.reasonForRejection = ReturnOrderLineItemRejectionReason.WRONG_ITEM.enumValue;
             returnOrderItemInput.returnOrderLineItemId = returnOrderLineItems[0].Id;
-            returnOrderItemInputList.add(returnOrderItemInput);
 
             ConnectApi.ReturnItemsInputRepresentation input = new ConnectApi.ReturnItemsInputRepresentation();
-            input.returnOrderItems = returnOrderItemInputList;
+            input.returnOrderItems = new List<ConnectApi.ReturnOrderItemInputRepresentation>{ returnOrderItemInput };
 
             Test.startTest();
             ConnectApi.ReturnItemsOutputRepresentation output = api.returnItems(returnOrderId, input);

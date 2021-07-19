@@ -13,6 +13,7 @@
     <testClassName>RestFailMock</testClassName>
     <testClassName>RestSuccessMock</testClassName>
     <testClassName>ReturnOrderApiTest</testClassName>
+    <testClassName>RoutingApiTest</testClassName>
     <testClassName>SalesforceAdapterTest</testClassName>
     <testClassName>TestDataFactory</testClassName>
     <testClassName>XmlParserDocumentTest</testClassName>

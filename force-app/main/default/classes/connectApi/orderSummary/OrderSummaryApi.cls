@@ -1,14 +1,14 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
-* @description OrderSummary Api class
+* @description Work with orders in Order Management
 */
 public with sharing class OrderSummaryApi extends BaseApi {
     /**
     * @description Create an OrderSummary based on an order
     *   That order is considered the original order for the OrderSummary
     * @param orderId Order id - required
-    * @return Order summary output
+    * @return Id of the created OrderSummary
     */
     public ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId) {
         ConnectApi.OrderSummaryInputRepresentation input = new ConnectApi.OrderSummaryInputRepresentation();
@@ -27,7 +27,7 @@ public with sharing class OrderSummaryApi extends BaseApi {
     * @param name OrderNumber of the OrderSummary - optional
     * @param orderLifeCycleType Managed|Unmanaged - optional
     * @param status Status of the OrderSummary - optional
-    * @return OrderSummary output
+    * @return Id of the created OrderSummary
     */
     @suppressWarnings('PMD.ExcessiveParameterList')
     public ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId, String name, LifeCycleType orderLifeCycleType, OrderSummaryStatus status) {
@@ -64,7 +64,9 @@ public with sharing class OrderSummaryApi extends BaseApi {
     *   description description of adjustment - optional
     *   orderItem​SummaryId Id of the OrderItemSummary - required
     *   reason reason for the adjustment based on OrderItemSummaryChange - required
-    * @return Adjust preview output
+    * @return Output representation of the financial changes for an adjust items action.
+    *   For a preview action, these values are the expected output. For a submit action, 
+    *   these values are the actual output
     */
     public ConnectApi.AdjustOrderSummaryOutputRepresentation adjustPreview(String orderSummaryId, List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList) {
         ConnectApi.AdjustOrderItemSummaryInputRepresentation adjustInput = new ConnectApi.AdjustOrderItemSummaryInputRepresentation();
@@ -85,7 +87,9 @@ public with sharing class OrderSummaryApi extends BaseApi {
     *   description description of adjustment - optional
     *   orderItem​SummaryId Id of the OrderItemSummary - required
     *   reason reason for the adjustment based on OrderItemSummaryChange - required
-    * @return Adjust submit output
+    * @return Output representation of the financial changes for an adjust items action.
+    *   For a preview action, these values are the expected output. For a submit action, 
+    *   these values are the actual output
     */
     public ConnectApi.AdjustOrderSummaryOutputRepresentation adjustSubmit(String orderSummaryId, List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList) {
         ConnectApi.AdjustOrderItemSummaryInputRepresentation adjustInput = new ConnectApi.AdjustOrderItemSummaryInputRepresentation();
@@ -105,7 +109,7 @@ public with sharing class OrderSummaryApi extends BaseApi {
     *  background operation status
     * @param orderSummaryId Id of the OrderSummary - required
     * @param invoiceId - Id of the Invoice - required
-    * @return Ensure funds async output
+    * @return Id of the background operation
     */
     public ConnectApi.EnsureFundsAsyncOutputRepresentation ensureFundsAsync(String orderSummaryId, String invoiceId) {
         ConnectApi.EnsureFundsAsyncInputRepresentation ensureFundsAsyncInput = new ConnectApi.EnsureFundsAsyncInputRepresentation();
@@ -123,7 +127,7 @@ public with sharing class OrderSummaryApi extends BaseApi {
     * @param orderSummaryId Id of the OrderSummary - required
     * @param changeInput A list of changes to OrderItemSummaries that make 
     *   up an order change (return) required
-    * @return Preview return output
+    * @return Expected financial values for a proposed return action
     */
     public ConnectApi.PreviewReturnOutputRepresentation previewReturn(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput) {
         ConnectApi.PreviewReturnOutputRepresentation output = ConnectApi.OrderSummary.previewReturn(orderSummaryId, changeInput);
@@ -137,7 +141,8 @@ public with sharing class OrderSummaryApi extends BaseApi {
     * @param orderSummaryId Id of the OrderSummary - required
     * @param changeInput A list of changes to OrderItemSummaries that make 
     *   up an order change (return) - required
-    * @return Submit return output
+    * @return Id of the change order created for a return action, and a set
+    *   of its financial values
     */
     public ConnectApi.SubmitReturnOutputRepresentation submitReturn(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput) {
         ConnectApi.SubmitReturnOutputRepresentation output = ConnectApi.OrderSummary.submitReturn(orderSummaryId, changeInput);
@@ -152,7 +157,7 @@ public with sharing class OrderSummaryApi extends BaseApi {
     * @param orderSummaryId Id of the OrderSummary - required
     * @param changeInput A list of changes to OrderItemSummaries that make 
     *   up an order change (cancel) - required
-    * @return Preview cancel output
+    * @return Expected financial values for a proposed cancel action
     */
     public ConnectApi.PreviewCancelOutputRepresentation previewCancel(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput) {
         ConnectApi.PreviewCancelOutputRepresentation output = ConnectApi.OrderSummary.previewCancel(orderSummaryId, changeInput);
@@ -166,7 +171,8 @@ public with sharing class OrderSummaryApi extends BaseApi {
     * @param orderSummaryId Id of the OrderSummary - required
     * @param changeInput A list of changes to OrderItemSummaries that make 
     *   up an order change (cancel) - required
-    * @return Preview return output
+    * @return ID of the change order created for a cancel action, and a set of its
+    *   financial values
     */
     public ConnectApi.SubmitCancelOutputRepresentation submitCancel(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput) {
         ConnectApi.SubmitCancelOutputRepresentation output = ConnectApi.OrderSummary.submitCancel(orderSummaryId, changeInput);
@@ -179,7 +185,7 @@ public with sharing class OrderSummaryApi extends BaseApi {
     *  more change orders associated with an OrderSummary
     * @param orderSummaryId Id of the OrderSummary - required
     * @param changeOrderIds The list of change order Ids - required
-    * @return Create credit memo output
+    * @return Id of a created Credit Memo
     */
     public ConnectApi.CreateCreditMemoOutputRepresentation createCreditMemo(String orderSummaryId, List<String> changeOrderIds) {
         ConnectApi.CreateCreditMemoInputRepresentation input = new ConnectApi.CreateCreditMemoInputRepresentation();
@@ -200,7 +206,7 @@ public with sharing class OrderSummaryApi extends BaseApi {
     * @param orderSummaryId Id of the OrderSummary - required
     * @param creditMemoId The Id of the CreditMemo - required
     * @param excessFundsAmount Amount of excess funds to refund - optional
-    * @return Ensure funds async output
+    * @return Id of the background operation
     */
     public ConnectApi.EnsureRefundsAsyncOutputRepresentation ensureRefundsAsync(String orderSummaryId, String creditMemoId, Double excessFundsAmount) {
         ConnectApi.EnsureRefundsAsyncInputRepresentation ensureRefundAsyncInput = new ConnectApi.EnsureRefundsAsyncInputRepresentation();

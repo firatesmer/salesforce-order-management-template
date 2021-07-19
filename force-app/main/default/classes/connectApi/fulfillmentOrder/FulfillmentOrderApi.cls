@@ -1,7 +1,7 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
-* @description FulfillmentOrder Api class
+* @description Fulfill orders in Order Management
 */
 public with sharing class FulfillmentOrderApi extends BaseApi {
     /**
@@ -17,7 +17,7 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     * @param orderSummaryId Id of the OrderSummary
     * @param locationId Id of the Location
     * @param fulfillmentOrderType Type of the FulfillmentOrder (enum)
-    * @return FulfillmentOrder output
+    * @return A list of Ids of the created FulfillmentOrders
     */
     public ConnectApi.FulfillmentOrderOutputRepresentation createFulfillmentOrders(String orderSummaryId, String locationId, FulfillmentOrderType fulfillmentOrderType) {
         ConnectApi.FulfillmentOrderInputRepresentation fulfillmentOrderInput = new ConnectApi.FulfillmentOrderInputRepresentation();
@@ -57,7 +57,7 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     /**
     * @description Create an invoice for a FulfillmentOrder that doesn’t have one
     * @param fulfillmentOrderId of the FulfillmentOrder
-    * @return CreateInvoice output
+    * @return Id of the created Invoice
     */
     public ConnectApi.FulfillmentOrderInvoiceOutputRepresentation createInvoice(String fulfillmentOrderId) {
         ConnectApi.FulfillmentOrderInvoiceInputRepresentation invoiceInput = new ConnectApi.FulfillmentOrderInvoiceInputRepresentation();
@@ -71,8 +71,8 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     * This action doesn’t cancel the associated OrderItemSummaries, so reallocate
     *  the canceled quantities to a new FulfillmentOrder
     * @param fulfillmentOrderId Id of the FulfillmentOrder
-    * @param lineItemIdToCancelQuantity Map<FulfillmentOrderLineItem.Id, FulfillmentOrderLineItem.Quantity/QuantityCancelled
-    * @return CancelLineItems output
+    * @param lineItemIdToCancelQuantity Map<FulfillmentOrderLineItem.Id, FulfillmentOrderLineItem.Quantity/QuantityCancelled>
+    * @return Wraps the base output
     */
     public ConnectApi.FulfillmentOrderCancelLineItemsOutputRepresentation cancelFulfillmentOrderLineItems(String fulfillmentOrderId, Map<String, Decimal> lineItemIdToCancelQuantity) {
         List<ConnectApi.FulfillmentOrderLineItemInputRepresentation> cancelItemList = new List<ConnectApi.FulfillmentOrderLineItemInputRepresentation>();
@@ -98,8 +98,11 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     * @description Create FulfillmentOrders for multiple 
     *   OrderDeliveryGroups in a single request
     *   suppress reason: ignore
-    * @param createFulfillmentOrderList CreateFulfillmentOrderInput model list
-    * @return Create multiple fulfillment order output
+    * @param createFulfillmentOrderList Input contains
+    *   LocationId, OrderSummaryId, FulfillmentType
+    * @return List of responses for the individual 
+    *   FulfillmentOrder creation attempts from a create
+    *   multiple fulfillment orders request
     */
     public ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrder(List<CreateFulfillmentOrderInput> createFulfillmentOrderList) {
         ConnectApi.MultipleFulfillmentOrderInputRepresentation multipleFulfillmentOrderInput = new ConnectApi.MultipleFulfillmentOrderInputRepresentation();
@@ -158,7 +161,7 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     /**
     * @description Create Invoices for multiple FulfillmentOrders 
     * @param fulfillmentOrderIds The list of FulfillmentOrder Ids
-    * @return Create multiple invoices output
+    * @return Ids of the created Invoices
     */
     public ConnectApi.MultipleFulfillmentOrderInvoicesOutputRepresentation createMultipleInvoices(List<String> fulfillmentOrderIds) {
         ConnectApi.MultipleFulfillmentOrderInvoicesInputRepresentation input = new ConnectApi.MultipleFulfillmentOrderInvoicesInputRepresentation();
@@ -171,7 +174,8 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
 
     /**
     * @description Returns Ids of OrderSummary list from request
-    * @param createFulfillmentOrderList Request list
+    * @param createFulfillmentOrderList List of input contains
+    *   LocationId, OrderSummaryId, FulfillmentType
     * @return OrderSummary Id list
     */
     private Set<Id> getOrderSummaryIdList(List<CreateFulfillmentOrderInput> createFulfillmentOrderList) {
@@ -236,7 +240,7 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     }
 
     /**
-    * @description Model for create FulfillmentOrder action
+    * @description Model for createMultipleFulfillmentOrder action
     */
     public class CreateFulfillmentOrderInput {
         public String locationId;

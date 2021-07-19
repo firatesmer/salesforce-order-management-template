@@ -1,7 +1,7 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 14/07/2021
-* @description ReturnOrder Api class
+* @description Process ReturnOrders in Order Management
 */
 public with sharing class ReturnOrderApi extends BaseApi {
     /**
@@ -11,7 +11,7 @@ public with sharing class ReturnOrderApi extends BaseApi {
     * @param orderSummaryId Id of the OrderSummary
     * @param returnOrderStatus ReturnOrder status (enum)
     * @param returnOrderLineItemInputList ReturnOrderLineItemInput list
-    * @return Create return order output
+    * @return Id of the created ReturnOrder
     */
     public ConnectApi.ReturnOrderOutputRepresentation createReturnOrder(String orderSummaryId, ReturnOrderStatus returnOrderStatus, List<ConnectApi.ReturnOrderLineItemInputRepresentation> returnOrderLineItemInputList) {
         ConnectApi.ReturnOrderInputRepresentation input = new ConnectApi.ReturnOrderInputRepresentation();
@@ -36,7 +36,10 @@ public with sharing class ReturnOrderApi extends BaseApi {
     *   representing that quantity
     * @param returnOrderId Id of the ReturnOrder
     * @param input Data about product|delivery to return
-    * @return Return items output
+    * @return Output of Return Items. Includes the ID of
+    *   the generated change order, plus information about
+    *   any ReturnOrderLineItems that were created to 
+    *   represent remaining return quantities
     */
     public ConnectApi.ReturnItemsOutputRepresentation returnItems(String returnOrderId, ConnectApi.ReturnItemsInputRepresentation input) {
         ConnectApi.ReturnItemsOutputRepresentation output = ConnectApi.ReturnOrder.returnItems(returnOrderId, input);

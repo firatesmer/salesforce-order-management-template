@@ -165,13 +165,15 @@ public class TestDataFactory {
     /**
     * @description Creates location
     * @param name Location name
-    * @param locationType Location type (LocationType enum)
+    * @param externalReference Reference of the Location
+    * @param locationType Enum of LocationType
     * @return Location
     */
-    public static Schema.Location createLocation(String name, String locationType) {
+    public static Schema.Location createLocation(String name, String externalReference, LocationType locationType) {
         Schema.Location location = new Schema.Location();
         location.Name = name;
-        location.LocationType = locationType;
+        location.ExternalReference = externalReference;
+        location.LocationType = locationType.enumValue;
         return location;
     }
 
@@ -369,7 +371,8 @@ public class TestDataFactory {
     * @return Id of the Order
     */
     public static String createOrder() {
-        Schema.Location location = TestDataFactory.createLocation(Constants.WAREHOUSE, Constants.WAREHOUSE);
+        String locationName = LocationType.WAREHOUSE.enumValue;
+        Schema.Location location = TestDataFactory.createLocation(locationName, locationName, LocationType.WAREHOUSE);
         insert location;
 
         List<TestDataFactory.CreateOrderItem> orderItemList = new List<TestDataFactory.CreateOrderItem>();
