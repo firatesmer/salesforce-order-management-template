@@ -20,7 +20,7 @@ private class ReturnOrderApiTest {
 
         FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
-        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(location.Id, orderSummary.Id, FulfillmentOrderType.WAREHOUSE);
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
@@ -51,8 +51,8 @@ private class ReturnOrderApiTest {
                 returnOrderLineItemInput.canReduceShipping = true;
                 returnOrderLineItemInput.orderItemSummaryId = orderItemSummary.Id;
                 returnOrderLineItemInput.quantityExpected = 1;
-                returnOrderLineItemInput.quantityReceived = 1;
-                returnOrderLineItemInput.reasonForReturn = ReturnOrderLineItemReturnReason.WRONG_ITEM.enumValue;
+                returnOrderLineItemInput.quantityReceived = 0;
+                returnOrderLineItemInput.reasonForReturn = OrderItemSummaryChangeReason.UNKNOWN.enumValue;
                 returnOrderLineItemInputList.add(returnOrderLineItemInput);
             }
             
@@ -82,7 +82,7 @@ private class ReturnOrderApiTest {
 
         FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
-        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(location.Id, orderSummary.Id, FulfillmentOrderType.WAREHOUSE);
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
@@ -113,8 +113,8 @@ private class ReturnOrderApiTest {
                 returnOrderLineItemInput.canReduceShipping = true;
                 returnOrderLineItemInput.orderItemSummaryId = orderItemSummary.Id;
                 returnOrderLineItemInput.quantityExpected = 1;
-                returnOrderLineItemInput.quantityReceived = 1;
-                returnOrderLineItemInput.reasonForReturn = ReturnOrderLineItemReturnReason.WRONG_ITEM.enumValue;
+                returnOrderLineItemInput.quantityReceived = 0;
+                returnOrderLineItemInput.reasonForReturn = OrderItemSummaryChangeReason.UNKNOWN.enumValue;
                 returnOrderLineItemInputList.add(returnOrderLineItemInput);
             }
             

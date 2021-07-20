@@ -10,6 +10,7 @@
 		<members>CardPaymentMethodStatus</members>
 		<members>CardPaymentMethodType</members>
 		<members>Constants</members>
+		<members>CreateTestOrderItemInput</members>
 		<members>CsvParser</members>
 		<members>CsvParserTest</members>
 		<members>DatabaseUtils</members>
@@ -27,8 +28,9 @@
 		<members>LocationType</members>
 		<members>LogUtils</members>
 		<members>LogUtilsTest</members>
-		<members>ObjectUtils</members>
-		<members>ObjectUtilsTest</members>
+		<members>OmnichannelInventoryDataFactory</members>
+		<members>OmnichannelInventoryServiceApi</members>
+		<members>OmnichannelInventoryServiceApiTest</members>
 		<members>OrderManagementSetup</members>
 		<members>OrderPaymentSummaryApi</members>
 		<members>OrderPaymentSummaryApiTest</members>

@@ -1,7 +1,8 @@
 {
   "orgName": "salesforce-order-management-template",
-  "edition": "Developer",
-  "features": ["PersonAccounts", "MultiCurrency", "ProcessBuilder", "OrderManagement"],
+  "country": "US",
+  "edition": "Enterprise",
+  "features": ["PersonAccounts", "MultiCurrency", "ProcessBuilder", "OrderManagement", "OmnichannelInventory"],
   "settings": {
     "orderSettings": {
       "enableOrders": true,
@@ -14,6 +15,10 @@
         "enableB2CIntegration": true,
         "enableB2CSelfService": true,
         "enablePersonAccountsForShoppers": true
+    },
+    "inventorySettings": {
+      "enableOCIB2CIntegration": true,
+      "enableOmniChannelInventory": true
     }
   }
 }

@@ -219,10 +219,8 @@ public with sharing class FulfillmentOrderApi extends BaseApi {
     private Map<String, List<OrderItemSummary>> getOrderItemSummaryMap(List<OrderDeliveryGroupSummary> orderDeliveryGroupSummaryList) {
         Map<String, List<OrderItemSummary>> orderDeliveryGroupSummaryIdToOrderItemSummaryList = new Map<String, List<OrderItemSummary>>();
 
-        Set<String> orderDeliveryGroupSummaryIdList = ObjectUtils.getIdList(orderDeliveryGroupSummaryList);
-
         List<OrderItemSummary> orderItemSummaryList = [SELECT Quantity, OrderDeliveryGroupSummaryId FROM OrderItemSummary 
-                                                    WHERE OrderDeliveryGroupSummaryId IN: orderDeliveryGroupSummaryIdList 
+                                                    WHERE OrderDeliveryGroupSummaryId =: orderDeliveryGroupSummaryList 
                                                     WITH SECURITY_ENFORCED];
 
         for (OrderItemSummary orderItemSummary : orderItemSummaryList) {

@@ -203,10 +203,10 @@ public without sharing class OrderManagementSetup {
     * @description Insert a sample SalesChannel
     */
     public static void insertSalesChannel() {
-        SalesChannel newSaleschannel = new SalesChannel();
-        newSaleschannel.SalesChannelName = 'Test Sales Channel';
-        newSaleschannel.ExternalChannelNumber = 'Test_Sales_Channel';
-        Database.insert(newSaleschannel);
+        SalesChannel newSalesChannel = new SalesChannel();
+        newSalesChannel.SalesChannelName = 'Test Sales Channel';
+        newSalesChannel.ExternalChannelNumber = 'Test_Sales_Channel';
+        Database.insert(newSalesChannel);
     }
 
     /**

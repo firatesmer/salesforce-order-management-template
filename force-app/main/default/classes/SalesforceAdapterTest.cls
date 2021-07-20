@@ -126,24 +126,24 @@ private class SalesforceAdapterTest {
         Schema.Location location = TestDataFactory.createLocation(locationName, locationName, LocationType.WAREHOUSE);
         insert location;
 
-        List<TestDataFactory.CreateOrderItem> orderItemList = new List<TestDataFactory.CreateOrderItem>();
+        List<CreateTestOrderItemInput> orderItemList = new List<CreateTestOrderItemInput>();
 
         // #1 order item
-        TestDataFactory.CreateOrderItem product1 = new TestDataFactory.CreateOrderItem();
+        CreateTestOrderItemInput product1 = new CreateTestOrderItemInput();
         product1.type = OrderItemType.ORDER_PRODUCT;
         product1.productCode = '001';
         product1.quantity = 2;
         product1.unitPrice = 10;
 
         // #2 order item
-        TestDataFactory.CreateOrderItem product2 = new TestDataFactory.CreateOrderItem();
+        CreateTestOrderItemInput product2 = new CreateTestOrderItemInput();
         product2.type = OrderItemType.ORDER_PRODUCT;
         product2.productCode = '002';
         product2.quantity = 2;
         product2.unitPrice = 10;
 
         // #3 order item
-        TestDataFactory.CreateOrderItem shipping = new TestDataFactory.CreateOrderItem();
+        CreateTestOrderItemInput shipping = new CreateTestOrderItemInput();
         shipping.type = OrderItemType.DELIVERY_CHARGE;
         shipping.productCode = '003';
         shipping.quantity = 2;
