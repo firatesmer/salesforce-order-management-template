@@ -3,7 +3,7 @@
 * @date 10/04/2021
 * @description Fulfill orders in Order Management
 */
-public with sharing class FulfillmentOrderApi extends BaseApi {
+public with sharing class FulfillmentOrderApi extends ConnectApiBase {
     /**
     * @description Create one or more FulfillmentOrders 
     *   and FulfillmentOrderLineItems for an OrderDeliveryGroupSummary,

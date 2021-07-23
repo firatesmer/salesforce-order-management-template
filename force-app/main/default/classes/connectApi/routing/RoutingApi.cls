@@ -4,7 +4,7 @@
 * @description Route orders to inventory locations
 *   in Order Management
 */
-public with sharing class RoutingApi extends BaseApi {
+public with sharing class RoutingApi extends ConnectApiBase {
     /**
     * @description Returns combinations of inventory
     *   locations that can fulfill an order within a

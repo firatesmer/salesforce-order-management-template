@@ -3,7 +3,7 @@
 * @date 10/04/2021
 * @description Work with orders in Order Management
 */
-public with sharing class OrderSummaryApi extends BaseApi {
+public with sharing class OrderSummaryApi extends ConnectApiBase {
     /**
     * @description Create an OrderSummary based on an order
     *   That order is considered the original order for the OrderSummary

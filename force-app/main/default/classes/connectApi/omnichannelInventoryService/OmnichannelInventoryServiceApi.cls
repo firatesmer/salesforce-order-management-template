@@ -5,7 +5,7 @@
 * @description Route orders to inventory locations
 *   in Order Management
 */
-public with sharing class OmnichannelInventoryServiceApi extends BaseApi {
+public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnichannelInventoryBase {
     /**
     * @description Create an inventory reservation in 
     *   Omnichannel Inventory
@@ -19,9 +19,9 @@ public with sharing class OmnichannelInventoryServiceApi extends BaseApi {
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.createReservation(input)
-            : OmnichannelInventoryDataFactory.getDefaultSuccessOCICreateReservationOutput();
+            : OmnichannelInventoryDataFactory.getDefaultSuccessCreateReservationOutput();
 
-        // super.insertFailedResults(output);
+        super.insertFailedResults(output);
         return output;
     }
     
@@ -36,19 +36,11 @@ public with sharing class OmnichannelInventoryServiceApi extends BaseApi {
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.fulfillReservation(input)
-            : OmnichannelInventoryDataFactory.getDefaultSuccessOCIFulfillReservationOutput();
+            : OmnichannelInventoryDataFactory.getDefaultSuccessFulfillReservationOutput();
 
-        // super.insertFailedResults(output);
+        super.insertFailedResults(output);
         return output;
     }
-
-    // Subclass of ConnectApi.OCIBaseOutputRepresentation.
-
-    /**
-    OCI base var
-    + olmayanları koy
-    + baseApi için test yaz ve mock data ver error için
-     */
 
     /**
     * @description Retrieve inventory availability data for one
@@ -63,9 +55,100 @@ public with sharing class OmnichannelInventoryServiceApi extends BaseApi {
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.getInventoryAvailability(input)
-            : OmnichannelInventoryDataFactory();
+            : OmnichannelInventoryDataFactory.getDefaultSuccessGetInventoryAvailabilityOutput();
 
-        // super.insertFailedResults(output);
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    /**
+    * @description Retrieve the status of an inventory availability
+    *   upload job
+    * @param uploadId The upload Id of the upload job
+    * @return Detailed status of an upload inventory availability job
+    */
+    public ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation getInventoryAvailabilityUploadStatus(String uploadId) {
+        ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation output;
+
+        output = !Test.isRunningTest()
+            ? ConnectApi.OmnichannelInventoryService.getInventoryAvailabilityUploadStatus(uploadId)
+            : OmnichannelInventoryDataFactory.getDefaultSuccessGetInventoryAvailabilityUploadStatusOutput();
+
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    /**
+    * @description Retrieve the status of a publish location
+    *   structure job
+    * @param uploadId The upload Id of the publish job
+    * @return Detailed status of a publish location structure job
+    */
+    public ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation getPublishLocationStructureStatus(String uploadId) {
+        ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation output;
+
+        output = !Test.isRunningTest()
+            ? ConnectApi.OmnichannelInventoryService.getPublishLocationStructureStatus(uploadId)
+            : OmnichannelInventoryDataFactory.getDefaultSuccessGetPublishLocationStructureStatusOutput();
+
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    /**
+    * @description Asynchronously publish information about 
+    *   your inventory locations and location groups to 
+    *   Omnichannel Inventory. The publish includes records
+    *   whose IsEnabled and ShouldSyncWithOci fields are both
+    *   true. This method returns an ID that you can use to 
+    *   retrieve the status of the publish job
+    * @return Detailed status of a publish location structure job
+    */
+    public ConnectApi.OCIPublishLocationStructureOutputRepresentation publishLocationStructure() {
+        ConnectApi.OCIPublishLocationStructureOutputRepresentation output;
+
+        output = !Test.isRunningTest()
+            ? ConnectApi.OmnichannelInventoryService.publishLocationStructure()
+            : OmnichannelInventoryDataFactory.getDefaultSuccessPublishLocationStructureOutput();
+
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    /**
+    * @description Release one or more existing inventory 
+    *   reservations to free up that inventory
+    * @param inputs A list of inventory reservation to release
+    * @return Response to a request to release one or more inventory reservations
+    */
+    public ConnectApi.OCIReleaseReservationOutputRepresentation releaseReservation(List<ConnectApi.OCIReleaseReservationSingleInputRepresentation> inputs) {
+        ConnectApi.OCIReleaseReservationOutputRepresentation output;
+
+        ConnectApi.OCIReleaseReservationInputRepresentation input = new ConnectApi.OCIReleaseReservationInputRepresentation();
+        input.releaseRecords = inputs;
+
+        output = !Test.isRunningTest()
+            ? ConnectApi.OmnichannelInventoryService.releaseReservation(input)
+            : OmnichannelInventoryDataFactory.getDefaultSuccessReleaseReservationOutput();
+
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    /**
+    * @description Upload an inventory availability data file to
+    *   Omnichannel Inventory
+    * @param input JSON file containing inventory availability data
+    * @return Response to an upload inventory availability job
+    */
+    public ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation submitInventoryAvailabilityUpload(ConnectApi.BinaryInput input) {
+        ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation output;
+
+        output = !Test.isRunningTest()
+            ? ConnectApi.OmnichannelInventoryService.submitInventoryAvailabilityUpload(input)
+            : OmnichannelInventoryDataFactory.getDefaultSuccessSubmitInventoryAvailabilityUploadOutput();
+
+        super.insertFailedResults(output);
         return output;
     }
 }

@@ -3,7 +3,7 @@
 * @date 10/04/2021
 * @description Base class for Connect Api classes
 */
-public without sharing virtual class BaseApi {
+public without sharing abstract class ConnectApiBase {
     /**
     * @description Inserts failed results of ConnectApi methods
     * @param output Base output class

@@ -49,7 +49,7 @@ private class OmnichannelInventoryServiceApiTest {
         singleFulfillInput.stockKeepingUnit = '001';
 
         ConnectApi.OCIFulfillReservationInputRepresentation input = new ConnectApi.OCIFulfillReservationInputRepresentation();
-        input.fulfillmentRecords = new ConnectApi.OCIFulfillReservationSingleInputRepresentation{ singleFulfillInput };
+        input.fulfillmentRecords = new List<ConnectApi.OCIFulfillReservationSingleInputRepresentation> { singleFulfillInput };
 
         Test.startTest();
         ConnectApi.OCIFulfillReservationOutputRepresentation output = new OmnichannelInventoryServiceApi().fulfillReservation(input);

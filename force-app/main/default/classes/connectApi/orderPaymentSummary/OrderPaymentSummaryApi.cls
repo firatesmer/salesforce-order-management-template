@@ -3,7 +3,7 @@
 * @date 11/07/2021
 * @description Work with payments in Order Management
 */
-public with sharing class OrderPaymentSummaryApi extends BaseApi {
+public with sharing class OrderPaymentSummaryApi extends ConnectApiBase {
     /**
     * @description Create an OrderPaymentSummary
     *   for an OrderSummary. Specify a payment 
