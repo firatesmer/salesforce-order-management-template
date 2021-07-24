@@ -33,7 +33,6 @@
 		<members>OmnichannelInventoryDataFactory</members>
 		<members>OmnichannelInventoryServiceApi</members>
 		<members>OmnichannelInventoryServiceApiTest</members>
-		<members>OrderManagementSetup</members>
 		<members>OrderPaymentSummaryApi</members>
 		<members>OrderPaymentSummaryApiTest</members>
 		<members>OrderItemStatus</members>
