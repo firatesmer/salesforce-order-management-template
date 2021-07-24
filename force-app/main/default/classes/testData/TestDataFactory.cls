@@ -15,11 +15,28 @@ public class TestDataFactory {
     }
 
     /**
-    * @description Returns default fail Http response body
+    * @description Returns default fail Http
+    *response body
     * @return Http response plain text
     */
     public static string getDefaultRestFailMockResponseBody() {
         return '{ "isSuccess":false }';
+    }
+
+    /**
+    * @description Returns default failed fulfillment order output
+    * @return Http response plain text
+    */
+    public static ConnectApi.FulfillmentOrderOutputRepresentation getDefaultFailFulfillmentOrderOutput() {
+        ConnectApi.ErrorResponse error = new ConnectApi.ErrorResponse();
+        error.message = 'UNKOWN_EXCEPTION';
+        error.errorCode = '001';
+
+        ConnectApi.FulfillmentOrderOutputRepresentation output = new ConnectApi.FulfillmentOrderOutputRepresentation();
+        output.success = false;
+        output.errors = new List<ConnectApi.ErrorResponse>{ error };
+
+        return output;
     }
 
     /**

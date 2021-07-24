@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>ConnectApiBase</members>
 		<members>BaseEnum</members>
 		<members>BaseEnumTest</members>
 		<members>CalloutUtils</members>
@@ -9,6 +8,8 @@
 		<members>CardPaymentMethodCategory</members>
 		<members>CardPaymentMethodStatus</members>
 		<members>CardPaymentMethodType</members>
+		<members>ConnectApiBase</members>
+		<members>ConnectApiBaseTest</members>
 		<members>ConnectApiOmnichannelInventoryBase</members>
 		<members>Constants</members>
 		<members>CreateTestOrderItemInput</members>
