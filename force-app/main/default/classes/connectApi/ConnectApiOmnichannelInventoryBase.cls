@@ -57,6 +57,36 @@ public without sharing abstract class ConnectApiOmnichannelInventoryBase {
     }
 
     /**
+    * @description Inserts failed results of OCI ConnectApi methods
+    * @param output OCIReleaseReservationOutputRepresentation
+    */
+    public virtual void insertFailedResults(ConnectApi.OCITransferReservationOutputRepresentation output) {
+        if (!output.success) {
+            List<OmsLog__c> errorLogs = getResultErrors(output.errors);
+
+            if (!errorLogs.isEmpty()) {
+                Database.insert(errorLogs, false);
+            }
+        }
+    }
+
+    /**
+    * @description Gets errors from result and creates a list with error logs
+    * @param errors Errors
+    * @return Error logs
+    */
+    private List<OmsLog__c> getResultErrors(ConnectApi.OCITransferReservationErrorOutputRepresentation[] errors) {
+        List<OmsLog__c> errorLogs = new List<OmsLog__c>();
+
+        for (ConnectApi.OCITransferReservationErrorOutputRepresentation error : errors) {
+            OmsLog__c log = LogUtils.createErrorLog(error.errorCode, error.message);
+            errorLogs.add(log);
+        }
+
+        return errorLogs;
+    }
+
+    /**
     * @description Gets errors from result and creates a list with error logs
     * @param errors Errors
     * @return Error logs

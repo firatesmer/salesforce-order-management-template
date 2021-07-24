@@ -145,4 +145,16 @@ public with sharing class OmnichannelInventoryDataFactory {
 
         return output;
     }
+
+    /**
+    * @description Creates OCITransferReservationOutputRepresentation test data
+    * @return Default success transfer reservation output
+    */
+    public static ConnectApi.OCITransferReservationOutputRepresentation getDefaultSuccessTransferReservationOutput() {
+        ConnectApi.OCITransferReservationOutputRepresentation output = new ConnectApi.OCITransferReservationOutputRepresentation();
+        output.success = true;
+        output.errors = new List<ConnectApi.OCITransferReservationErrorOutputRepresentation>();
+
+        return output;
+    }
 }

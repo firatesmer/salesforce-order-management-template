@@ -139,6 +139,9 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
     * @description Upload an inventory availability data file to
     *   Omnichannel Inventory
     * @param input JSON file containing inventory availability data
+    *   blob - {blob} - Contents of the file to be used for input
+    *   contentType - {string} - MIME type description of the content
+    *   blob - {string} - filename - File name with the file extension
     * @return Response to an upload inventory availability job
     */
     public ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation submitInventoryAvailabilityUpload(ConnectApi.BinaryInput input) {
@@ -147,6 +150,26 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.submitInventoryAvailabilityUpload(input)
             : OmnichannelInventoryDataFactory.getDefaultSuccessSubmitInventoryAvailabilityUploadOutput();
+
+        super.insertFailedResults(output);
+        return output;
+    }
+
+    /**
+    * @description Transfer one or more inventory reservations between
+    *   locations or location groups. This API doesn’t change physical
+    *   quantities, but reduces the reserved quantity at the source and
+    *   increases it at the destination
+    * @param input A list of inventory reservation transfers and specifies
+    *   whether a single failure cancels the entire list
+    * @return Response to a request to transfer one or more inventory reservations
+    */
+    public ConnectApi.OCITransferReservationOutputRepresentation transferReservation(ConnectApi.OCITransferReservationInputRepresentation input) {
+        ConnectApi.OCITransferReservationOutputRepresentation output;
+
+        output = !Test.isRunningTest()
+            ? ConnectApi.OmnichannelInventoryService.transferReservation(input)
+            : OmnichannelInventoryDataFactory.getDefaultSuccessTransferReservationOutput();
 
         super.insertFailedResults(output);
         return output;
