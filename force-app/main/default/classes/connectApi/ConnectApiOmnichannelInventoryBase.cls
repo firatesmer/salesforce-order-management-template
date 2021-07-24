@@ -1,3 +1,8 @@
+/**
+* @author Firat Esmer <firat.esmer@osf.digital>
+* @date 22/07/2021
+* @description Base class for Connect Api OCI class
+*/
 public without sharing abstract class ConnectApiOmnichannelInventoryBase {
     /**
     * @description Inserts failed results of OCI ConnectApi methods
