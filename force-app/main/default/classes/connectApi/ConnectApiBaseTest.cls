@@ -11,7 +11,7 @@ private class ConnectApiBaseTest {
     */
     @isTest
     static void shouldInsertFailedResults() {
-        ConnectApi.FulfillmentOrderOutputRepresentation output = TestDataFactory.getDefaultFailFulfillmentOrderOutput();
+        ConnectApi.FulfillmentOrderOutputRepresentation output = TestDataFactory.getFailFulfillmentOrderOutput();
 
         Test.startTest();
         new FulfillmentOrderApi().insertFailedResults(output);

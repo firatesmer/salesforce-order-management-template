@@ -8,10 +8,8 @@ private class OmnichannelInventoryServiceApiTest {
     /**
     * @description Test method of 
     *   OmnichannelInventoryServiceApi.createReservation
-    *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @isTest(SeeAllData=true)
+    @isTest
     static void shouldCreateReservation() {
         ConnectApi.OCICreateReservationSingleInputRepresentation singleReservationInput  = new ConnectApi.OCICreateReservationSingleInputRepresentation();
         singleReservationInput.locationGroupIdentifier = 'TEST_LOCATION_GROUP';
@@ -22,7 +20,7 @@ private class OmnichannelInventoryServiceApiTest {
         input.actionRequestId = 'requestId';
         input.allowPartialReservations = true;
         input.expirationSeconds = 20;
-        input.externalRefId = 'externalRefId';
+        input.externalRefId = 'externalRef_Id';
         input.reservationTime = DateTime.now().format('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         input.createRecords = new List<ConnectApi.OCICreateReservationSingleInputRepresentation>{ singleReservationInput };
 
@@ -36,14 +34,12 @@ private class OmnichannelInventoryServiceApiTest {
     /**
     * @description Test method of 
     *   OmnichannelInventoryServiceApi.fulfillReservation
-    *   suppress reason: ConnectApi requires SeeAllData=true annotation
     */
-    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
-    @isTest(SeeAllData=true)
+    @isTest
     static void shouldFulfillReservation() {
         ConnectApi.OCIFulfillReservationSingleInputRepresentation singleFulfillInput = new ConnectApi.OCIFulfillReservationSingleInputRepresentation();
-        singleFulfillInput.actionRequestId = 'requestId';
-        singleFulfillInput.externalRefId = 'externalRefId';
+        singleFulfillInput.actionRequestId = 'request_Id';
+        singleFulfillInput.externalRefId = 'externalRef_Id';
         singleFulfillInput.locationIdentifier = 'TEST_LOCATION';
         singleFulfillInput.quantity = 1;
         singleFulfillInput.stockKeepingUnit = '001';
@@ -56,5 +52,133 @@ private class OmnichannelInventoryServiceApiTest {
         Test.stopTest();
 
         System.assert(output.success, 'Fulfill reservation action is failed');
+    }
+
+    /**
+    * @description Test method of 
+    *   OmnichannelInventoryServiceApi.getInventoryAvailability
+    */
+    @isTest
+    static void shouldGetInventoryAvailability() {
+        ConnectApi.OCIGetInventoryAvailabilityInputRepresentation input = new ConnectApi.OCIGetInventoryAvailabilityInputRepresentation();
+        input.locationIdentifiers = new List<String>{ 'location_Id' };
+        input.stockKeepingUnit = '001';
+        input.useCache = false;
+
+        Test.startTest();
+        ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation output = new OmnichannelInventoryServiceApi().getInventoryAvailability(input);
+        Test.stopTest();
+
+        System.assert(output.success, 'Get inventory availability action is failed');
+    }
+
+    /**
+    * @description Test method of 
+    *   OmnichannelInventoryServiceApi.getInventoryAvailabilityUploadStatus
+    */
+    @isTest
+    static void shouldGetInventoryAvailabilityUploadStatus() {
+        String uploadId = 'upload_id';
+
+        Test.startTest();
+        ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation output = new OmnichannelInventoryServiceApi().getInventoryAvailabilityUploadStatus(uploadId);
+        Test.stopTest();
+
+        System.assert(output.success, 'Get inventory availability upload status action is failed');
+    }
+
+    /**
+    * @description Test method of 
+    *   OmnichannelInventoryServiceApi.getPublishLocationStructureStatus
+    */
+    @isTest
+    static void shouldGetPublishLocationStructureStatus() {
+        String uploadId = 'upload_id';
+
+        Test.startTest();
+        ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation output = new OmnichannelInventoryServiceApi().getPublishLocationStructureStatus(uploadId);
+        Test.stopTest();
+
+        System.assert(output.success, 'Get publish location structure action is failed');
+    }
+
+    /**
+    * @description Test method of 
+    *   OmnichannelInventoryServiceApi.publishLocationStructure
+    */
+    @isTest
+    static void shouldPublishLocationStructure() {
+        Test.startTest();
+        ConnectApi.OCIPublishLocationStructureOutputRepresentation output = new OmnichannelInventoryServiceApi().publishLocationStructure();
+        Test.stopTest();
+
+        System.assert(output.success, 'Publish location structure action is failed');
+    }
+
+    /**
+    * @description Test method of 
+    *   OmnichannelInventoryServiceApi.releaseReservation
+    */
+    @isTest
+    static void shouldReleaseReservation() {
+        List<ConnectApi.OCIReleaseReservationSingleInputRepresentation> inputs = new List<ConnectApi.OCIReleaseReservationSingleInputRepresentation>();
+        ConnectApi.OCIReleaseReservationSingleInputRepresentation input = new ConnectApi.OCIReleaseReservationSingleInputRepresentation();
+        input.actionRequestId = 'actionRequest_Id';
+        input.externalRefId = 'externalRef_Id';
+        input.locationIdentifier = 'location_id';
+        input.quantity = 1;
+        input.stockKeepingUnit = '001';
+        inputs.add(input);
+        
+        Test.startTest();
+        ConnectApi.OCIReleaseReservationOutputRepresentation output = new OmnichannelInventoryServiceApi().releaseReservation(inputs);
+        Test.stopTest();
+
+        System.assert(output.success, 'Release reservation action is failed');
+    }
+
+    /**
+    * @description Test method of 
+    *   OmnichannelInventoryServiceApi.submitInventoryAvailabilityUpload
+    */
+    @isTest
+    static void shouldSubmitInventoryAvailabilityUpload() {
+        ConnectApi.BinaryInput input = new ConnectApi.BinaryInput
+        (
+            Blob.valueOf('blob'), 
+            'application/json', 
+            'test.json'
+        );
+        
+        Test.startTest();
+        ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation output = new OmnichannelInventoryServiceApi().submitInventoryAvailabilityUpload(input);
+        Test.stopTest();
+
+        System.assert(output.success, 'Submit inventory availability upload action is failed');
+    }
+
+    /**
+    * @description Test method of 
+    *   OmnichannelInventoryServiceApi.transferReservation
+    */
+    @isTest
+    static void shouldTransferReservation() {
+        ConnectApi.OCITransferReservationSingleInputRepresentation singleReservationInput = new ConnectApi.OCITransferReservationSingleInputRepresentation();
+        singleReservationInput.actionRequestId = 'actionRequest_Id';
+        singleReservationInput.externalRefId = 'externalRef_Id';
+        singleReservationInput.fromLocationGroupIdentifier = 'TEST_LOCATION_GROUP';
+        singleReservationInput.ignoreAvailabilityCheck = false;
+        singleReservationInput.quantity = 1;
+        singleReservationInput.stockKeepingUnit = '001';
+        singleReservationInput.toLocationIdentifier = 'TEST_LOCATION';
+
+        ConnectApi.OCITransferReservationInputRepresentation input = new ConnectApi.OCITransferReservationInputRepresentation();
+        input.transferRecords = new List<ConnectApi.OCITransferReservationSingleInputRepresentation>{ singleReservationInput };
+
+        Test.startTest();
+        ConnectApi.OCITransferReservationOutputRepresentation output = new OmnichannelInventoryServiceApi().transferReservation(input);
+        Test.stopTest();
+
+        System.assert(output.success, 'Transfer reservation action is failed');
     }
 }

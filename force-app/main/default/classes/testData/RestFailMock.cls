@@ -13,7 +13,7 @@ public class RestFailMock implements HttpCalloutMock {
     public HttpResponse respond(HttpRequest request) {
         HttpResponse response = new HttpResponse();
         response.setStatusCode(Constants.HTTP_INTERNAL_ERROR_CODE);
-        response.setBody(TestDataFactory.getDefaultRestFailMockResponseBody());
+        response.setBody(TestDataFactory.getRestFailMockResponseBody());
         return response;
     }
 }

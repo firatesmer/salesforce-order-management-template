@@ -13,7 +13,7 @@ public class RestSuccessMock implements HttpCalloutMock {
     public HttpResponse respond(HttpRequest request) {
         HttpResponse response = new HttpResponse();
         response.setStatusCode(Constants.HTTP_SUCCESS_CODE);
-        response.setBody(TestDataFactory.getDefaultRestSuccessMockResponseBody());
+        response.setBody(TestDataFactory.getRestSuccessMockResponseBody());
         return response;
     }
 }

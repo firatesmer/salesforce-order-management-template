@@ -19,7 +19,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.createReservation(input)
-            : OmnichannelInventoryDataFactory.getDefaultSuccessCreateReservationOutput();
+            : OmnichannelInventoryDataFactory.getSuccessCreateReservationOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -36,7 +36,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.fulfillReservation(input)
-            : OmnichannelInventoryDataFactory.getDefaultSuccessFulfillReservationOutput();
+            : OmnichannelInventoryDataFactory.getSuccessFulfillReservationOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -55,7 +55,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.getInventoryAvailability(input)
-            : OmnichannelInventoryDataFactory.getDefaultSuccessGetInventoryAvailabilityOutput();
+            : OmnichannelInventoryDataFactory.getSuccessGetInventoryAvailabilityOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -72,7 +72,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.getInventoryAvailabilityUploadStatus(uploadId)
-            : OmnichannelInventoryDataFactory.getDefaultSuccessGetInventoryAvailabilityUploadStatusOutput();
+            : OmnichannelInventoryDataFactory.getSuccessGetInventoryAvailabilityUploadStatusOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -89,7 +89,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.getPublishLocationStructureStatus(uploadId)
-            : OmnichannelInventoryDataFactory.getDefaultSuccessGetPublishLocationStructureStatusOutput();
+            : OmnichannelInventoryDataFactory.getSuccessGetPublishLocationStructureStatusOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -109,7 +109,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.publishLocationStructure()
-            : OmnichannelInventoryDataFactory.getDefaultSuccessPublishLocationStructureOutput();
+            : OmnichannelInventoryDataFactory.getSuccessPublishLocationStructureOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -129,7 +129,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.releaseReservation(input)
-            : OmnichannelInventoryDataFactory.getDefaultSuccessReleaseReservationOutput();
+            : OmnichannelInventoryDataFactory.getSuccessReleaseReservationOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -149,7 +149,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.submitInventoryAvailabilityUpload(input)
-            : OmnichannelInventoryDataFactory.getDefaultSuccessSubmitInventoryAvailabilityUploadOutput();
+            : OmnichannelInventoryDataFactory.getSuccessSubmitInventoryAvailabilityUploadOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -169,7 +169,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.transferReservation(input)
-            : OmnichannelInventoryDataFactory.getDefaultSuccessTransferReservationOutput();
+            : OmnichannelInventoryDataFactory.getSuccessTransferReservationOutput();
 
         super.insertFailedResults(output);
         return output;

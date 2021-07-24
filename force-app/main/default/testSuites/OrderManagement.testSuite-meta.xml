@@ -3,6 +3,7 @@
     <testClassName>BaseEnumTest</testClassName>
     <testClassName>CalloutUtilsTest</testClassName>
     <testClassName>ConnectApiBaseTest</testClassName>
+    <testClassName>ConnectApiOmnichannelInventoryBaseTest</testClassName>
     <testClassName>CreateTestOrderItemInput</testClassName>
     <testClassName>CsvParserTest</testClassName>
     <testClassName>DatabaseUtilsTest</testClassName>

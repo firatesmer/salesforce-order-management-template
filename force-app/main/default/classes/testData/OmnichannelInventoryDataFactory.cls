@@ -10,9 +10,9 @@ public with sharing class OmnichannelInventoryDataFactory {
 
     /**
     * @description Creates OCICreateReservationOutput test data
-    * @return Default success create reservation output
+    * @return Success create reservation output
     */
-    public static ConnectApi.OCICreateReservationOutputRepresentation getDefaultSuccessCreateReservationOutput() {
+    public static ConnectApi.OCICreateReservationOutputRepresentation getSuccessCreateReservationOutput() {
         ConnectApi.OCICreateReservationSingleOutputRepresentation outputItem = new ConnectApi.OCICreateReservationSingleOutputRepresentation();
         outputItem.locationGroupIdentifier = TEST_LOCATION_GROUP;
         outputItem.quantity = 1;
@@ -29,10 +29,26 @@ public with sharing class OmnichannelInventoryDataFactory {
     }
 
     /**
-    * @description Creates OCIFulfillReservationOutput test data
-    * @return Default success fulfill reservation output
+    * @description Creates OCICreateReservationOutputRepresentation test data for fail
+    * @return Fail get inventory availability output
     */
-    public static ConnectApi.OCIFulfillReservationOutputRepresentation getDefaultSuccessFulfillReservationOutput() {
+    public static ConnectApi.OCICreateReservationOutputRepresentation getFailCreateReservationOutput() {
+        ConnectApi.OCICreateReservationErrorOutputRepresentation error = new ConnectApi.OCICreateReservationErrorOutputRepresentation();
+        error.message = 'UNKOWN_EXCEPTION';
+        error.errorCode = '001';
+        
+        ConnectApi.OCICreateReservationOutputRepresentation output = new ConnectApi.OCICreateReservationOutputRepresentation();
+        output.success = false;
+        output.errors = new List<ConnectApi.OCICreateReservationErrorOutputRepresentation>{ error };
+
+        return output;
+    }
+
+    /**
+    * @description Creates OCIFulfillReservationOutput test data
+    * @return Success fulfill reservation output
+    */
+    public static ConnectApi.OCIFulfillReservationOutputRepresentation getSuccessFulfillReservationOutput() {
         ConnectApi.OCIFulfillReservationOutputRepresentation output = new ConnectApi.OCIFulfillReservationOutputRepresentation();
         output.success = true;
         output.errors = new List<ConnectApi.OCIFulfillReservationErrorOutputRepresentation>();
@@ -41,10 +57,26 @@ public with sharing class OmnichannelInventoryDataFactory {
     }
 
     /**
-    * @description Creates OCIGetInventoryAvailabilityOutputRepresentation test data
-    * @return Default success get inventory availability output
+    * @description Creates OCIFulfillReservationOutput test data for fail
+    * @return Success fulfill reservation output
     */
-    public static ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation getDefaultSuccessGetInventoryAvailabilityOutput() {
+    public static ConnectApi.OCIFulfillReservationOutputRepresentation getFailFulfillReservationOutput() {
+        ConnectApi.OCIFulfillReservationErrorOutputRepresentation error = new ConnectApi.OCIFulfillReservationErrorOutputRepresentation();
+        error.message = 'UNKOWN_EXCEPTION';
+        error.errorCode = '001';
+        
+        ConnectApi.OCIFulfillReservationOutputRepresentation output = new ConnectApi.OCIFulfillReservationOutputRepresentation();
+        output.success = false;
+        output.errors = new List<ConnectApi.OCIFulfillReservationErrorOutputRepresentation>{ error };
+
+        return output;
+    }
+
+    /**
+    * @description Creates OCIGetInventoryAvailabilityOutputRepresentation test data
+    * @return Success get inventory availability output
+    */
+    public static ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation getSuccessGetInventoryAvailabilityOutput() {
         ConnectApi.OCIInventoryRecordOutputRepresentation inventoryRecord = new ConnectApi.OCIInventoryRecordOutputRepresentation();
         inventoryRecord.availableToFulfill = 1;
         inventoryRecord.availableToOrder = 1;
@@ -67,10 +99,26 @@ public with sharing class OmnichannelInventoryDataFactory {
     }
 
     /**
-    * @description Creates OCIGetInventoryAvailabilityOutputRepresentation test data
-    * @return Default success get inventory availability upload status output
+    * @description Creates OCIGetInventoryAvailabilityOutputRepresentation test data for fail
+    * @return Fail get inventory availability output
     */
-    public static ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation getDefaultSuccessGetInventoryAvailabilityUploadStatusOutput() {
+    public static ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation getFailInventoryAvailabilityOutputRepresentation() {
+        ConnectApi.ErrorResponse error = new ConnectApi.ErrorResponse();
+        error.message = 'UNKOWN_EXCEPTION';
+        error.errorCode = '001';
+
+        ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation output = new ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation();
+        output.success = false;
+        output.errors = new List<ConnectApi.ErrorResponse>{ error };
+
+        return output;
+    }
+
+    /**
+    * @description Creates OCIUploadInventoryAvailabilityStatusOutputRepresentation test data
+    * @return Success get inventory availability upload status output
+    */
+    public static ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation getSuccessGetInventoryAvailabilityUploadStatusOutput() {
         ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation output = new ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation();
         output.endTimeUTC = DateTime.now().format(TIME_FORMAT);
         output.recordsProcessedCount = 100;
@@ -89,9 +137,9 @@ public with sharing class OmnichannelInventoryDataFactory {
 
     /**
     * @description Creates OCIPublishLocationStructureStatusOutputRepresentation test data
-    * @return Default success get publish location structure status output
+    * @return Success get publish location structure status output
     */
-    public static ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation getDefaultSuccessGetPublishLocationStructureStatusOutput() {
+    public static ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation getSuccessGetPublishLocationStructureStatusOutput() {
         ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation output = new ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation();
         output.endTimeUTC = DateTime.now().format(TIME_FORMAT);
         output.recordsProcessedCount = 100;
@@ -110,9 +158,9 @@ public with sharing class OmnichannelInventoryDataFactory {
 
     /**
     * @description Creates OCIPublishLocationStructureOutputRepresentation test data
-    * @return Default success publish location structure output
+    * @return Success publish location structure output
     */
-    public static ConnectApi.OCIPublishLocationStructureOutputRepresentation getDefaultSuccessPublishLocationStructureOutput() {
+    public static ConnectApi.OCIPublishLocationStructureOutputRepresentation getSuccessPublishLocationStructureOutput() {
         ConnectApi.OCIPublishLocationStructureOutputRepresentation output = new ConnectApi.OCIPublishLocationStructureOutputRepresentation();
         output.uploadId = 'upload_id';
         output.success = true;
@@ -123,9 +171,9 @@ public with sharing class OmnichannelInventoryDataFactory {
 
     /**
     * @description Creates OCIReleaseReservationOutputRepresentation test data
-    * @return Default success release reservation output
+    * @return Success release reservation output
     */
-    public static ConnectApi.OCIReleaseReservationOutputRepresentation getDefaultSuccessReleaseReservationOutput() {
+    public static ConnectApi.OCIReleaseReservationOutputRepresentation getSuccessReleaseReservationOutput() {
         ConnectApi.OCIReleaseReservationOutputRepresentation output = new ConnectApi.OCIReleaseReservationOutputRepresentation();
         output.success = true;
         output.errors = new List<ConnectApi.OCIReleaseReservationErrorOutputRepresentation>();
@@ -134,10 +182,26 @@ public with sharing class OmnichannelInventoryDataFactory {
     }
 
     /**
-    * @description Creates OCIUploadInventoryAvailabilityOutputRepresentation test data
-    * @return Default success submit inventory availability upload output
+    * @description Creates OCIReleaseReservationOutputRepresentation test data for fail
+    * @return Fail release reservation output
     */
-    public static ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation getDefaultSuccessSubmitInventoryAvailabilityUploadOutput() {
+    public static ConnectApi.OCIReleaseReservationOutputRepresentation getFailReleaseReservationOutput() {
+        ConnectApi.OCIReleaseReservationErrorOutputRepresentation error = new ConnectApi.OCIReleaseReservationErrorOutputRepresentation();
+        error.message = 'UNKOWN_EXCEPTION';
+        error.errorCode = '001';
+
+        ConnectApi.OCIReleaseReservationOutputRepresentation output = new ConnectApi.OCIReleaseReservationOutputRepresentation();
+        output.success = false;
+        output.errors = new List<ConnectApi.OCIReleaseReservationErrorOutputRepresentation>{ error };
+
+        return output;
+    }
+
+    /**
+    * @description Creates OCIUploadInventoryAvailabilityOutputRepresentation test data
+    * @return Success submit inventory availability upload output
+    */
+    public static ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation getSuccessSubmitInventoryAvailabilityUploadOutput() {
         ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation output = new ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation();
         output.uploadId = 'upload_id';
         output.success = true;
@@ -148,12 +212,28 @@ public with sharing class OmnichannelInventoryDataFactory {
 
     /**
     * @description Creates OCITransferReservationOutputRepresentation test data
-    * @return Default success transfer reservation output
+    * @return Success transfer reservation output
     */
-    public static ConnectApi.OCITransferReservationOutputRepresentation getDefaultSuccessTransferReservationOutput() {
+    public static ConnectApi.OCITransferReservationOutputRepresentation getSuccessTransferReservationOutput() {
         ConnectApi.OCITransferReservationOutputRepresentation output = new ConnectApi.OCITransferReservationOutputRepresentation();
         output.success = true;
         output.errors = new List<ConnectApi.OCITransferReservationErrorOutputRepresentation>();
+
+        return output;
+    }
+
+    /**
+    * @description Creates OCITransferReservationOutputRepresentation test data for fail
+    * @return Success transfer reservation output
+    */
+    public static ConnectApi.OCITransferReservationOutputRepresentation getFailTransferReservationOutput() {
+        ConnectApi.OCITransferReservationErrorOutputRepresentation error = new ConnectApi.OCITransferReservationErrorOutputRepresentation();
+        error.message = 'UNKOWN_EXCEPTION';
+        error.errorCode = '001';
+
+        ConnectApi.OCITransferReservationOutputRepresentation output = new ConnectApi.OCITransferReservationOutputRepresentation();
+        output.success = false;
+        output.errors = new List<ConnectApi.OCITransferReservationErrorOutputRepresentation>{ error };
 
         return output;
     }

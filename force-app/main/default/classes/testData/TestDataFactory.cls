@@ -10,7 +10,7 @@ public class TestDataFactory {
     * @description Returns default success Http response body
     * @return Http response plain text
     */
-    public static string getDefaultRestSuccessMockResponseBody() {
+    public static string getRestSuccessMockResponseBody() {
         return '{ "isSuccess":true }';
     }
 
@@ -19,7 +19,7 @@ public class TestDataFactory {
     *response body
     * @return Http response plain text
     */
-    public static string getDefaultRestFailMockResponseBody() {
+    public static string getRestFailMockResponseBody() {
         return '{ "isSuccess":false }';
     }
 
@@ -27,7 +27,7 @@ public class TestDataFactory {
     * @description Returns default failed fulfillment order output
     * @return Http response plain text
     */
-    public static ConnectApi.FulfillmentOrderOutputRepresentation getDefaultFailFulfillmentOrderOutput() {
+    public static ConnectApi.FulfillmentOrderOutputRepresentation getFailFulfillmentOrderOutput() {
         ConnectApi.ErrorResponse error = new ConnectApi.ErrorResponse();
         error.message = 'UNKOWN_EXCEPTION';
         error.errorCode = '001';
