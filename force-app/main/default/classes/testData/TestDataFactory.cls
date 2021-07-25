@@ -10,16 +10,33 @@ public class TestDataFactory {
     * @description Returns default success Http response body
     * @return Http response plain text
     */
-    public static string getDefaultRestSuccessMockResponseBody() {
+    public static string getRestSuccessMockResponseBody() {
         return '{ "isSuccess":true }';
     }
 
     /**
-    * @description Returns default fail Http response body
+    * @description Returns default fail Http
+    *response body
     * @return Http response plain text
     */
-    public static string getDefaultRestFailMockResponseBody() {
+    public static string getRestFailMockResponseBody() {
         return '{ "isSuccess":false }';
+    }
+
+    /**
+    * @description Returns default failed fulfillment order output
+    * @return Http response plain text
+    */
+    public static ConnectApi.FulfillmentOrderOutputRepresentation getFailFulfillmentOrderOutput() {
+        ConnectApi.ErrorResponse error = new ConnectApi.ErrorResponse();
+        error.message = 'UNKOWN_EXCEPTION';
+        error.errorCode = '001';
+
+        ConnectApi.FulfillmentOrderOutputRepresentation output = new ConnectApi.FulfillmentOrderOutputRepresentation();
+        output.success = false;
+        output.errors = new List<ConnectApi.ErrorResponse>{ error };
+
+        return output;
     }
 
     /**
@@ -81,20 +98,20 @@ public class TestDataFactory {
     }
 
     /**
-    * @description Creates saleschannel
-    * @param saleschannelName Saleschannel name
-    * @return Saleschannel
+    * @description Creates SalesChannel
+    * @param saleschannelName SalesChannel name
+    * @return SalesChannel
     */
-    public static Saleschannel createSaleschannel(string saleschannelName) {
-        Saleschannel saleschannel = new Saleschannel();
-        saleschannel.SaleschannelName = saleschannelName;
+    public static SalesChannel createSalesChannel(string saleschannelName) {
+        SalesChannel saleschannel = new SalesChannel();
+        saleschannel.SalesChannelName = saleschannelName;
         return saleschannel;
     }
 
     /**
     * @description Creates order
     * @param accountId Account Id (createAccount)
-    * @param saleschannelId Saleschannel Id (createSaleschannel)
+    * @param saleschannelId SalesChannel Id (createSalesChannel)
     * @return Order
     */
     public static Order createOrder(Id accountId, Id saleschannelId) {
@@ -165,13 +182,15 @@ public class TestDataFactory {
     /**
     * @description Creates location
     * @param name Location name
-    * @param locationType Location type (LocationType enum)
+    * @param externalReference Reference of the Location
+    * @param locationType Enum of LocationType
     * @return Location
     */
-    public static Schema.Location createLocation(String name, String locationType) {
+    public static Schema.Location createLocation(String name, String externalReference, LocationType locationType) {
         Schema.Location location = new Schema.Location();
         location.Name = name;
-        location.LocationType = locationType;
+        location.ExternalReference = externalReference;
+        location.LocationType = locationType.enumValue;
         return location;
     }
 
@@ -242,23 +261,23 @@ public class TestDataFactory {
 
     /**
     * @description Creates order and related objects
-    * @param orderItemList CreateOrderItem list
+    * @param orderItemList CreateTestOrderItemInput list
     * @param locationId Location id
     * @return Order
     */
-    public static Order createOrderAndRelatedObjects(List<CreateOrderItem> orderItemList, String locationId) {
+    public static Order createOrderAndRelatedObjects(List<CreateTestOrderItemInput> orderItemList, String locationId) {
         Double subTotal = 0; 
 
         // Product2
         Map<String, Product2> codeToProduct = new Map<String, Product2>();
-        for (CreateOrderItem orderItem : orderItemList) {
+        for (CreateTestOrderItemInput orderItem : orderItemList) {
             codeToProduct.put(orderItem.productCode, createProduct(orderItem.productCode));
         }
         insert codeToProduct.values();
 
         // PricebookEntry
         Map<String, PricebookEntry> codeToPricebookEntry = new Map<String, PricebookEntry>();
-        for (CreateOrderItem orderItem : orderItemList) {
+        for (CreateTestOrderItemInput orderItem : orderItemList) {
             Product2 product = codeToProduct.get(orderItem.productCode);
             codeToPricebookEntry.put(orderItem.productCode, createPricebookEntry(orderItem.unitPrice, product.Id));
             subTotal += (Double)(orderItem.unitPrice * orderItem.quantity);
@@ -269,8 +288,8 @@ public class TestDataFactory {
         Account account = createAccount(Constants.TEST, Constants.TEST, 'joe@doe.com');
         insert account;
 
-        // Saleschannel
-        Saleschannel saleschannel = createSaleschannel(Constants.TEST);
+        // SalesChannel
+        SalesChannel saleschannel = createSalesChannel(Constants.TEST);
         insert saleschannel;
 
         // Order
@@ -287,7 +306,7 @@ public class TestDataFactory {
 
         // OrderItem
         Map<String, OrderItem> codeToOrderItem = new Map<String, OrderItem>();
-        for (CreateOrderItem orderItem : orderItemList) {
+        for (CreateTestOrderItemInput orderItem : orderItemList) {
             Product2 product = codeToProduct.get(orderItem.productCode);
             PricebookEntry pricebookEntry = codeToPricebookEntry.get(orderItem.productCode);
 
@@ -299,7 +318,7 @@ public class TestDataFactory {
 
         // OrderItemTaxLineItem
         List<OrderItemTaxLineItem> orderItemTaxLineItems = new List<OrderItemTaxLineItem>();
-        for (CreateOrderItem orderItem : orderItemList) {
+        for (CreateTestOrderItemInput orderItem : orderItemList) {
             if (orderItem.applyTax) {
                 OrderItem standardOrderItem = codeToOrderItem.get(orderItem.productCode);
 
@@ -369,27 +388,28 @@ public class TestDataFactory {
     * @return Id of the Order
     */
     public static String createOrder() {
-        Schema.Location location = TestDataFactory.createLocation(Constants.WAREHOUSE, Constants.WAREHOUSE);
+        String locationName = LocationType.WAREHOUSE.enumValue;
+        Schema.Location location = TestDataFactory.createLocation(locationName, locationName, LocationType.WAREHOUSE);
         insert location;
 
-        List<TestDataFactory.CreateOrderItem> orderItemList = new List<TestDataFactory.CreateOrderItem>();
+        List<CreateTestOrderItemInput> orderItemList = new List<CreateTestOrderItemInput>();
 
         // #1 order item
-        TestDataFactory.CreateOrderItem product1 = new TestDataFactory.CreateOrderItem();
+        CreateTestOrderItemInput product1 = new CreateTestOrderItemInput();
         product1.type = OrderItemType.ORDER_PRODUCT;
         product1.productCode = '001';
         product1.quantity = 2;
         product1.unitPrice = 10;
 
         // #2 order item
-        TestDataFactory.CreateOrderItem product2 = new TestDataFactory.CreateOrderItem();
+        CreateTestOrderItemInput product2 = new CreateTestOrderItemInput();
         product2.type = OrderItemType.ORDER_PRODUCT;
         product2.productCode = '002';
         product2.quantity = 2;
         product2.unitPrice = 10;
 
         // #3 order item
-        TestDataFactory.CreateOrderItem shipping = new TestDataFactory.CreateOrderItem();
+        CreateTestOrderItemInput shipping = new CreateTestOrderItemInput();
         shipping.type = OrderItemType.DELIVERY_CHARGE;
         shipping.productCode = '003';
         shipping.quantity = 2;
@@ -451,54 +471,5 @@ public class TestDataFactory {
         adjustItemInputList.add(adjustItemInput);
 
         return adjustItemInputList;
-    }
-
-    /**
-    * @description Model to use to create 
-    *   OrderItem in test classes
-    */
-    public class CreateOrderItem {
-        /**
-        * @description Set default values
-        */
-        public CreateOrderItem() {
-            this.applyTax = false;
-        }
-
-        /**
-        * @description Product code of the item
-        */
-        public String productCode { get; set; }
-
-        /**
-        * @description Quantity of the item
-        */
-        public Integer quantity { get; set; }
-
-        /**
-        * @description Unit price of the item
-        */
-        public Double unitPrice { get; set; }
-
-        /**
-        * @description Type of the item 
-        *   DELIVERY CHARGE|ORDER PRODUCT
-        */
-        public OrderItemType type { get; set; }
-
-        /**
-        * @description Tax amount for the item (optional)
-        */
-        public Double taxAmount { get; set; }
-
-        /**
-        * @description Tax rate for the item (optional)
-        */
-        public Double taxRate { get; set; }
-
-        /**
-        * @description Apply tax
-        */
-        public Boolean applyTax { get; set; }
     }
 }

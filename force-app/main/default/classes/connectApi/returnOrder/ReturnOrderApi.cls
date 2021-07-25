@@ -1,9 +1,9 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 14/07/2021
-* @description ReturnOrder Api class
+* @description Process ReturnOrders in Order Management
 */
-public with sharing class ReturnOrderApi extends BaseApi {
+public with sharing class ReturnOrderApi extends ConnectApiBase {
     /**
     * @description Create a ReturnOrder and 
     *   ReturnOrderLineItems for items belonging
@@ -11,7 +11,7 @@ public with sharing class ReturnOrderApi extends BaseApi {
     * @param orderSummaryId Id of the OrderSummary
     * @param returnOrderStatus ReturnOrder status (enum)
     * @param returnOrderLineItemInputList ReturnOrderLineItemInput list
-    * @return Create return order output
+    * @return Id of the created ReturnOrder
     */
     public ConnectApi.ReturnOrderOutputRepresentation createReturnOrder(String orderSummaryId, ReturnOrderStatus returnOrderStatus, List<ConnectApi.ReturnOrderLineItemInputRepresentation> returnOrderLineItemInputList) {
         ConnectApi.ReturnOrderInputRepresentation input = new ConnectApi.ReturnOrderInputRepresentation();
@@ -34,10 +34,16 @@ public with sharing class ReturnOrderApi extends BaseApi {
     *   has any remaining expected quantity, then the
     *   API creates a separate ReturnOrderLineItem
     *   representing that quantity
-    * @param returnOrderId Id of the Return
-    * @return Return items output
+    * @param returnOrderId Id of the ReturnOrder
+    * @param input Data about product|delivery to return
+    * @return Output of Return Items. Includes the ID of
+    *   the generated change order, plus information about
+    *   any ReturnOrderLineItems that were created to 
+    *   represent remaining return quantities
     */
-    // public static void returnItems(String returnOrderId) {
-
-    // }
+    public ConnectApi.ReturnItemsOutputRepresentation returnItems(String returnOrderId, ConnectApi.ReturnItemsInputRepresentation input) {
+        ConnectApi.ReturnItemsOutputRepresentation output = ConnectApi.ReturnOrder.returnItems(returnOrderId, input);
+        super.insertFailedResults(output);
+        return output;
+    }
 }

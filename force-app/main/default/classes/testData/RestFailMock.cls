@@ -1,10 +1,10 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
 * @date 10/04/2021
-* @description Mock success response class
+* @description Mock fail response class
 */
 @isTest
-public class RestSuccessMock implements HttpCalloutMock {
+public class RestFailMock implements HttpCalloutMock {
     /**
     * @description Http respond method
     * @param request HttpRequest object
@@ -12,8 +12,8 @@ public class RestSuccessMock implements HttpCalloutMock {
     */
     public HttpResponse respond(HttpRequest request) {
         HttpResponse response = new HttpResponse();
-        response.setStatusCode(Constants.HTTP_SUCCESS_CODE);
-        response.setBody(TestDataFactory.getDefaultRestSuccessMockResponseBody());
+        response.setStatusCode(Constants.HTTP_INTERNAL_ERROR_CODE);
+        response.setBody(TestDataFactory.getRestFailMockResponseBody());
         return response;
     }
 }

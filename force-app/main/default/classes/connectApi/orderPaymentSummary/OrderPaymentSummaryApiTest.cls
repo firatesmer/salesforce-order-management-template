@@ -25,6 +25,6 @@ private class OrderPaymentSummaryApiTest {
         ConnectApi.CreateOrderPaymentSummaryOutputRepresentation output = api.createOrderPaymentSummary(orderSummary.Id, '', new List<String>{ payment.Id });
         Test.stopTest();
 
-        System.assert(output.success, 'Create order payment summary action failed');
+        System.assert(output.success, 'Create order payment summary action is failed');
     }
 }

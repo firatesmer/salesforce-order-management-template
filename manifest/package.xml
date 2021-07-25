@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
-		<members>BaseApi</members>
 		<members>BaseEnum</members>
 		<members>BaseEnumTest</members>
 		<members>CalloutUtils</members>
@@ -9,7 +8,11 @@
 		<members>CardPaymentMethodCategory</members>
 		<members>CardPaymentMethodStatus</members>
 		<members>CardPaymentMethodType</members>
+		<members>ConnectApiBase</members>
+		<members>ConnectApiBaseTest</members>
+		<members>ConnectApiOmnichannelInventoryBase</members>
 		<members>Constants</members>
+		<members>CreateTestOrderItemInput</members>
 		<members>CsvParser</members>
 		<members>CsvParserTest</members>
 		<members>DatabaseUtils</members>
@@ -27,9 +30,9 @@
 		<members>LocationType</members>
 		<members>LogUtils</members>
 		<members>LogUtilsTest</members>
-		<members>ObjectUtils</members>
-		<members>ObjectUtilsTest</members>
-		<members>OrderManagementSetup</members>
+		<members>OmnichannelInventoryDataFactory</members>
+		<members>OmnichannelInventoryServiceApi</members>
+		<members>OmnichannelInventoryServiceApiTest</members>
 		<members>OrderPaymentSummaryApi</members>
 		<members>OrderPaymentSummaryApiTest</members>
 		<members>OrderItemStatus</members>
@@ -50,8 +53,11 @@
 		<members>RestSuccessMock</members>
 		<members>ReturnOrderApi</members>
 		<members>ReturnOrderApiTest</members>
+		<members>ReturnOrderLineItemRejectionReason</members>
 		<members>ReturnOrderLineItemReturnReason</members>
 		<members>ReturnOrderStatus</members>
+		<members>RoutingApi</members>
+		<members>RoutingApiTest</members>
 		<members>SalesforceAdapter</members>
 		<members>SalesforceAdapterTest</members>
 		<members>ShipmentStatus</members>

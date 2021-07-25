@@ -24,7 +24,7 @@ private class FulfillmentOrderApiTest {
 
         List<FulfillmentOrder> fulfillmentOrders = [SELECT Id FROM FulfillmentOrder WHERE OrderSummaryId =: orderSummary.Id];
 
-        System.assert(output.success, 'Create fulfillment orders action failed');
+        System.assert(output.success, 'Create fulfillment orders action is failed');
         System.assert(!fulfillmentOrders.isEmpty(), 'No fulfillment orders found');
     }
 
@@ -53,7 +53,7 @@ private class FulfillmentOrderApiTest {
 
         fulfillmentOrder = [SELECT InvoiceId FROM FulfillmentOrder WHERE Id =: fulfillmentOrder.Id];
 
-        System.assert(output.success, 'Create invoice action failed');
+        System.assert(output.success, 'Create invoice action is failed');
         System.assert(fulfillmentOrder.InvoiceID != null, 'No invoices found');
     }
 
@@ -93,7 +93,7 @@ private class FulfillmentOrderApiTest {
             System.assert(fulfillmentOrderLineItem.Quantity == 0, String.format('Fulfillment order line item quantity is {0}', new List<String>{ String.valueOf(fulfillmentOrderLineItem.Quantity) }));
         }
 
-        System.assert(output.success, 'Cancel fulfillment order line items action failed');
+        System.assert(output.success, 'Cancel fulfillment order line items action is failed');
     }
 
     /**
@@ -135,7 +135,7 @@ private class FulfillmentOrderApiTest {
         List<FulfillmentOrder> fulfillmentOrders = [SELECT Id FROM FulfillmentOrder 
             WHERE OrderSummaryId =: orderSummaries];
 
-        System.assert(output.success, 'Create fulfillment orders action failed');
+        System.assert(output.success, 'Create fulfillment orders action is failed');
         System.assert(fulfillmentOrders.size() > 1, 'There should be multiple FulfillmentOrder records');
     }
 
@@ -185,7 +185,7 @@ private class FulfillmentOrderApiTest {
 
         List<FulfillmentOrder> fulfillmentOrders = [SELECT InvoiceId FROM FulfillmentOrder WHERE Id IN: fulfillmentOrderIds];
 
-        System.assert(output.success, 'Create multiple invoices action failed');
+        System.assert(output.success, 'Create multiple invoices action is failed');
         
         for (FulfillmentOrder fulfillmentOrder : fulfillmentOrders) {
             System.assert(String.isNotEmpty(fulfillmentOrder.InvoiceId), 'No invoice found');

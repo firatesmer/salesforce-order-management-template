@@ -20,7 +20,7 @@ private class ReturnOrderApiTest {
 
         FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
-        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(location.Id, orderSummary.Id, FulfillmentOrderType.WAREHOUSE);
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
 
         FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
@@ -51,8 +51,8 @@ private class ReturnOrderApiTest {
                 returnOrderLineItemInput.canReduceShipping = true;
                 returnOrderLineItemInput.orderItemSummaryId = orderItemSummary.Id;
                 returnOrderLineItemInput.quantityExpected = 1;
-                returnOrderLineItemInput.quantityReceived = 1;
-                returnOrderLineItemInput.reasonForReturn = ReturnOrderLineItemReturnReason.WRONG_ITEM.enumValue;
+                returnOrderLineItemInput.quantityReceived = 0;
+                returnOrderLineItemInput.reasonForReturn = OrderItemSummaryChangeReason.UNKNOWN.enumValue;
                 returnOrderLineItemInputList.add(returnOrderLineItemInput);
             }
             
@@ -62,8 +62,85 @@ private class ReturnOrderApiTest {
 
             List<ReturnOrder> returnOrders = [SELECT Id FROM ReturnOrder WHERE OrderSummaryId =: orderSummary.Id];
 
-            System.assert(output.success, 'Create return order action failed');
+            System.assert(output.success, 'Create return order action is failed');
             System.assert(!returnOrders.isEmpty(), 'No ReturnOrder records found');
+        }
+    }
+
+    /**
+    * @description Test method of ReturnOrderApi.returnItems
+    *   suppress reason: ConnectApi requires SeeAllData=true annotation
+    */
+    @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
+    @isTest(SeeAllData=true)
+    static void shouldReturnItems() {
+        String orderId = TestDataFactory.createOrder();
+
+        OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
+
+        Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
+
+        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
+
+        ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
+        String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
+
+        FulfillmentOrder fulfillmentOrder = [SELECT Id FROM FulfillmentOrder WHERE Id =: fulfillmentOrderId];
+        fulfillmentOrder.Status = FulfillmentOrderStatus.FULFILLED.enumValue;
+        DatabaseUtils.updateRecords(new List<FulfillmentOrder>{ fulfillmentOrder }, true);
+
+        List<OrderItemSummary> orderItemSummaries = [
+            SELECT Type, Quantity, QuantityAvailableToReturn
+            FROM OrderItemSummary 
+            WHERE OrderSummaryId =: orderSummary.Id
+            AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
+
+        Boolean areOrderItemsReturnable = false;
+
+        for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            if (!areOrderItemsReturnable) {
+                break;
+            }
+        }
+
+        System.assert(areOrderItemsReturnable, 'Order item is not returnable');
+
+        if (areOrderItemsReturnable) {
+            List<ConnectApi.ReturnOrderLineItemInputRepresentation> returnOrderLineItemInputList = new List<ConnectApi.ReturnOrderLineItemInputRepresentation>();
+            for (OrderItemSummary orderItemSummary : orderItemSummaries) {
+                ConnectApi.ReturnOrderLineItemInputRepresentation returnOrderLineItemInput = new ConnectApi.ReturnOrderLineItemInputRepresentation();
+                returnOrderLineItemInput.canReduceShipping = true;
+                returnOrderLineItemInput.orderItemSummaryId = orderItemSummary.Id;
+                returnOrderLineItemInput.quantityExpected = 1;
+                returnOrderLineItemInput.quantityReceived = 0;
+                returnOrderLineItemInput.reasonForReturn = OrderItemSummaryChangeReason.UNKNOWN.enumValue;
+                returnOrderLineItemInputList.add(returnOrderLineItemInput);
+            }
+            
+            ReturnOrderApi api = new ReturnOrderApi();
+
+            ConnectApi.ReturnOrderOutputRepresentation returnOrderOutput = api.createReturnOrder(orderSummary.Id, ReturnOrderStatus.DRAFT, returnOrderLineItemInputList);
+            String returnOrderId = returnOrderOutput.returnOrderId;
+
+            List<ReturnOrderLineItem> returnOrderLineItems = [SELECT Id FROM ReturnOrderLineItem WHERE ReturnOrderId =: returnOrderId];
+
+            ConnectApi.ReturnOrderItemInputRepresentation returnOrderItemInput = new ConnectApi.ReturnOrderItemInputRepresentation();
+            returnOrderItemInput.quantityReceived = 1;
+            returnOrderItemInput.quantityRejected = 0;
+            returnOrderItemInput.quantityReturned = 1;
+            returnOrderItemInput.quantityToCancel = 0;
+            returnOrderItemInput.reasonForRejection = ReturnOrderLineItemRejectionReason.WRONG_ITEM.enumValue;
+            returnOrderItemInput.returnOrderLineItemId = returnOrderLineItems[0].Id;
+
+            ConnectApi.ReturnItemsInputRepresentation input = new ConnectApi.ReturnItemsInputRepresentation();
+            input.returnOrderItems = new List<ConnectApi.ReturnOrderItemInputRepresentation>{ returnOrderItemInput };
+
+            Test.startTest();
+            ConnectApi.ReturnItemsOutputRepresentation output = api.returnItems(returnOrderId, input);
+            Test.stopTest();
+
+            System.assert(output.success, 'Return items action is failed');
         }
     }
 }

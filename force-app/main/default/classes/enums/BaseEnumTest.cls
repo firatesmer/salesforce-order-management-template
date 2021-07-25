@@ -32,6 +32,7 @@ private class BaseEnumTest {
         List<ProcessExceptionStatus> processExceptionStatusList = ProcessExceptionStatus.values();
         List<ProcessExceptionType> processExceptionTypeList = ProcessExceptionType.values();
         List<ProcessingMode> processingModeList = ProcessingMode.values();
+        List<ReturnOrderLineItemRejectionReason> returnOrderLineItemRejectionReasonList = ReturnOrderLineItemRejectionReason.values();
         List<ReturnOrderLineItemReturnReason> returnOrderLineItemReturnReasonList = ReturnOrderLineItemReturnReason.values();
         List<ReturnOrderStatus> returnOrderStatusList = ReturnOrderStatus.values();
         List<ShipmentStatus> shipmentStatusList = ShipmentStatus.values();
@@ -53,6 +54,7 @@ private class BaseEnumTest {
         System.assert(!processExceptionStatusList.isEmpty(), 'ProcessExceptionStatus list is empty');
         System.assert(!processExceptionTypeList.isEmpty(), 'ProcessExceptionType list is empty');
         System.assert(!processingModeList.isEmpty(), 'ProcessingMode list is empty');
+        System.assert(!returnOrderLineItemRejectionReasonList.isEmpty(), 'ReturnOrderLineItemRejectionReason list is empty');
         System.assert(!returnOrderLineItemReturnReasonList.isEmpty(), 'ReturnOrderLineItemReturnReason list is empty');
         System.assert(!returnOrderStatusList.isEmpty(), 'ReturnOrderStatus list is empty');
         System.assert(!shipmentStatusList.isEmpty(), 'ShipmentStatus list is empty');

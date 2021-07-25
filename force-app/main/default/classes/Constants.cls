@@ -19,6 +19,7 @@ public class Constants {
     public static final String CREATED = 'Created';
     public static final String CREDIT_CARD = 'CreditCard';
     public static final String DAMAGED = 'Damaged';
+    public static final String DAMAGED_ITEM = 'Damaged Item';
     public static final String DEBIT_CARD = 'DebitCard';
     public static final String DEFECTIVE = 'Defective';
     public static final String DELIVERED = 'Delivered';
@@ -27,6 +28,7 @@ public class Constants {
     public static final String DRAFT = 'Draft';
     public static final String DUPLICATE_ORDER = 'Duplicate Order';
     public static final String ERROR_POSTING = 'Error Posting';
+    public static final String EXPIRED_WARRANTY = 'Expired Warranty';
     public static final String ESTIMATED = 'Estimated';
     public static final String EXTERNAL = 'External';
     public static final String FAILED = 'Failed';
@@ -44,6 +46,7 @@ public class Constants {
     public static final String MAESTRO = 'Maestro';
     public static final String MANAGED = 'Managed';
     public static final String MASTER_CARD = 'Master Card';
+    public static final String MISSING_ITEM_OR_PART = 'Missing Item or Part';
     public static final String NEW_C = 'New';
     public static final String NOT_SATISFIED = 'Not Satisfied';
     public static final String ORDER_ACTIVATION = 'Order Activation';
