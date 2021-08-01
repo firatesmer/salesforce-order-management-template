@@ -3,13 +3,13 @@
 * @date 10/04/2021
 * @description OrderSummary/OrderItemSummary service class
 */
-public with sharing class OrderSummaryService {
+public with sharing class OrderSummaryService implements IOrderSummaryService {
     /**
     * @description Checks whether the order item is discountable
     * @param orderItemSummary OrderItemSummary
     * @return Discountable result
     */
-    public static Boolean isOrderItemDiscountable(OrderItemSummary orderItemSummary) {
+    public Boolean isOrderItemDiscountable(OrderItemSummary orderItemSummary) {
         return orderItemSummary.Quantity != 0
             && orderItemSummary.QuantityReturnInitiated == orderItemSummary.QuantityReturned
             && orderItemSummary.QuantityAllocated == orderItemSummary.QuantityFulfilled
@@ -21,7 +21,7 @@ public with sharing class OrderSummaryService {
     * @param orderItemSummary OrderItemSummary
     * @return Cancelable result
     */
-    public static Boolean isOrderItemCancelable(OrderItemSummary orderItemSummary) {
+    public Boolean isOrderItemCancelable(OrderItemSummary orderItemSummary) {
         return orderItemSummary.Type != OrderItemType.DELIVERY_CHARGE.enumValue
             && orderItemSummary.QuantityAvailableToCancel > 0;
     }
@@ -31,7 +31,7 @@ public with sharing class OrderSummaryService {
     * @param orderItemSummary OrderItemSummary
     * @return Returnable result
     */
-    public static Boolean isOrderItemReturnable(OrderItemSummary orderItemSummary) {
+    public Boolean isOrderItemReturnable(OrderItemSummary orderItemSummary) {
         return orderItemSummary.Type != OrderItemType.DELIVERY_CHARGE.enumValue
             && orderItemSummary.QuantityAvailableToReturn > 0;
     }
@@ -41,7 +41,7 @@ public with sharing class OrderSummaryService {
     * @param orderItemSummaries List of OrderItemSummary
     * @return OrderItemSummary list
     */
-    public static List<OrderItemSummary> getDiscountableOrderItems(List<OrderItemSummary> orderItemSummaries) {
+    public List<OrderItemSummary> getDiscountableOrderItems(List<OrderItemSummary> orderItemSummaries) {
         List<OrderItemSummary> discountableOrderItems = new List<OrderItemSummary>();
 
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
@@ -60,7 +60,7 @@ public with sharing class OrderSummaryService {
     * @param orderItemSummaries List of OrderItemSummary
     * @return OrderItemSummary list
     */
-    public static List<OrderItemSummary> getCancelableOrderItems(List<OrderItemSummary> orderItemSummaries) {
+    public List<OrderItemSummary> getCancelableOrderItems(List<OrderItemSummary> orderItemSummaries) {
         List<OrderItemSummary> cancelableOrderItems = new List<OrderItemSummary>();
 
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
@@ -79,7 +79,7 @@ public with sharing class OrderSummaryService {
     * @param orderItemSummaries List of OrderItemSummary
     * @return OrderItemSummary list
     */
-    public static List<OrderItemSummary> getReturnableOrderItems(List<OrderItemSummary> orderItemSummaries) {
+    public List<OrderItemSummary> getReturnableOrderItems(List<OrderItemSummary> orderItemSummaries) {
         List<OrderItemSummary> returnableOrderItems = new List<OrderItemSummary>();
 
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
@@ -100,7 +100,7 @@ public with sharing class OrderSummaryService {
     * @param shippingReductionFlag Reduction shipping
     * @return ConnectApi.ChangeInputRepresentation
     */
-    public static ConnectApi.ChangeInputRepresentation buildChangeInput(List<OrderItemSummary> orderItemSummaries, OrderItemSummaryChangeReason reason, Boolean shippingReductionFlag) {
+    public ConnectApi.ChangeInputRepresentation buildChangeInput(List<OrderItemSummary> orderItemSummaries, OrderItemSummaryChangeReason reason, Boolean shippingReductionFlag) {
         ConnectApi.ChangeInputRepresentation changeInput = new ConnectApi.ChangeInputRepresentation();
         List<ConnectApi.ChangeItemInputRepresentation> changeItemInputList = new List<ConnectApi.ChangeItemInputRepresentation>();
 

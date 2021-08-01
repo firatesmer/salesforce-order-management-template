@@ -3,7 +3,7 @@
 * @date 11/07/2021
 * @description Work with payments in Order Management
 */
-public with sharing class OrderPaymentSummaryApi extends ConnectApiBase {
+public virtual without sharing class OrderPaymentSummaryApi extends ConnectApiBase {
     /**
     * @description Create an OrderPaymentSummary
     *   for an OrderSummary. Specify a payment 
@@ -19,7 +19,7 @@ public with sharing class OrderPaymentSummaryApi extends ConnectApiBase {
     *   - either this or paymentAuthorizationId should be set
     * @return Id of the created OrderPaymentSummary
     */
-    public ConnectApi.CreateOrderPaymentSummaryOutputRepresentation createOrderPaymentSummary(String orderSummaryId, String paymentAuthorizationId, List<String> paymentIds) {
+    public virtual ConnectApi.CreateOrderPaymentSummaryOutputRepresentation createOrderPaymentSummary(String orderSummaryId, String paymentAuthorizationId, List<String> paymentIds) {
         ConnectApi.CreateOrderPaymentSummaryInputRepresentation input = new ConnectApi.CreateOrderPaymentSummaryInputRepresentation();
         input.orderSummaryId  = orderSummaryId;
 

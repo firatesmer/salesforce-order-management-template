@@ -4,7 +4,7 @@
 * @description Route orders to inventory locations
 *   in Order Management
 */
-public with sharing class RoutingApi extends ConnectApiBase {
+public virtual without sharing class RoutingApi extends ConnectApiBase {
     /**
     * @description Returns combinations of inventory
     *   locations that can fulfill an order within a
@@ -17,7 +17,7 @@ public with sharing class RoutingApi extends ConnectApiBase {
     *   can fulfill an order without exceeding the maximum 
     *   number of shipments
     */
-    public ConnectApi.FindRoutesWithFewestSplitsOutputRepresentation findRoutesWithFewestSplits(ConnectApi.FindRoutesWithFewestSplitsInputRepresentation input) {
+    public virtual ConnectApi.FindRoutesWithFewestSplitsOutputRepresentation findRoutesWithFewestSplits(ConnectApi.FindRoutesWithFewestSplitsInputRepresentation input) {
         ConnectApi.FindRoutesWithFewestSplitsOutputRepresentation output = ConnectApi.Routing.findRoutesWithFewestSplits(input);
         super.insertFailedResults(output);
         return output;
@@ -34,7 +34,7 @@ public with sharing class RoutingApi extends ConnectApiBase {
     * @return The results of calculating the average distances 
     *   from sets of inventory locations to an order recipient
     */
-    public ConnectApi.RankAverageDistanceOutputRepresentation rankAverageDistance(ConnectApi.RankAverageDistanceInputRepresentation input) {
+    public virtual ConnectApi.RankAverageDistanceOutputRepresentation rankAverageDistance(ConnectApi.RankAverageDistanceInputRepresentation input) {
         ConnectApi.RankAverageDistanceOutputRepresentation output = ConnectApi.Routing.rankAverageDistance(input);
         super.insertFailedResults(output);
         return output;

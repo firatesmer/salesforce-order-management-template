@@ -3,7 +3,7 @@
 * @date 10/04/2021
 * @description Fulfill orders in Order Management
 */
-public with sharing class FulfillmentOrderApi extends ConnectApiBase {
+public virtual without sharing class FulfillmentOrderApi extends ConnectApiBase {
     /**
     * @description Create one or more FulfillmentOrders 
     *   and FulfillmentOrderLineItems for an OrderDeliveryGroupSummary,
@@ -19,7 +19,7 @@ public with sharing class FulfillmentOrderApi extends ConnectApiBase {
     * @param fulfillmentOrderType Type of the FulfillmentOrder (enum)
     * @return A list of Ids of the created FulfillmentOrders
     */
-    public ConnectApi.FulfillmentOrderOutputRepresentation createFulfillmentOrders(String orderSummaryId, String locationId, FulfillmentOrderType fulfillmentOrderType) {
+    public virtual ConnectApi.FulfillmentOrderOutputRepresentation createFulfillmentOrders(String orderSummaryId, String locationId, FulfillmentOrderType fulfillmentOrderType) {
         ConnectApi.FulfillmentOrderInputRepresentation fulfillmentOrderInput = new ConnectApi.FulfillmentOrderInputRepresentation();
         fulfillmentOrderInput.orderSummaryId = orderSummaryId;
         
@@ -59,7 +59,7 @@ public with sharing class FulfillmentOrderApi extends ConnectApiBase {
     * @param fulfillmentOrderId of the FulfillmentOrder
     * @return Id of the created Invoice
     */
-    public ConnectApi.FulfillmentOrderInvoiceOutputRepresentation createInvoice(String fulfillmentOrderId) {
+    public virtual ConnectApi.FulfillmentOrderInvoiceOutputRepresentation createInvoice(String fulfillmentOrderId) {
         ConnectApi.FulfillmentOrderInvoiceInputRepresentation invoiceInput = new ConnectApi.FulfillmentOrderInvoiceInputRepresentation();
         ConnectAPI.FulfillmentOrderInvoiceOutputRepresentation output = ConnectApi.FulfillmentOrder.createInvoice(fulfillmentOrderId, invoiceInput);
         super.insertFailedResults(output);
@@ -74,7 +74,7 @@ public with sharing class FulfillmentOrderApi extends ConnectApiBase {
     * @param lineItemIdToCancelQuantity Map<FulfillmentOrderLineItem.Id, FulfillmentOrderLineItem.Quantity/QuantityCancelled>
     * @return Wraps the base output
     */
-    public ConnectApi.FulfillmentOrderCancelLineItemsOutputRepresentation cancelFulfillmentOrderLineItems(String fulfillmentOrderId, Map<String, Decimal> lineItemIdToCancelQuantity) {
+    public virtual ConnectApi.FulfillmentOrderCancelLineItemsOutputRepresentation cancelFulfillmentOrderLineItems(String fulfillmentOrderId, Map<String, Decimal> lineItemIdToCancelQuantity) {
         List<ConnectApi.FulfillmentOrderLineItemInputRepresentation> cancelItemList = new List<ConnectApi.FulfillmentOrderLineItemInputRepresentation>();
 
         for(String fulfillmentOrderLineItemId : lineItemIdToCancelQuantity.keySet()) {
@@ -104,7 +104,7 @@ public with sharing class FulfillmentOrderApi extends ConnectApiBase {
     *   FulfillmentOrder creation attempts from a create
     *   multiple fulfillment orders request
     */
-    public ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrder(List<CreateFulfillmentOrderInput> createFulfillmentOrderList) {
+    public virtual ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrder(List<CreateFulfillmentOrderInput> createFulfillmentOrderList) {
         ConnectApi.MultipleFulfillmentOrderInputRepresentation multipleFulfillmentOrderInput = new ConnectApi.MultipleFulfillmentOrderInputRepresentation();
         multipleFulfillmentOrderInput.fulfillmentOrders = new List<ConnectApi.FulfillmentOrderInputRepresentation>();
 
@@ -163,7 +163,7 @@ public with sharing class FulfillmentOrderApi extends ConnectApiBase {
     * @param fulfillmentOrderIds The list of FulfillmentOrder Ids
     * @return Ids of the created Invoices
     */
-    public ConnectApi.MultipleFulfillmentOrderInvoicesOutputRepresentation createMultipleInvoices(List<String> fulfillmentOrderIds) {
+    public virtual ConnectApi.MultipleFulfillmentOrderInvoicesOutputRepresentation createMultipleInvoices(List<String> fulfillmentOrderIds) {
         ConnectApi.MultipleFulfillmentOrderInvoicesInputRepresentation input = new ConnectApi.MultipleFulfillmentOrderInvoicesInputRepresentation();
         input.fulfillmentOrderIds = fulfillmentOrderIds;
 

@@ -33,10 +33,12 @@ private class ReturnOrderApiTest {
             WHERE OrderSummaryId =: orderSummary.Id
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
         Boolean areOrderItemsReturnable = false;
 
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            areOrderItemsReturnable = orderSummaryService.isOrderItemReturnable(orderItemSummary);
             if (!areOrderItemsReturnable) {
                 break;
             }
@@ -95,10 +97,12 @@ private class ReturnOrderApiTest {
             WHERE OrderSummaryId =: orderSummary.Id
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
         Boolean areOrderItemsReturnable = false;
 
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            areOrderItemsReturnable = orderSummaryService.isOrderItemReturnable(orderItemSummary);
             if (!areOrderItemsReturnable) {
                 break;
             }

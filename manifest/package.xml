@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
+		<members>Application</members>
+		<members>ApplicationException</members>
 		<members>BaseEnum</members>
 		<members>BaseEnumTest</members>
 		<members>CalloutUtils</members>
@@ -22,15 +24,18 @@
 		<members>Enums</members>
 		<members>FulfillmentOrderApi</members>
 		<members>FulfillmentOrderApiTest</members>
-		<members>FulfillmentOrderService</members>
+		<members>FulfillmentOrderSelector</members>
 		<members>FulfillmentOrderStatus</members>
 		<members>FulfillmentOrderType</members>
+		<members>IFulfillmentOrderSelector</members>
 		<members>InvoiceStatus</members>
+		<members>IOrderSummaryService</members>
+		<members>ISObjectSelector</members>
 		<members>LifeCycleType</members>
 		<members>LocationType</members>
 		<members>LogUtils</members>
 		<members>LogUtilsTest</members>
-		<members>OmnichannelInventoryDataFactory</members>
+		<members>OmnichannelInventoryTestDataFactory</members>
 		<members>OmnichannelInventoryServiceApi</members>
 		<members>OmnichannelInventoryServiceApiTest</members>
 		<members>OrderPaymentSummaryApi</members>
@@ -60,6 +65,8 @@
 		<members>RoutingApiTest</members>
 		<members>SalesforceAdapter</members>
 		<members>SalesforceAdapterTest</members>
+		<members>SelectorFactory</members>
+		<members>ServiceFactory</members>
 		<members>ShipmentStatus</members>
 		<members>TestDataFactory</members>
 		<members>XmlParser</members>

@@ -5,7 +5,7 @@
 * @description Route orders to inventory locations
 *   in Order Management
 */
-public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnichannelInventoryBase {
+public virtual without sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnichannelInventoryBase {
     /**
     * @description Create an inventory reservation in 
     *   Omnichannel Inventory
@@ -14,12 +14,12 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
     * @return Result of an Omnichannel Inventory reservation 
     *   creation request
     */
-    public ConnectApi.OCICreateReservationOutputRepresentation createReservation(ConnectApi.OCICreateReservationInputRepresentation input) {
+    public virtual ConnectApi.OCICreateReservationOutputRepresentation createReservation(ConnectApi.OCICreateReservationInputRepresentation input) {
         ConnectApi.OCICreateReservationOutputRepresentation output;
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.createReservation(input)
-            : OmnichannelInventoryDataFactory.getSuccessCreateReservationOutput();
+            : OmnichannelInventoryTestDataFactory.getSuccessCreateReservationOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -31,12 +31,12 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
     * @return Response to a request to fulfill one or more 
     *   inventory reservations
     */
-    public ConnectApi.OCIFulfillReservationOutputRepresentation fulfillReservation(ConnectApi.OCIFulfillReservationInputRepresentation input) {
+    public virtual ConnectApi.OCIFulfillReservationOutputRepresentation fulfillReservation(ConnectApi.OCIFulfillReservationInputRepresentation input) {
         ConnectApi.OCIFulfillReservationOutputRepresentation output;
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.fulfillReservation(input)
-            : OmnichannelInventoryDataFactory.getSuccessFulfillReservationOutput();
+            : OmnichannelInventoryTestDataFactory.getSuccessFulfillReservationOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -50,12 +50,12 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
     *   availability
     * @return Response to a request for inventory availability data
     */
-    public ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation getInventoryAvailability(ConnectApi.OCIGetInventoryAvailabilityInputRepresentation input) {
+    public virtual ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation getInventoryAvailability(ConnectApi.OCIGetInventoryAvailabilityInputRepresentation input) {
         ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation output;
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.getInventoryAvailability(input)
-            : OmnichannelInventoryDataFactory.getSuccessGetInventoryAvailabilityOutput();
+            : OmnichannelInventoryTestDataFactory.getSuccessGetInventoryAvailabilityOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -67,12 +67,12 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
     * @param uploadId The upload Id of the upload job
     * @return Detailed status of an upload inventory availability job
     */
-    public ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation getInventoryAvailabilityUploadStatus(String uploadId) {
+    public virtual ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation getInventoryAvailabilityUploadStatus(String uploadId) {
         ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation output;
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.getInventoryAvailabilityUploadStatus(uploadId)
-            : OmnichannelInventoryDataFactory.getSuccessGetInventoryAvailabilityUploadStatusOutput();
+            : OmnichannelInventoryTestDataFactory.getSuccessGetInventoryAvailabilityUploadStatusOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -84,12 +84,12 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
     * @param uploadId The upload Id of the publish job
     * @return Detailed status of a publish location structure job
     */
-    public ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation getPublishLocationStructureStatus(String uploadId) {
+    public virtual ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation getPublishLocationStructureStatus(String uploadId) {
         ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation output;
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.getPublishLocationStructureStatus(uploadId)
-            : OmnichannelInventoryDataFactory.getSuccessGetPublishLocationStructureStatusOutput();
+            : OmnichannelInventoryTestDataFactory.getSuccessGetPublishLocationStructureStatusOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -104,12 +104,12 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
     *   retrieve the status of the publish job
     * @return Detailed status of a publish location structure job
     */
-    public ConnectApi.OCIPublishLocationStructureOutputRepresentation publishLocationStructure() {
+    public virtual ConnectApi.OCIPublishLocationStructureOutputRepresentation publishLocationStructure() {
         ConnectApi.OCIPublishLocationStructureOutputRepresentation output;
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.publishLocationStructure()
-            : OmnichannelInventoryDataFactory.getSuccessPublishLocationStructureOutput();
+            : OmnichannelInventoryTestDataFactory.getSuccessPublishLocationStructureOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -121,7 +121,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
     * @param inputs A list of inventory reservation to release
     * @return Response to a request to release one or more inventory reservations
     */
-    public ConnectApi.OCIReleaseReservationOutputRepresentation releaseReservation(List<ConnectApi.OCIReleaseReservationSingleInputRepresentation> inputs) {
+    public virtual ConnectApi.OCIReleaseReservationOutputRepresentation releaseReservation(List<ConnectApi.OCIReleaseReservationSingleInputRepresentation> inputs) {
         ConnectApi.OCIReleaseReservationOutputRepresentation output;
 
         ConnectApi.OCIReleaseReservationInputRepresentation input = new ConnectApi.OCIReleaseReservationInputRepresentation();
@@ -129,7 +129,7 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.releaseReservation(input)
-            : OmnichannelInventoryDataFactory.getSuccessReleaseReservationOutput();
+            : OmnichannelInventoryTestDataFactory.getSuccessReleaseReservationOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -144,12 +144,12 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
     *   blob - {string} - filename - File name with the file extension
     * @return Response to an upload inventory availability job
     */
-    public ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation submitInventoryAvailabilityUpload(ConnectApi.BinaryInput input) {
+    public virtual ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation submitInventoryAvailabilityUpload(ConnectApi.BinaryInput input) {
         ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation output;
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.submitInventoryAvailabilityUpload(input)
-            : OmnichannelInventoryDataFactory.getSuccessSubmitInventoryAvailabilityUploadOutput();
+            : OmnichannelInventoryTestDataFactory.getSuccessSubmitInventoryAvailabilityUploadOutput();
 
         super.insertFailedResults(output);
         return output;
@@ -164,12 +164,12 @@ public with sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnic
     *   whether a single failure cancels the entire list
     * @return Response to a request to transfer one or more inventory reservations
     */
-    public ConnectApi.OCITransferReservationOutputRepresentation transferReservation(ConnectApi.OCITransferReservationInputRepresentation input) {
+    public virtual ConnectApi.OCITransferReservationOutputRepresentation transferReservation(ConnectApi.OCITransferReservationInputRepresentation input) {
         ConnectApi.OCITransferReservationOutputRepresentation output;
 
         output = !Test.isRunningTest()
             ? ConnectApi.OmnichannelInventoryService.transferReservation(input)
-            : OmnichannelInventoryDataFactory.getSuccessTransferReservationOutput();
+            : OmnichannelInventoryTestDataFactory.getSuccessTransferReservationOutput();
 
         super.insertFailedResults(output);
         return output;

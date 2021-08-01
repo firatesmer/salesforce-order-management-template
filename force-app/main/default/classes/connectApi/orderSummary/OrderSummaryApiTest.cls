@@ -63,7 +63,9 @@ private class OrderSummaryApiTest {
             WHERE OrderSummaryId =: orderSummary.Id
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue LIMIT 1];
         
-        Boolean isOrderItemDiscountable = OrderSummaryService.isOrderItemDiscountable(orderItemSummary);
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
+        Boolean isOrderItemDiscountable = orderSummaryService.isOrderItemDiscountable(orderItemSummary);
 
         System.assert(isOrderItemDiscountable, 'Order item is not discountable');
 
@@ -104,7 +106,8 @@ private class OrderSummaryApiTest {
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue 
             LIMIT 1];
         
-        Boolean isOrderItemDiscountable = OrderSummaryService.isOrderItemDiscountable(orderItemSummary);
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+        Boolean isOrderItemDiscountable = orderSummaryService.isOrderItemDiscountable(orderItemSummary);
 
         if (isOrderItemDiscountable) {
             List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList = TestDataFactory.buildAdjustInput(orderItemSummary, orderSummary, OrderItemSummaryChangeReason.UNKNOWN, adjustment);
@@ -189,8 +192,10 @@ private class OrderSummaryApiTest {
 
         Boolean areOrderItemsReturnable = false;
 
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            areOrderItemsReturnable = orderSummaryService.isOrderItemReturnable(orderItemSummary);
             if (!areOrderItemsReturnable) {
                 break;
             }
@@ -239,10 +244,12 @@ private class OrderSummaryApiTest {
             WHERE OrderSummaryId =: orderSummary.Id
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
         Boolean areOrderItemsReturnable = false;
 
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            areOrderItemsReturnable = orderSummaryService.isOrderItemReturnable(orderItemSummary);
             if (!areOrderItemsReturnable) {
                 break;
             }
@@ -292,10 +299,12 @@ private class OrderSummaryApiTest {
             WHERE OrderSummaryId =: orderSummary.Id
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
         Boolean areOrderItemsCancelable = false;
 
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-            areOrderItemsCancelable = OrderSummaryService.isOrderItemCancelable(orderItemSummary);
+            areOrderItemsCancelable = orderSummaryService.isOrderItemCancelable(orderItemSummary);
             if (!areOrderItemsCancelable) {
                 break;
             }
@@ -334,10 +343,12 @@ private class OrderSummaryApiTest {
             WHERE OrderSummaryId =: orderSummary.Id
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
         Boolean areOrderItemsCancelable = false;
 
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-            areOrderItemsCancelable = OrderSummaryService.isOrderItemCancelable(orderItemSummary);
+            areOrderItemsCancelable = orderSummaryService.isOrderItemCancelable(orderItemSummary);
             if (!areOrderItemsCancelable) {
                 break;
             }
@@ -395,10 +406,12 @@ private class OrderSummaryApiTest {
             WHERE OrderSummaryId =: orderSummary.Id
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
         Boolean areOrderItemsReturnable = false;
 
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            areOrderItemsReturnable = orderSummaryService.isOrderItemReturnable(orderItemSummary);
             if (!areOrderItemsReturnable) {
                 break;
             }
@@ -410,7 +423,7 @@ private class OrderSummaryApiTest {
             OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
 
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
+            ConnectApi.ChangeInputRepresentation changeInput = orderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
 
             // return
             ConnectApi.SubmitReturnOutputRepresentation submitReturnOutput = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
@@ -454,10 +467,12 @@ private class OrderSummaryApiTest {
             WHERE OrderSummaryId =: orderSummary.Id
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
         Boolean areOrderItemsReturnable = false;
 
         for (OrderItemSummary orderItemSummary : orderItemSummaries) {
-            areOrderItemsReturnable = OrderSummaryService.isOrderItemReturnable(orderItemSummary);
+            areOrderItemsReturnable = orderSummaryService.isOrderItemReturnable(orderItemSummary);
             if (!areOrderItemsReturnable) {
                 break;
             }
@@ -469,7 +484,7 @@ private class OrderSummaryApiTest {
             OrderSummaryApi orderSummaryApi = new OrderSummaryApi();
 
             // prepare change input
-            ConnectApi.ChangeInputRepresentation changeInput = OrderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
+            ConnectApi.ChangeInputRepresentation changeInput = orderSummaryService.buildChangeInput(orderItemSummaries, OrderItemSummaryChangeReason.UNKNOWN, true);
 
             // return
             ConnectApi.SubmitReturnOutputRepresentation submitReturnOutput = orderSummaryApi.submitReturn(orderSummary.Id, changeInput);
