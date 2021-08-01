@@ -24,8 +24,10 @@ private class OmnichannelInventoryServiceApiTest {
         input.reservationTime = DateTime.now().format('YYYY-MM-dd\'T\'HH:mm:ss\'Z\'');
         input.createRecords = new List<ConnectApi.OCICreateReservationSingleInputRepresentation>{ singleReservationInput };
 
+        IOmnichannelInventoryServiceApi api = (IOmnichannelInventoryServiceApi)Application.ConnectApi.newInstance(IOmnichannelInventoryServiceApi.class);
+
         Test.startTest();
-        ConnectApi.OCICreateReservationOutputRepresentation output = new OmnichannelInventoryServiceApi().createReservation(input);
+        ConnectApi.OCICreateReservationOutputRepresentation output = api.createReservation(input);
         Test.stopTest();
 
         System.assert(output.success, 'Create reservation action is failed');
@@ -47,8 +49,10 @@ private class OmnichannelInventoryServiceApiTest {
         ConnectApi.OCIFulfillReservationInputRepresentation input = new ConnectApi.OCIFulfillReservationInputRepresentation();
         input.fulfillmentRecords = new List<ConnectApi.OCIFulfillReservationSingleInputRepresentation> { singleFulfillInput };
 
+        IOmnichannelInventoryServiceApi api = (IOmnichannelInventoryServiceApi)Application.ConnectApi.newInstance(IOmnichannelInventoryServiceApi.class);
+
         Test.startTest();
-        ConnectApi.OCIFulfillReservationOutputRepresentation output = new OmnichannelInventoryServiceApi().fulfillReservation(input);
+        ConnectApi.OCIFulfillReservationOutputRepresentation output = api.fulfillReservation(input);
         Test.stopTest();
 
         System.assert(output.success, 'Fulfill reservation action is failed');
@@ -65,8 +69,10 @@ private class OmnichannelInventoryServiceApiTest {
         input.stockKeepingUnit = '001';
         input.useCache = false;
 
+        IOmnichannelInventoryServiceApi api = (IOmnichannelInventoryServiceApi)Application.ConnectApi.newInstance(IOmnichannelInventoryServiceApi.class);
+
         Test.startTest();
-        ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation output = new OmnichannelInventoryServiceApi().getInventoryAvailability(input);
+        ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation output = api.getInventoryAvailability(input);
         Test.stopTest();
 
         System.assert(output.success, 'Get inventory availability action is failed');
@@ -80,8 +86,10 @@ private class OmnichannelInventoryServiceApiTest {
     static void shouldGetInventoryAvailabilityUploadStatus() {
         String uploadId = 'upload_id';
 
+        IOmnichannelInventoryServiceApi api = (IOmnichannelInventoryServiceApi)Application.ConnectApi.newInstance(IOmnichannelInventoryServiceApi.class);
+
         Test.startTest();
-        ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation output = new OmnichannelInventoryServiceApi().getInventoryAvailabilityUploadStatus(uploadId);
+        ConnectApi.OCIUploadInventoryAvailabilityStatusOutputRepresentation output = api.getInventoryAvailabilityUploadStatus(uploadId);
         Test.stopTest();
 
         System.assert(output.success, 'Get inventory availability upload status action is failed');
@@ -95,8 +103,10 @@ private class OmnichannelInventoryServiceApiTest {
     static void shouldGetPublishLocationStructureStatus() {
         String uploadId = 'upload_id';
 
+        IOmnichannelInventoryServiceApi api = (IOmnichannelInventoryServiceApi)Application.ConnectApi.newInstance(IOmnichannelInventoryServiceApi.class);
+
         Test.startTest();
-        ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation output = new OmnichannelInventoryServiceApi().getPublishLocationStructureStatus(uploadId);
+        ConnectApi.OCIPublishLocationStructureStatusOutputRepresentation output = api.getPublishLocationStructureStatus(uploadId);
         Test.stopTest();
 
         System.assert(output.success, 'Get publish location structure action is failed');
@@ -108,8 +118,10 @@ private class OmnichannelInventoryServiceApiTest {
     */
     @isTest
     static void shouldPublishLocationStructure() {
+        IOmnichannelInventoryServiceApi api = (IOmnichannelInventoryServiceApi)Application.ConnectApi.newInstance(IOmnichannelInventoryServiceApi.class);
+
         Test.startTest();
-        ConnectApi.OCIPublishLocationStructureOutputRepresentation output = new OmnichannelInventoryServiceApi().publishLocationStructure();
+        ConnectApi.OCIPublishLocationStructureOutputRepresentation output = api.publishLocationStructure();
         Test.stopTest();
 
         System.assert(output.success, 'Publish location structure action is failed');
@@ -129,9 +141,11 @@ private class OmnichannelInventoryServiceApiTest {
         input.quantity = 1;
         input.stockKeepingUnit = '001';
         inputs.add(input);
+
+        IOmnichannelInventoryServiceApi api = (IOmnichannelInventoryServiceApi)Application.ConnectApi.newInstance(IOmnichannelInventoryServiceApi.class);
         
         Test.startTest();
-        ConnectApi.OCIReleaseReservationOutputRepresentation output = new OmnichannelInventoryServiceApi().releaseReservation(inputs);
+        ConnectApi.OCIReleaseReservationOutputRepresentation output = api.releaseReservation(inputs);
         Test.stopTest();
 
         System.assert(output.success, 'Release reservation action is failed');
@@ -143,6 +157,8 @@ private class OmnichannelInventoryServiceApiTest {
     */
     @isTest
     static void shouldSubmitInventoryAvailabilityUpload() {
+        IOmnichannelInventoryServiceApi api = (IOmnichannelInventoryServiceApi)Application.ConnectApi.newInstance(IOmnichannelInventoryServiceApi.class);
+
         ConnectApi.BinaryInput input = new ConnectApi.BinaryInput
         (
             Blob.valueOf('blob'), 
@@ -151,7 +167,7 @@ private class OmnichannelInventoryServiceApiTest {
         );
         
         Test.startTest();
-        ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation output = new OmnichannelInventoryServiceApi().submitInventoryAvailabilityUpload(input);
+        ConnectApi.OCIUploadInventoryAvailabilityOutputRepresentation output = api.submitInventoryAvailabilityUpload(input);
         Test.stopTest();
 
         System.assert(output.success, 'Submit inventory availability upload action is failed');
@@ -175,8 +191,10 @@ private class OmnichannelInventoryServiceApiTest {
         ConnectApi.OCITransferReservationInputRepresentation input = new ConnectApi.OCITransferReservationInputRepresentation();
         input.transferRecords = new List<ConnectApi.OCITransferReservationSingleInputRepresentation>{ singleReservationInput };
 
+        IOmnichannelInventoryServiceApi api = (IOmnichannelInventoryServiceApi)Application.ConnectApi.newInstance(IOmnichannelInventoryServiceApi.class);
+
         Test.startTest();
-        ConnectApi.OCITransferReservationOutputRepresentation output = new OmnichannelInventoryServiceApi().transferReservation(input);
+        ConnectApi.OCITransferReservationOutputRepresentation output = api.transferReservation(input);
         Test.stopTest();
 
         System.assert(output.success, 'Transfer reservation action is failed');

@@ -18,8 +18,10 @@ private class FulfillmentOrderApiTest {
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
+        IFulfillmentOrderApi api = (IFulfillmentOrderApi)Application.ConnectApi.newInstance(IFulfillmentOrderApi.class);
+
         Test.startTest();
-        ConnectApi.FulfillmentOrderOutputRepresentation output = new FulfillmentOrderApi().createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
+        ConnectApi.FulfillmentOrderOutputRepresentation output = api.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
         Test.stopTest();
 
         List<FulfillmentOrder> fulfillmentOrders = [SELECT Id FROM FulfillmentOrder WHERE OrderSummaryId =: orderSummary.Id];
@@ -37,7 +39,7 @@ private class FulfillmentOrderApiTest {
     static void shouldCreateInvoice() {
         String orderId = TestDataFactory.createOrder();
 
-        FulfillmentOrderApi api = new FulfillmentOrderApi();
+        IFulfillmentOrderApi api = (IFulfillmentOrderApi)Application.ConnectApi.newInstance(IFulfillmentOrderApi.class);
 
         OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
@@ -70,7 +72,7 @@ private class FulfillmentOrderApiTest {
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
-        FulfillmentOrderApi api = new FulfillmentOrderApi();
+        IFulfillmentOrderApi api = (IFulfillmentOrderApi)Application.ConnectApi.newInstance(IFulfillmentOrderApi.class);
 
         api.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
 
@@ -116,16 +118,16 @@ private class FulfillmentOrderApiTest {
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
-        FulfillmentOrderApi api = new FulfillmentOrderApi();
+        IFulfillmentOrderApi api = (IFulfillmentOrderApi)Application.ConnectApi.newInstance(IFulfillmentOrderApi.class);
 
-        // createFulfillmentOrders request
-        List<FulfillmentOrderApi.CreateFulfillmentOrderInput> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrderInput>();
+        // createMultipleFulfillmentOrders input build
+        List<CreateMultipleFulfillmentOrderInput> createFulfillmentOrderList = new List<CreateMultipleFulfillmentOrderInput>();
         for (OrderSummary orderSummary : orderSummaries) {
-            FulfillmentOrderApi.CreateFulfillmentOrderInput createFulfillmentOrderInput = new FulfillmentOrderApi.CreateFulfillmentOrderInput();
-            CreateFulfillmentOrderInput.orderSummaryId = orderSummary.Id;
-            CreateFulfillmentOrderInput.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
-            CreateFulfillmentOrderInput.locationId = location.Id;
-            createFulfillmentOrderList.add(createFulfillmentOrderInput);
+            CreateMultipleFulfillmentOrderInput createMultipleFulfillmentOrderInput = new CreateMultipleFulfillmentOrderInput();
+            createMultipleFulfillmentOrderInput.orderSummaryId = orderSummary.Id;
+            createMultipleFulfillmentOrderInput.fulfillmentType = FulfillmentOrderType.WAREHOUSE;
+            createMultipleFulfillmentOrderInput.locationId = location.Id;
+            createFulfillmentOrderList.add(createMultipleFulfillmentOrderInput);
         }
 
         Test.startTest();
@@ -159,16 +161,16 @@ private class FulfillmentOrderApiTest {
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
 
-        FulfillmentOrderApi api = new FulfillmentOrderApi();
+        IFulfillmentOrderApi api = (IFulfillmentOrderApi)Application.ConnectApi.newInstance(IFulfillmentOrderApi.class);
 
         // createFulfillmentOrders request
-        List<FulfillmentOrderApi.CreateFulfillmentOrderInput> createFulfillmentOrderList = new List<FulfillmentOrderApi.CreateFulfillmentOrderInput>();
+        List<CreateMultipleFulfillmentOrderInput> createFulfillmentOrderList = new List<CreateMultipleFulfillmentOrderInput>();
         for (OrderSummary orderSummary : orderSummaries) {
-            FulfillmentOrderApi.CreateFulfillmentOrderInput createFulfillmentOrderInput = new FulfillmentOrderApi.CreateFulfillmentOrderInput();
-            CreateFulfillmentOrderInput.orderSummaryId = orderSummary.Id;
-            CreateFulfillmentOrderInput.fulfillmentType = FulfillmentOrderType.WAREHOUSE.enumValue;
-            CreateFulfillmentOrderInput.locationId = location.Id;
-            createFulfillmentOrderList.add(createFulfillmentOrderInput);
+            CreateMultipleFulfillmentOrderInput createMultipleFulfillmentOrderInput = new CreateMultipleFulfillmentOrderInput();
+            createMultipleFulfillmentOrderInput.orderSummaryId = orderSummary.Id;
+            createMultipleFulfillmentOrderInput.fulfillmentType = FulfillmentOrderType.WAREHOUSE;
+            createMultipleFulfillmentOrderInput.locationId = location.Id;
+            createFulfillmentOrderList.add(createMultipleFulfillmentOrderInput);
         }
 
         ConnectApi.MultipleFulfillmentOrderOutputRepresentation createMultipleFulfillmentOrderOutput = api.createMultipleFulfillmentOrder(createFulfillmentOrderList);

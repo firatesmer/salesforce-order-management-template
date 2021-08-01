@@ -11,13 +11,13 @@ private class ConnectApiOmnichannelInventoryBaseTest {
     */
     @isTest
     static void shouldInsertFailedResultsForBaseOutput() {
-        ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation output = OmnichannelInventoryDataFactory.getFailInventoryAvailabilityOutputRepresentation();
+        ConnectApi.OCIGetInventoryAvailabilityOutputRepresentation output = OmnichannelInventoryTestDataFactory.getFailInventoryAvailabilityOutputRepresentation();
 
         Test.startTest();
         new OmnichannelInventoryServiceApi().insertFailedResults(output);
         Test.stopTest();
 
-        // Log with category 001 is created in OmnichannelInventoryDataFactory
+        // Log with category 001 is created in OmnichannelInventoryTestDataFactory
         List<OmsLog__c> logs = [SELECT Id FROM OmsLog__c WHERE Category__c = '001'];
 
         System.assert(!logs.isEmpty(), 'No log records found');
@@ -29,13 +29,13 @@ private class ConnectApiOmnichannelInventoryBaseTest {
     */
     @isTest
     static void shouldInsertFailedResultsForCreateReservationOutput() {
-        ConnectApi.OCICreateReservationOutputRepresentation output = OmnichannelInventoryDataFactory.getFailCreateReservationOutput();
+        ConnectApi.OCICreateReservationOutputRepresentation output = OmnichannelInventoryTestDataFactory.getFailCreateReservationOutput();
 
         Test.startTest();
         new OmnichannelInventoryServiceApi().insertFailedResults(output);
         Test.stopTest();
 
-        // Log with category 001 is created in OmnichannelInventoryDataFactory
+        // Log with category 001 is created in OmnichannelInventoryTestDataFactory
         List<OmsLog__c> logs = [SELECT Id FROM OmsLog__c WHERE Category__c = '001'];
 
         System.assert(!logs.isEmpty(), 'No log records found');
@@ -47,13 +47,13 @@ private class ConnectApiOmnichannelInventoryBaseTest {
     */
     @isTest
     static void shouldInsertFailedResultsForFulfillReservationOutput() {
-        ConnectApi.OCIFulfillReservationOutputRepresentation output = OmnichannelInventoryDataFactory.getFailFulfillReservationOutput();
+        ConnectApi.OCIFulfillReservationOutputRepresentation output = OmnichannelInventoryTestDataFactory.getFailFulfillReservationOutput();
 
         Test.startTest();
         new OmnichannelInventoryServiceApi().insertFailedResults(output);
         Test.stopTest();
 
-        // Log with category 001 is created in OmnichannelInventoryDataFactory
+        // Log with category 001 is created in OmnichannelInventoryTestDataFactory
         List<OmsLog__c> logs = [SELECT Id FROM OmsLog__c WHERE Category__c = '001'];
 
         System.assert(!logs.isEmpty(), 'No log records found');
@@ -65,13 +65,13 @@ private class ConnectApiOmnichannelInventoryBaseTest {
     */
     @isTest
     static void shouldInsertFailedResultsForReleaseReservationOutput() {
-        ConnectApi.OCIReleaseReservationOutputRepresentation output = OmnichannelInventoryDataFactory.getFailReleaseReservationOutput();
+        ConnectApi.OCIReleaseReservationOutputRepresentation output = OmnichannelInventoryTestDataFactory.getFailReleaseReservationOutput();
 
         Test.startTest();
         new OmnichannelInventoryServiceApi().insertFailedResults(output);
         Test.stopTest();
 
-        // Log with category 001 is created in OmnichannelInventoryDataFactory
+        // Log with category 001 is created in OmnichannelInventoryTestDataFactory
         List<OmsLog__c> logs = [SELECT Id FROM OmsLog__c WHERE Category__c = '001'];
 
         System.assert(!logs.isEmpty(), 'No log records found');
@@ -83,13 +83,13 @@ private class ConnectApiOmnichannelInventoryBaseTest {
     */
     @isTest
     static void shouldInsertFailedResultsForFailTransferReservationOutput() {
-        ConnectApi.OCITransferReservationOutputRepresentation output = OmnichannelInventoryDataFactory.getFailTransferReservationOutput();
+        ConnectApi.OCITransferReservationOutputRepresentation output = OmnichannelInventoryTestDataFactory.getFailTransferReservationOutput();
 
         Test.startTest();
         new OmnichannelInventoryServiceApi().insertFailedResults(output);
         Test.stopTest();
 
-        // Log with category 001 is created in OmnichannelInventoryDataFactory
+        // Log with category 001 is created in OmnichannelInventoryTestDataFactory
         List<OmsLog__c> logs = [SELECT Id FROM OmsLog__c WHERE Category__c = '001'];
 
         System.assert(!logs.isEmpty(), 'No log records found');

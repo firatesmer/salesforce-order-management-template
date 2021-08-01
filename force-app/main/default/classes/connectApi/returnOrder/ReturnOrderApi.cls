@@ -3,7 +3,7 @@
 * @date 14/07/2021
 * @description Process ReturnOrders in Order Management
 */
-public with sharing class ReturnOrderApi extends ConnectApiBase {
+public virtual without sharing class ReturnOrderApi extends ConnectApiBase implements IReturnOrderApi {
     /**
     * @description Create a ReturnOrder and 
     *   ReturnOrderLineItems for items belonging
@@ -13,7 +13,7 @@ public with sharing class ReturnOrderApi extends ConnectApiBase {
     * @param returnOrderLineItemInputList ReturnOrderLineItemInput list
     * @return Id of the created ReturnOrder
     */
-    public ConnectApi.ReturnOrderOutputRepresentation createReturnOrder(String orderSummaryId, ReturnOrderStatus returnOrderStatus, List<ConnectApi.ReturnOrderLineItemInputRepresentation> returnOrderLineItemInputList) {
+    public virtual ConnectApi.ReturnOrderOutputRepresentation createReturnOrder(String orderSummaryId, ReturnOrderStatus returnOrderStatus, List<ConnectApi.ReturnOrderLineItemInputRepresentation> returnOrderLineItemInputList) {
         ConnectApi.ReturnOrderInputRepresentation input = new ConnectApi.ReturnOrderInputRepresentation();
         input.orderSummaryId = orderSummaryId;
         input.returnOrderLifeCycleType = LifeCycleType.MANAGED.enumValue;
@@ -41,7 +41,7 @@ public with sharing class ReturnOrderApi extends ConnectApiBase {
     *   any ReturnOrderLineItems that were created to 
     *   represent remaining return quantities
     */
-    public ConnectApi.ReturnItemsOutputRepresentation returnItems(String returnOrderId, ConnectApi.ReturnItemsInputRepresentation input) {
+    public virtual ConnectApi.ReturnItemsOutputRepresentation returnItems(String returnOrderId, ConnectApi.ReturnItemsInputRepresentation input) {
         ConnectApi.ReturnItemsOutputRepresentation output = ConnectApi.ReturnOrder.returnItems(returnOrderId, input);
         super.insertFailedResults(output);
         return output;

@@ -16,7 +16,7 @@ private class OrderPaymentSummaryApiTest {
 
         OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
-        OrderPaymentSummaryApi api = new OrderPaymentSummaryApi();
+        IOrderPaymentSummaryApi api = (IOrderPaymentSummaryApi)Application.ConnectApi.newInstance(IOrderPaymentSummaryApi.class);
 
         Payment payment = TestDataFactory.createPayment(1);
         insert payment;

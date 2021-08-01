@@ -4,7 +4,7 @@
 * @description Test data factory for Omnichannel Inventory Service class
 */
 @isTest
-public with sharing class OmnichannelInventoryDataFactory {
+public with sharing class OmnichannelInventoryTestDataFactory {
     private final static String TIME_FORMAT = 'YYYY-MM-dd\'T\'HH:mm:ss\'Z\'';
     private final static String TEST_LOCATION_GROUP = 'TEST_LOCATION_GROUP';
 

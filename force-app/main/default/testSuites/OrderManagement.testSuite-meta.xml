@@ -10,7 +10,7 @@
     <testClassName>EmailUtilsTest</testClassName>
     <testClassName>FulfillmentOrderApiTest</testClassName>
     <testClassName>LogUtilsTest</testClassName>
-    <testClassName>OmnichannelInventoryDataFactory</testClassName>
+    <testClassName>OmnichannelInventoryTestDataFactory</testClassName>
     <testClassName>OmnichannelInventoryServiceApiTest</testClassName>
     <testClassName>OrderPaymentSummaryApiTest</testClassName>
     <testClassName>OrderSummaryApiTest</testClassName>
