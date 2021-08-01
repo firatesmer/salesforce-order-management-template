@@ -3,13 +3,12 @@
 * @date 31/07/2021
 * @description Handles application-specific functionality
 */
-@suppressWarnings('PMD.FieldNamingConventions')
 public with sharing class Application {
     /**
     * @descripton Service register
     *   suppress reason: ignore
     */
-    public static final ServiceFactory Service = new ServiceFactory(
+    public static final ServiceFactory Service = new ServiceFactory(//NOPMD
         new Map<Type, Type>
         {
             IOrderSummaryService.class => OrderSummaryService.class
@@ -20,7 +19,7 @@ public with sharing class Application {
     * @descripton Selector register
     *   suppress reason: ignore
     */
-    public static final SelectorFactory Selector = new SelectorFactory(
+    public static final SelectorFactory Selector = new SelectorFactory(//NOPMD
         new Map<SObjectType, Type>
         {
             FulfillmentOrder.SObjectType => FulfillmentOrderSelector.class
@@ -31,7 +30,7 @@ public with sharing class Application {
     * @descripton Service register
     *   suppress reason: ignore
     */
-    public static final ServiceFactory ConnectApi = new ServiceFactory(
+    public static final ServiceFactory ConnectApi = new ServiceFactory(//NOPMD
         new Map<Type, Type>
         {
             IFulfillmentOrderApi.class => FulfillmentOrderApi.class,
