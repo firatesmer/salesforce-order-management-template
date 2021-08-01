@@ -13,7 +13,9 @@
 		<members>ConnectApiBase</members>
 		<members>ConnectApiBaseTest</members>
 		<members>ConnectApiOmnichannelInventoryBase</members>
+		<members>ConnectApiOmnichannelInventoryBaseTest</members>
 		<members>Constants</members>
+		<members>CreateMultipleFulfillmentOrderInput</members>
 		<members>CreateTestOrderItemInput</members>
 		<members>CsvParser</members>
 		<members>CsvParserTest</members>
@@ -27,9 +29,15 @@
 		<members>FulfillmentOrderSelector</members>
 		<members>FulfillmentOrderStatus</members>
 		<members>FulfillmentOrderType</members>
+		<members>IFulfillmentOrderApi</members>
 		<members>IFulfillmentOrderSelector</members>
 		<members>InvoiceStatus</members>
+		<members>IOmnichannelInventoryServiceApi</members>
+		<members>IOrderPaymentSummaryApi</members>
+		<members>IOrderSummaryApi</members>
 		<members>IOrderSummaryService</members>
+		<members>IReturnOrderApi</members>
+		<members>IRoutingApi</members>
 		<members>ISObjectSelector</members>
 		<members>LifeCycleType</members>
 		<members>LocationType</members>

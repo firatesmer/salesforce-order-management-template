@@ -1,55 +1,29 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
-* @date 10/04/2021
-* @description Work with orders in Order Management
+* @date 01/08/2021
+* @description OrderSummaryApi interface
+*   suppress reason: ignore
 */
-public virtual without sharing class OrderSummaryApi extends ConnectApiBase implements IOrderSummaryApi {
+@suppressWarnings('PMD.ExcessiveParameterList')
+public interface IOrderSummaryApi {
     /**
     * @description Create an OrderSummary based on an order
     *   That order is considered the original order for the OrderSummary
     * @param orderId Order id - required
     * @return Id of the created OrderSummary
     */
-    public virtual ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId) {
-        ConnectApi.OrderSummaryInputRepresentation input = new ConnectApi.OrderSummaryInputRepresentation();
-        input.orderId = orderId;
-
-        ConnectApi.OrderSummaryOutputRepresentation output = ConnectApi.OrderSummaryCreation.createOrderSummary(input);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId);
 
     /**
     * @description Create an OrderSummary based on an order
     *   That order is considered the original order for the OrderSummary
-    *   suppress reason: ignore
     * @param orderId Id of the Order - required
     * @param name OrderNumber of the OrderSummary - optional
     * @param orderLifeCycleType Managed|Unmanaged - optional
     * @param status Status of the OrderSummary - optional
     * @return Id of the created OrderSummary
     */
-    @suppressWarnings('PMD.ExcessiveParameterList')
-    public virtual ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId, String name, LifeCycleType orderLifeCycleType, OrderSummaryStatus status) {
-        ConnectApi.OrderSummaryInputRepresentation input = new ConnectApi.OrderSummaryInputRepresentation();
-        input.orderId = orderId;
-        
-        if (String.isNotBlank(name)) {
-            input.name = name;
-        }
-
-        if (orderLifeCycleType != null) {
-            input.orderLifeCycleType = orderLifeCycleType.enumValue;
-        }
-
-        if (status != null) {
-            input.status = status.enumValue;
-        }
-
-        ConnectApi.OrderSummaryOutputRepresentation output = ConnectApi.OrderSummaryCreation.createOrderSummary(input);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.OrderSummaryOutputRepresentation createOrderSummary(String orderId, String name, LifeCycleType orderLifeCycleType, OrderSummaryStatus status);
 
     /**
     * @description Retrieve the expected results of adjusting
@@ -68,14 +42,7 @@ public virtual without sharing class OrderSummaryApi extends ConnectApiBase impl
     *   For a preview action, these values are the expected output. For a submit action, 
     *   these values are the actual output
     */
-    public virtual ConnectApi.AdjustOrderSummaryOutputRepresentation adjustPreview(String orderSummaryId, List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList) {
-        ConnectApi.AdjustOrderItemSummaryInputRepresentation adjustInput = new ConnectApi.AdjustOrderItemSummaryInputRepresentation();
-        adjustInput.adjustItems = adjustItemInputList;
-
-        ConnectApi.AdjustOrderSummaryOutputRepresentation output = ConnectApi.OrderSummary.adjustPreview(orderSummaryId, adjustInput);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.AdjustOrderSummaryOutputRepresentation adjustPreview(String orderSummaryId, List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList);
 
     /**
     * @description Adjust the price of one or more OrderItemSummaries from an 
@@ -91,14 +58,7 @@ public virtual without sharing class OrderSummaryApi extends ConnectApiBase impl
     *   For a preview action, these values are the expected output. For a submit action, 
     *   these values are the actual output
     */
-    public virtual ConnectApi.AdjustOrderSummaryOutputRepresentation adjustSubmit(String orderSummaryId, List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList) {
-        ConnectApi.AdjustOrderItemSummaryInputRepresentation adjustInput = new ConnectApi.AdjustOrderItemSummaryInputRepresentation();
-        adjustInput.adjustItems = adjustItemInputList;
-
-        ConnectApi.AdjustOrderSummaryOutputRepresentation output = ConnectApi.OrderSummary.adjustSubmit(orderSummaryId, adjustInput);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.AdjustOrderSummaryOutputRepresentation adjustSubmit(String orderSummaryId, List<ConnectApi.AdjustItemInputRepresentation> adjustItemInputList);
 
     /**
     * @description Ensure refunds for a credit memo or excess funds by
@@ -111,14 +71,7 @@ public virtual without sharing class OrderSummaryApi extends ConnectApiBase impl
     * @param invoiceId - Id of the Invoice - required
     * @return Id of the background operation
     */
-    public virtual ConnectApi.EnsureFundsAsyncOutputRepresentation ensureFundsAsync(String orderSummaryId, String invoiceId) {
-        ConnectApi.EnsureFundsAsyncInputRepresentation ensureFundsAsyncInput = new ConnectApi.EnsureFundsAsyncInputRepresentation();
-        ensureFundsAsyncInput.invoiceId = invoiceId;
-
-        ConnectApi.EnsureFundsAsyncOutputRepresentation output = ConnectApi.OrderSummary.ensureFundsAsync(orderSummaryId, ensureFundsAsyncInput);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.EnsureFundsAsyncOutputRepresentation ensureFundsAsync(String orderSummaryId, String invoiceId);
 
     /**
     * @description Retrieve the expected change order values for returning 
@@ -129,11 +82,7 @@ public virtual without sharing class OrderSummaryApi extends ConnectApiBase impl
     *   up an order change (return) required
     * @return Expected financial values for a proposed return action
     */
-    public virtual ConnectApi.PreviewReturnOutputRepresentation previewReturn(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput) {
-        ConnectApi.PreviewReturnOutputRepresentation output = ConnectApi.OrderSummary.previewReturn(orderSummaryId, changeInput);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.PreviewReturnOutputRepresentation previewReturn(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput);
 
     /**
     * @description Cancel one or more OrderItemSummaries from an OrderSummary
@@ -144,11 +93,7 @@ public virtual without sharing class OrderSummaryApi extends ConnectApiBase impl
     * @return Id of the change order created for a return action, and a set
     *   of its financial values
     */
-    public virtual ConnectApi.SubmitReturnOutputRepresentation submitReturn(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput) {
-        ConnectApi.SubmitReturnOutputRepresentation output = ConnectApi.OrderSummary.submitReturn(orderSummaryId, changeInput);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.SubmitReturnOutputRepresentation submitReturn(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput);
 
     /**
     * @description Retrieve the expected change order values for canceling
@@ -159,11 +104,7 @@ public virtual without sharing class OrderSummaryApi extends ConnectApiBase impl
     *   up an order change (cancel) - required
     * @return Expected financial values for a proposed cancel action
     */
-    public virtual ConnectApi.PreviewCancelOutputRepresentation previewCancel(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput) {
-        ConnectApi.PreviewCancelOutputRepresentation output = ConnectApi.OrderSummary.previewCancel(orderSummaryId, changeInput);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.PreviewCancelOutputRepresentation previewCancel(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput);
 
     /**
     * @description Cancel one or more OrderItemSummaries from an OrderSummary
@@ -174,11 +115,7 @@ public virtual without sharing class OrderSummaryApi extends ConnectApiBase impl
     * @return ID of the change order created for a cancel action, and a set of its
     *   financial values
     */
-    public virtual ConnectApi.SubmitCancelOutputRepresentation submitCancel(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput) {
-        ConnectApi.SubmitCancelOutputRepresentation output = ConnectApi.OrderSummary.submitCancel(orderSummaryId, changeInput);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.SubmitCancelOutputRepresentation submitCancel(String orderSummaryId, ConnectApi.ChangeInputRepresentation changeInput);
 
     /**
     * @description Create a credit memo to represent the refund for one or 
@@ -187,14 +124,7 @@ public virtual without sharing class OrderSummaryApi extends ConnectApiBase impl
     * @param changeOrderIds The list of change order Ids - required
     * @return Id of a created Credit Memo
     */
-    public virtual ConnectApi.CreateCreditMemoOutputRepresentation createCreditMemo(String orderSummaryId, List<String> changeOrderIds) {
-        ConnectApi.CreateCreditMemoInputRepresentation input = new ConnectApi.CreateCreditMemoInputRepresentation();
-        input.changeOrderIds = changeOrderIds;
-
-        ConnectApi.CreateCreditMemoOutputRepresentation output = ConnectApi.OrderSummary.createCreditMemo(orderSummaryId, input);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.CreateCreditMemoOutputRepresentation createCreditMemo(String orderSummaryId, List<String> changeOrderIds);
 
     /**
     * @description Ensure refunds for a credit memo or excess 
@@ -208,16 +138,5 @@ public virtual without sharing class OrderSummaryApi extends ConnectApiBase impl
     * @param excessFundsAmount Amount of excess funds to refund - optional
     * @return Id of the background operation
     */
-    public virtual ConnectApi.EnsureRefundsAsyncOutputRepresentation ensureRefundsAsync(String orderSummaryId, String creditMemoId, Double excessFundsAmount) {
-        ConnectApi.EnsureRefundsAsyncInputRepresentation ensureRefundAsyncInput = new ConnectApi.EnsureRefundsAsyncInputRepresentation();
-        ensureRefundAsyncInput.creditMemoId = creditMemoId;
-
-        if (excessFundsAmount != null && excessFundsAmount > 0) {
-            ensureRefundAsyncInput.excessFundsAmount = excessFundsAmount;
-        }
-
-        ConnectApi.EnsureRefundsAsyncOutputRepresentation output = ConnectApi.OrderSummary.ensureRefundsAsync(orderSummaryId, ensureRefundAsyncInput);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.EnsureRefundsAsyncOutputRepresentation ensureRefundsAsync(String orderSummaryId, String creditMemoId, Double excessFundsAmount);
 }

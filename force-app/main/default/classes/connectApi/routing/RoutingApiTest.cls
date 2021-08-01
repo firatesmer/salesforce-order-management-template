@@ -28,8 +28,10 @@ private class RoutingApiTest {
         input.orderedQuantities = new List<ConnectApi.QuantityWithSkuInputRepresentation>{ skuInput };
         input.maximumNumberOfSplits = 0;
 
+        IRoutingApi routingApi = (IRoutingApi)Application.ConnectApi.newInstance(IRoutingApi.class);
+
         Test.startTest();
-        ConnectApi.FindRoutesWithFewestSplitsOutputRepresentation output = new RoutingApi().findRoutesWithFewestSplits(input);
+        ConnectApi.FindRoutesWithFewestSplitsOutputRepresentation output = routingApi.findRoutesWithFewestSplits(input);
         Test.stopTest();
 
         System.assert(output.success, 'Routing find routues with fewest splits action is failed');
@@ -60,8 +62,10 @@ private class RoutingApiTest {
         input.sortResult = 'DESC';
         input.targetLocations = new List<ConnectApi.TargetLocationInputRepresentation>{ targetLocationInput };
 
+        IRoutingApi routingApi = (IRoutingApi)Application.ConnectApi.newInstance(IRoutingApi.class);
+
         Test.startTest();
-        ConnectApi.RankAverageDistanceOutputRepresentation output = new RoutingApi().rankAverageDistance(input);
+        ConnectApi.RankAverageDistanceOutputRepresentation output = routingApi.rankAverageDistance(input);
         Test.stopTest();
 
         System.assert(output.success, 'Rank average distance action is failed');

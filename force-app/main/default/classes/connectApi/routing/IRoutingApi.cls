@@ -1,10 +1,9 @@
 /**
 * @author Firat Esmer <firat.esmer@osf.digital>
-* @date 19/07/2021
-* @description Route orders to inventory locations
-*   in Order Management
+* @date 01/08/2021
+* @description ReturnOrderApi interface
 */
-public virtual without sharing class RoutingApi extends ConnectApiBase implements IRoutingApi {
+public interface IRoutingApi {
     /**
     * @description Returns combinations of inventory
     *   locations that can fulfill an order within a
@@ -17,11 +16,7 @@ public virtual without sharing class RoutingApi extends ConnectApiBase implement
     *   can fulfill an order without exceeding the maximum 
     *   number of shipments
     */
-    public virtual ConnectApi.FindRoutesWithFewestSplitsOutputRepresentation findRoutesWithFewestSplits(ConnectApi.FindRoutesWithFewestSplitsInputRepresentation input) {
-        ConnectApi.FindRoutesWithFewestSplitsOutputRepresentation output = ConnectApi.Routing.findRoutesWithFewestSplits(input);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.FindRoutesWithFewestSplitsOutputRepresentation findRoutesWithFewestSplits(ConnectApi.FindRoutesWithFewestSplitsInputRepresentation input);
 
     /**
     * @description Calculates the average distance from sets of
@@ -34,9 +29,5 @@ public virtual without sharing class RoutingApi extends ConnectApiBase implement
     * @return The results of calculating the average distances 
     *   from sets of inventory locations to an order recipient
     */
-    public virtual ConnectApi.RankAverageDistanceOutputRepresentation rankAverageDistance(ConnectApi.RankAverageDistanceInputRepresentation input) {
-        ConnectApi.RankAverageDistanceOutputRepresentation output = ConnectApi.Routing.rankAverageDistance(input);
-        super.insertFailedResults(output);
-        return output;
-    }
+    ConnectApi.RankAverageDistanceOutputRepresentation rankAverageDistance(ConnectApi.RankAverageDistanceInputRepresentation input);
 }

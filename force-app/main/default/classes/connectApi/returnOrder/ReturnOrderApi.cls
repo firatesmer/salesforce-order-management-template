@@ -3,7 +3,7 @@
 * @date 14/07/2021
 * @description Process ReturnOrders in Order Management
 */
-public virtual without sharing class ReturnOrderApi extends ConnectApiBase {
+public virtual without sharing class ReturnOrderApi extends ConnectApiBase implements IReturnOrderApi {
     /**
     * @description Create a ReturnOrder and 
     *   ReturnOrderLineItems for items belonging

@@ -5,7 +5,7 @@
 * @description Route orders to inventory locations
 *   in Order Management
 */
-public virtual without sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnichannelInventoryBase {
+public virtual without sharing class OmnichannelInventoryServiceApi extends ConnectApiOmnichannelInventoryBase implements IOmnichannelInventoryServiceApi {
     /**
     * @description Create an inventory reservation in 
     *   Omnichannel Inventory

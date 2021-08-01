@@ -12,13 +12,15 @@ private class ReturnOrderApiTest {
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @isTest(SeeAllData=true)
     static void shouldCreateReturnOrder() {
+        IReturnOrderApi returnOrderApi = (IReturnOrderApi)Application.ConnectApi.newInstance(IReturnOrderApi.class);
+        IFulfillmentOrderApi fulfillmentOrderApi = (IFulfillmentOrderApi)Application.ConnectApi.newInstance(IFulfillmentOrderApi.class);
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
         String orderId = TestDataFactory.createOrder();
 
         OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
-
-        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
         ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
@@ -32,8 +34,6 @@ private class ReturnOrderApiTest {
             FROM OrderItemSummary 
             WHERE OrderSummaryId =: orderSummary.Id
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
-
-        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
 
         Boolean areOrderItemsReturnable = false;
 
@@ -59,7 +59,7 @@ private class ReturnOrderApiTest {
             }
             
             Test.startTest();
-            ConnectApi.ReturnOrderOutputRepresentation output = new ReturnOrderApi().createReturnOrder(orderSummary.Id, ReturnOrderStatus.DRAFT, returnOrderLineItemInputList);
+            ConnectApi.ReturnOrderOutputRepresentation output = returnOrderApi.createReturnOrder(orderSummary.Id, ReturnOrderStatus.DRAFT, returnOrderLineItemInputList);
             Test.stopTest();
 
             List<ReturnOrder> returnOrders = [SELECT Id FROM ReturnOrder WHERE OrderSummaryId =: orderSummary.Id];
@@ -76,13 +76,15 @@ private class ReturnOrderApiTest {
     @suppressWarnings('PMD.ApexUnitTestShouldNotUseSeeAllDataTrue')
     @isTest(SeeAllData=true)
     static void shouldReturnItems() {
+        IReturnOrderApi returnOrderApi = (IReturnOrderApi)Application.ConnectApi.newInstance(IReturnOrderApi.class);
+        IFulfillmentOrderApi fulfillmentOrderApi = (IFulfillmentOrderApi)Application.ConnectApi.newInstance(IFulfillmentOrderApi.class);
+        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
+
         String orderId = TestDataFactory.createOrder();
 
         OrderSummary orderSummary = TestDataFactory.createOrderSummary(orderId);
 
         Schema.Location location = [SELECT Id FROM Location WHERE Name =: Constants.WAREHOUSE LIMIT 1];
-
-        FulfillmentOrderApi fulfillmentOrderApi = new FulfillmentOrderApi();
 
         ConnectApi.FulfillmentOrderOutputRepresentation fulfillmentOrderOutput = fulfillmentOrderApi.createFulfillmentOrders(orderSummary.Id, location.Id, FulfillmentOrderType.WAREHOUSE);
         String fulfillmentOrderId = fulfillmentOrderOutput.fulfillmentOrderIds[0];
@@ -97,7 +99,6 @@ private class ReturnOrderApiTest {
             WHERE OrderSummaryId =: orderSummary.Id
             AND Type =: OrderItemType.ORDER_PRODUCT.enumValue];
 
-        IOrderSummaryService orderSummaryService = (IOrderSummaryService)Application.Service.newInstance(IOrderSummaryService.class);
 
         Boolean areOrderItemsReturnable = false;
 
@@ -121,10 +122,8 @@ private class ReturnOrderApiTest {
                 returnOrderLineItemInput.reasonForReturn = OrderItemSummaryChangeReason.UNKNOWN.enumValue;
                 returnOrderLineItemInputList.add(returnOrderLineItemInput);
             }
-            
-            ReturnOrderApi api = new ReturnOrderApi();
 
-            ConnectApi.ReturnOrderOutputRepresentation returnOrderOutput = api.createReturnOrder(orderSummary.Id, ReturnOrderStatus.DRAFT, returnOrderLineItemInputList);
+            ConnectApi.ReturnOrderOutputRepresentation returnOrderOutput = returnOrderApi.createReturnOrder(orderSummary.Id, ReturnOrderStatus.DRAFT, returnOrderLineItemInputList);
             String returnOrderId = returnOrderOutput.returnOrderId;
 
             List<ReturnOrderLineItem> returnOrderLineItems = [SELECT Id FROM ReturnOrderLineItem WHERE ReturnOrderId =: returnOrderId];
@@ -141,7 +140,7 @@ private class ReturnOrderApiTest {
             input.returnOrderItems = new List<ConnectApi.ReturnOrderItemInputRepresentation>{ returnOrderItemInput };
 
             Test.startTest();
-            ConnectApi.ReturnItemsOutputRepresentation output = api.returnItems(returnOrderId, input);
+            ConnectApi.ReturnItemsOutputRepresentation output = returnOrderApi.returnItems(returnOrderId, input);
             Test.stopTest();
 
             System.assert(output.success, 'Return items action is failed');

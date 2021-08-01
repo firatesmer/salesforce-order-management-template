@@ -27,4 +27,21 @@ public with sharing class Application {
             FulfillmentOrder.SObjectType => FulfillmentOrderSelector.class
         }
     );
+
+    /**
+    * @descripton Service register
+    *   suppress reason: ignore
+    */
+    @suppressWarnings('PMD.FieldNamingConventions')
+    public static final ServiceFactory ConnectApi = new ServiceFactory(
+        new Map<Type, Type>
+        {
+            IFulfillmentOrderApi.class => FulfillmentOrderApi.class,
+            IOmnichannelInventoryServiceApi.class => OmnichannelInventoryServiceApi.class,
+            IOrderPaymentSummaryApi.class => OrderPaymentSummaryApi.class,
+            IOrderSummaryApi.class => OrderSummaryApi.class,
+            IReturnOrderApi.class => ReturnOrderApi.class,
+            IRoutingApi.class => RoutingApi.class
+        }
+    );
 }
