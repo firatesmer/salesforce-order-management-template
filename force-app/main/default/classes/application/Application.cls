@@ -3,12 +3,12 @@
 * @date 31/07/2021
 * @description Handles application-specific functionality
 */
+@suppressWarnings('PMD.FieldNamingConventions')
 public with sharing class Application {
     /**
     * @descripton Service register
     *   suppress reason: ignore
     */
-    @suppressWarnings('PMD.FieldNamingConventions')
     public static final ServiceFactory Service = new ServiceFactory(
         new Map<Type, Type>
         {
@@ -20,7 +20,6 @@ public with sharing class Application {
     * @descripton Selector register
     *   suppress reason: ignore
     */
-    @suppressWarnings('PMD.FieldNamingConventions')
     public static final SelectorFactory Selector = new SelectorFactory(
         new Map<SObjectType, Type>
         {
@@ -32,7 +31,6 @@ public with sharing class Application {
     * @descripton Service register
     *   suppress reason: ignore
     */
-    @suppressWarnings('PMD.FieldNamingConventions')
     public static final ServiceFactory ConnectApi = new ServiceFactory(
         new Map<Type, Type>
         {
